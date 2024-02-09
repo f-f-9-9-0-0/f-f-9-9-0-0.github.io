@@ -20,7 +20,7 @@ resume: true
 resume-external: true
 resume-url: https://google.com/?q=my+resume
 
-url: https://f-f-9-9-0-0.github.io/
+url: http://127.0.0.1:4000
 # your url: https://USERNAME.github.io
 baseurl: ""
 
