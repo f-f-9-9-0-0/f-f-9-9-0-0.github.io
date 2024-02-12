@@ -75,8 +75,11 @@ The **Scheduler** periodically checks on the DAGs and datasets in its [database 
 
 ---
 
+When a new **dataset** is being specified as the value for the `outlet` parameter in a *task* then a record is being added to the backend database table `dataset` ([def create_datasets][def_create_datasets])
+
 References from a DAG to a dataset of which it is a consumer (**consuming DAGs**) are being stored in table `dag_schedule_dataset_reference`
-This table is being populated when the the DAG Processor processes Python files (with the followinf chain of functions):
+
+These above tables are being populated when the the DAG Processor processes Python files (with the following chain of functions):
 1. processor.py [def process_file] ->  
 2. processor.py [def save_dag_to_db] ->
 3. dagbag.py [def _sync_to_db] ->
@@ -85,14 +88,12 @@ This table is being populated when the the DAG Processor processes Python files 
 
 ---
 
-When a new **dataset** is being created then a record is being added to the backend database table `dataset` ([def create_datasets][def_create_datasets])
-
-If a **task updates a dataset** then a record is being added to the table `dataset_event` with all the DAG Run's details ([def register_dataset_change][def_register_dataset_change])  
-At the same time puts all DAGs, which consumes the updated dataset, into the queue and creates a record in table `dataset_dag_run_queue` (*storing dataset events that need processing*)
+If a **DAG Run's task updates a dataset** then a record is being added to the table `dataset_event` with all the DAG Run's details ([def register_dataset_change][def_register_dataset_change])  
+At the same time all DAGs, which consumes the updated dataset, are being put into the queue and a record is added to the table `dataset_dag_run_queue` (*storing dataset events that need processing*)
 
 ---
 
-The scheduler gathers all DAGs where a DAG Run is needed after a dataset update, and triggers a DAG Run for each of them. The following chain of function calls serves this purpose: [def _execute -> def _do_scheduling -> def _run_scheduler_loop -> def _create_dagruns_for_dags -> def _create_dag_runs_dataset_triggered][func_chain]  
+The *Scheduler* gathers all DAGs in its loop where a DAG Run is needed after a dataset update, and triggers a DAG Run for each of them. The following chain of function calls serves this purpose: [def _execute -> def _do_scheduling -> def _run_scheduler_loop -> def _create_dagruns_for_dags -> def _create_dag_runs_dataset_triggered][func_chain]  
 The DAG IDs, *where all datasets are updated which the DAG depends on*, are being retrieved by this query from the backend database ([def dags_needing_dagruns][def_dags_needing_dagruns]):
 ```sql
 select
@@ -166,18 +167,6 @@ where
 Once the DAG Run is started, all records for the triggered DAG is being removed from table `dataset_dag_run_queue` with the below SQL:
 ```sql
 delete from dataset_dag_run_queue where target_dag_id = <dag_id>
-```
-
-
-```python
-    def create_datasets(self, dataset_models: list[DatasetModel], session: Session) -> None:
-        """Create new datasets."""
-        for dataset_model in dataset_models:
-            session.add(dataset_model)
-        session.flush()
-
-        for dataset_model in dataset_models:
-            self.notify_dataset_created(dataset=Dataset(uri=dataset_model.uri, extra=dataset_model.extra))
 ```
 
 
