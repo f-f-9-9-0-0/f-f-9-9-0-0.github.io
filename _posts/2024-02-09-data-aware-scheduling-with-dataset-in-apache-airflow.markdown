@@ -75,8 +75,6 @@ The **Scheduler** periodically checks on the DAGs and datasets in its [database 
 
 ---
 
-When a new **dataset** is being created then a record is being added to the backend database table `dataset` ([def create_datasets][def_create_datasets])
-
 References from a DAG to a dataset of which it is a consumer (**consuming DAGs**) are being stored in table `dag_schedule_dataset_reference`
 This table is being populated when the the DAG Processor processes Python files (with the followinf chain of functions):
 1. processor.py [def process_file] ->  
@@ -84,6 +82,10 @@ This table is being populated when the the DAG Processor processes Python files 
 3. dagbag.py [def _sync_to_db] ->
 4. dag.py [def bulk_write_to_db] ->
 5. DagScheduleDatasetReference()
+
+---
+
+When a new **dataset** is being created then a record is being added to the backend database table `dataset` ([def create_datasets][def_create_datasets])
 
 If a **task updates a dataset** then a record is being added to the table `dataset_event` with all the DAG Run's details ([def register_dataset_change][def_register_dataset_change])  
 At the same time puts all DAGs, which consumes the updated dataset, into the queue and creates a record in table `dataset_dag_run_queue` (*storing dataset events that need processing*)
