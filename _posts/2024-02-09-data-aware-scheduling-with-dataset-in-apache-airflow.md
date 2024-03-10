@@ -11,6 +11,7 @@ tag:
 category: blog
 author: gabor
 description: Airflow datasets unleashed
+excerpt_separator: <!--more-->
 ---
 # Datasets in Apache Airflow
 <br>
@@ -28,7 +29,7 @@ There are multiple ways of triggering a DAG Run in Airflow:
 - Trigger from another DAG Run using operator [*TriggerDagRunOperator*][triggerdagrunoperator]
 - Manually trigger a DAG Run
 - Programmatically using [*Airflow REST Api*][airflow_rest_api]
-
+<!--more-->
 [Sensors][sensors], a special type of [Operator][operator], are a way of controlling an already triggered DAG Run by making it deferred until certain events occur and re-trigger its execution from the point it stopped running.
 
 ---
@@ -47,7 +48,7 @@ All these can work, however would come with more effort when it comes to develop
 
 For this exact use case, to build a data platform with Airflow, there is a **built-in feature** Airflow provides, called `datasets`.
 
-Do not think of anything related to data from data management perspective, when you here the term *dataset*. Dataset here refers to a [URI][uri_wiki] (*Uniform Resource Identifier*) only (a string) which can be used as a way of communication among DAGs.
+Do not think of anything related to data from data management perspective when you hear the term *dataset*, especially do not associate it with datasets in Google's BigQuery. A dataset in Airflow's world refers to a [URI][uri_wiki] (*Uniform Resource Identifier*) only (actually a string) which can be used as a way of communication among DAGs.
 
 While a dataset does not represent data on its own, we can still consider this solution as a **data-aware scheduling** solution, as if we identify a certain set of data with a dataset.  
 
@@ -93,7 +94,13 @@ At the same time all DAGs, which consumes the updated dataset, are being put int
 
 ---
 
-The *Scheduler* gathers all DAGs in its loop where a DAG Run is needed after a dataset update, and triggers a DAG Run for each of them. The following chain of function calls serves this purpose: [def _execute -> def _do_scheduling -> def _run_scheduler_loop -> def _create_dagruns_for_dags -> def _create_dag_runs_dataset_triggered][func_chain]  
+The *Scheduler* gathers all DAGs in its loop where a DAG Run is needed after a dataset update, and triggers a DAG Run for each of them. The following [chain of function calls][func_chain]  serves this purpose:
+1. def _execute ->
+2. def _do_scheduling ->
+3. def _run_scheduler_loop ->
+4. def _create_dagruns_for_dags ->
+5. def _create_dag_runs_dataset_triggered
+  
 The DAG IDs, *where all datasets are updated which the DAG depends on*, are being retrieved by this query from the backend database ([def dags_needing_dagruns][def_dags_needing_dagruns]):
 ```sql
 select
