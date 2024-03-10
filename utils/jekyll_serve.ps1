@@ -1,5 +1,5 @@
-$CONTAINER_NAME = "JEKYLL-SERVE__$((Split-Path -Path (Join-Path (Get-Location) '..') -Leaf) -replace '\.', '_')"
-$VOLUME         = "$(Get-Location)/../:/srv/jekyll:Z"
+$CONTAINER_NAME = "JEKYLL-SERVE__$((Split-Path -Path (Join-Path $PSScriptRoot '..') -Leaf) -replace '\.', '_')"
+$VOLUME         = "$($PSScriptRoot)/../:/srv/jekyll:Z"
 $PUBLISH        = "127.0.0.1:4000:4000"
 
 Clear-Host
