@@ -220,15 +220,6 @@ delete from dataset_dag_run_queue where target_dag_id = <dag_id>
 
 
 
-dataset_dag_run_queue: Model for storing dataset events that need processing.
-dag_schedule_dataset_reference: References from a DAG to a dataset of which it is a consumer.
-task_outlet_dataset_reference: References from a task to a dataset that it updates / produces.
-
-dataset_event: A table to store datasets events.
-dagrun_dataset_event: ?
-
-
-
 
 [database_backend]: https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html
 [airflow\dag_processing\processor.py]: https://github.com/apache/airflow/blob/main/airflow/dag_processing/processor.py
