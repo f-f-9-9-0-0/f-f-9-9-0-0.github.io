@@ -30,9 +30,11 @@ There are multiple ways of triggering a DAG Run in Airflow:
 - Manually trigger a DAG Run
 - Programmatically using [*Airflow REST Api*][airflow_rest_api]
 <!--more-->
+  
 [Sensors][sensors], a special type of [Operator][operator], are a way of controlling an already triggered DAG Run by making it deferred until certain events occur and re-trigger its execution from the point it stopped running.
 
 ---
+## Complex environments lead to.. dependencies
 
 Dependencies are **very much required** in a complex environment, especially if you need to deal with a data analytics platform.  
 Certain data moves can happen only after some transformation already being done on source or other loads completed successfully.  
@@ -43,6 +45,7 @@ There are even more crazy solutions, for example storing all dependencies in an 
 Or another way is to take full control of dependencies and build a meta table somewhere, which can be *polled with a certain frequency by DAGs checking for dependencies*, or even build an **event-driven system** by introducing a messaging service or application, which can trigger DAGs.
 
 ---
+## Less effort, datasets!
 
 All these can work, however would come with more effort when it comes to development and can introduce a lot of customizations, which would make maintenance difficult and cause a hard time for new comers to get up to speed with.
 
@@ -56,7 +59,26 @@ This is how the *official documentation* describes a `dataset`:
 > An Airflow dataset is a stand-in for a logical grouping of data.  
 > Airflow makes no assumptions about the content or location of the data represented by the URI.
 
+---
+## The concept
 
+Datasets are there like `OK files` on a Linux file system. If an application wants to trigger another, for example when it completes its operation, it creates an empty file with the proper timestamp, just like an OK file. The other application can realise the completion of the first one by checking on the file, and can get event the exact timestamp of that event.  
+
+Datasets are the same, one DAG updates them (specially the timestamp associated with them) and other DAGs can be triggered depending on those.  
+
+One DAG can depend on multiple datasets and can also update multiple datasets during its run. To be more precise, datasets are updated by *task instances*, not the DAG itself, which means those updates can happen even before the DAG completes, so other DAGs can start their execution and run in parallel with the source DAG.  
+Another interesting aspect of this is that datasets are not necessarily updated by a DAG, during a run, just imagine a branch of the acyclic graph of tasks which gets skipped.
+
+---
+## Let's code
+
+When it comes to coding, we can specify upstream and downstream datasets, not other DAGs themselves.  
+Upstream datasets are passed in argument `schedule` of a DAG. So the DAG itself depends on the dataset.  
+Downstream datasets are specified in the argument `outlets` of tasks when those are specified.  
+Both can accept lists of instances of class `Dataset`.
+
+There are two upstream datasets which DAG `example_upstream_datasets` depends on in the below example:  
+<script src="https://gist.github.com/f-f-9-9-0-0/6d22dbe61ff4b1717d1e53eb88ae395b.js"></script>
 
 
 [creating_the_DAG]: https://airflow.apache.org/docs/apache-airflow/2.7.3/administration-and-deployment/scheduler.html
