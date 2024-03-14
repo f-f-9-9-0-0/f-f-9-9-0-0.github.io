@@ -80,6 +80,25 @@ Both can accept lists of instances of class `Dataset`.
 There are two upstream datasets which DAG `example_upstream_datasets` depends on in the below example:  
 <script src="https://gist.github.com/f-f-9-9-0-0/6d22dbe61ff4b1717d1e53eb88ae395b.js"></script>
 
+And this is the DAG which updates those two datasets: `example_downstream_datasets`  
+**NOTE:** While the name of the *Python variables* are different (`ds_003` and `ds_004`) than in the previous DAG, the string for the datasets are the same (`any_string_001` and `any_string_002`)  
+<script src="https://gist.github.com/f-f-9-9-0-0/ddf908525fed6fc99618b19a297d8bed.js"></script>
+
+On the *Airflow UI*, you can get a nice representation of these dependencies in the form of a directed acyclic graph, by clicking on the **Datasets** item in the navbar:  
+![Airflow UI Datasets](/assets/images/001/airflow_ui.png)
+
+---
+
+Ok, you can ask a very valid question: *What if there is no guarantee in the Python code that the task instance, updating the datasets, gets executed? Would Airflow still identify a dependency between the DAG and the datasets or the Processor results in an error when parsing the file?*  
+The answer is **yes**, Airflow still record the dependency, however datasets might not be updated by all the runs of the actual DAG.  
+  
+Let's see the below example DAG, which has a branch in itself, resulting in an update for only one of the two datasets at a time:  
+<script src="https://gist.github.com/f-f-9-9-0-0/3dd72b1f003512556edc065c61d4c84a.js"></script>
+
+Still the dependencies are recorded by Airflow, even though datasets are not updated by every run:  
+![Airflow UI Branch Datasets](/assets/images/001/airflow_ui2.png)
+![Airflow UI Branch DAG](/assets/images/001/airflow_ui3.png)
+
 
 [creating_the_DAG]: https://airflow.apache.org/docs/apache-airflow/2.7.3/administration-and-deployment/scheduler.html
 [data_aware_scheduling]: https://airflow.apache.org/docs/apache-airflow/2.7.3/authoring-and-scheduling/datasets.html
