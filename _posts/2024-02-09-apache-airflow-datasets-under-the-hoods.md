@@ -5,6 +5,7 @@ date: 2024-02-09 01:00
 image: /assets/images/001/airflow.png
 headerImage: true
 tag:
+- data-aware scheduling
 - orchestration
 - apache
 - airflow
