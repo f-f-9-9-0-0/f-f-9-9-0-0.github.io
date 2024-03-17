@@ -2,7 +2,7 @@
 title: "Apache Airflow Datasets Under The Hoods"
 layout: post
 date: 2024-02-09 01:00
-image: /assets/images/001/airflow.png
+image: /assets/images/001/ufo.jpg
 headerImage: true
 tag:
 - data-aware scheduling

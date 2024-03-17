@@ -2,7 +2,7 @@
 title: "Documenting DAGs in Apache Airflow"
 layout: post
 date: 2024-03-14 02:00
-image: /assets/images/001/airflow.png
+image: /assets/images/001/reading.jpg
 headerImage: true
 tag:
 - docs

@@ -2,7 +2,7 @@
 title: "Data-aware scheduling with Datasets in Apache Airflow"
 layout: post
 date: 2024-02-09 00:00
-image: /assets/images/001/airflow.png
+image: /assets/images/001/coworking.jpg
 headerImage: true
 tag:
 - data-aware scheduling
