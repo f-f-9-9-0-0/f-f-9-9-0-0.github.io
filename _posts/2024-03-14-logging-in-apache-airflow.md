@@ -2,7 +2,7 @@
 title: "Logging in Apache Airflow"
 layout: post
 date: 2024-03-14 01:00
-image: /assets/images/001/airflow.png
+image: /assets/images/001/skycrapers.jpg
 headerImage: true
 tag:
 - logging
