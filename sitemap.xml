@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<url><loc>https://f-f-9-9-0-0.github.io</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io/</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//feed.xml</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//about</loc></url>
-<url><loc>https://f-f-9-9-0-0.github.io//blog</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//projects</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io//blog</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io//documenting-dags-in-apache-airflow/</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io//logging-in-apache-airflow/</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io//downside-of-using-datasets-inapache-airflow/</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//data-aware-scheduling-with-dataset-in-apache-airflow/</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//apache-airflow-datasets-under-the-hoods/</loc></url>
 <url><loc>https://f-f-9-9-0-0.github.io//tags/</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io/data-aware-scheduling-with-dataset-in-apache-airflow</loc></url>
+<url><loc>https://f-f-9-9-0-0.github.io/apache-airflow-datasets-under-the-hoods</loc></url>
 </urlset>
