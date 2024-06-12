@@ -53,3 +53,8 @@ Also the script's content gets executed in the existing shell invoking it, which
 
 `source` is a synonym for dot/period '.' in bash, but not in POSIX sh, so for maximum compatibility use the period.  
 <br>
+
+# Sample code
+<br>
+
+<script src="https://gist.github.com/f-f-9-9-0-0/362970e3c1f6b0afddd218eefe1f6c97.js"></script>
