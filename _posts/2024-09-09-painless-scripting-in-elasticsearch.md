@@ -29,7 +29,6 @@ Scripts are compiled directly into Java Virtual Machine (JVM) byte code and exec
 <br>
 
 # A brief history of search engines
-<br>
 
 It all started with Vannevar Bush's essay back in 1945..
 > 'Consider a future device …  in which an individual stores all his books, records, and communications, and which is mechanized so that it may be consulted with exceeding speed and flexibility. It is an enlarged intimate supplement to his memory.'
@@ -45,8 +44,8 @@ Some big names worked on the project that time back, including Michael E. Lesk a
 <br>
 
 And [here][lesk] is a short summary of himself by Lesk:
-> In the 1960's I worked for the SMART project, wrote much of their retrieval code and did many of the retrieval experiments, as well as obtaining a PhD in Chemical Physics.
-> In the 1970's I worked in the group that built Unix and I wrote Unix tools for word processing (tbl, refer), compiling (lex), and networking (uucp).
+> In the 1960's I worked for the SMART project, wrote much of their retrieval code and did many of the retrieval experiments, as well as obtaining a PhD in Chemical Physics.  
+> In the 1970's I worked in the group that built Unix and I wrote Unix tools for word processing (tbl, refer), compiling (lex), and networking (uucp).  
 > ...
 <br>
 
@@ -70,6 +69,7 @@ All these are being used ever since then..
 <br>
 
 # Elasticsearch
+
 Elasticsearch is a search engine, a software program designed to help users find information stored on a specific database, based on the [Lucene library][lucene].  
 In addition to this open source library Elasticsearch provides:
 - distributed, multitenant-capable full-text search engine with an
@@ -96,7 +96,6 @@ Although nowadays many other implementations are available for this library in o
 <br>
 
 # Painless, designed specifically for use with Elasticsearch
-<br>
 
 You can use Painless anywhere scripts are used in Elasticsearch.  
 Painless is a simple, secure scripting language designed specifically for use with Elasticsearch.
@@ -129,8 +128,16 @@ The full language specification can be found here: [Painless Language Specificat
 # Sample code
 <br>
 
-<script src="https://gist.github.com/f-f-9-9-0-0/362970e3c1f6b0afddd218eefe1f6c97.js"></script>
+#### Parsing a date field
+<script src="https://gist.github.com/f-f-9-9-0-0/4f372cbce47b63a319eb87f08f42b8e0.js"></script>
 
+#### Mapping a value to another
+Multi-line script
+<script src="https://gist.github.com/f-f-9-9-0-0/f62804cd61c6fd216e3cb69a9e702f97.js"></script>
+
+#### Classification
+Multi-line script
+<script src="https://gist.github.com/f-f-9-9-0-0/56e81a16d0164900b78a8d217cd1ddf8.js"></script>
 
 
 [cornell]: https://cornell.edu/
