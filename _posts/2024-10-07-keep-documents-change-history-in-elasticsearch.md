@@ -18,7 +18,7 @@ excerpt_separator: <!--more-->
 ---
 # Documents' change history
 
-As expressed by David Pilato, one of Elastic's most experienced developer and evangelist, there's no built-in support for keeping documents' change history in an index of Elasticsearch.
+As expressed by [David Pilato][pilato], one of Elastic's most experienced developer and evangelist, there's no built-in support for keeping documents' change history in an index of Elasticsearch.
 <br>
 
 It is interesting to see that there is nothing implemented for this common problem, which is a demanding need across the developers' community using Elasticsearch.  
@@ -126,6 +126,7 @@ The ouput shows exactly what we wanted to achieve, having the documents change h
 }
 ```
 
+[pilato]: https://david.pilato.fr/
 [discuss1]: https://discuss.elastic.co/t/how-to-store-document-history-versioning-revisions/32651
 [discuss2]: https://discuss.elastic.co/t/how-to-model-a-documents-state-history/144684
 [discuss3]: https://discuss.elastic.co/t/is-it-possible-to-store-document-versions-in-elastic-search/337496
