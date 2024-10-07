@@ -2,7 +2,7 @@
 title: "Painless scripting in Elasticsearch"
 layout: post
 date: 2024-09-09 00:00
-image: /assets/images/001/gallery2.jpg
+image: /assets/images/001/engine.jpg
 headerImage: true
 tag:
 - painless

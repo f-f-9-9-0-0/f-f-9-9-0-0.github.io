@@ -2,7 +2,7 @@
 title: "Keep documents' change history in Elasticsearch"
 layout: post
 date: 2024-10-07 00:00
-image: /assets/images/001/gallery2.jpg
+image: /assets/images/001/robot.jpg
 headerImage: true
 tag:
 - change history
@@ -17,7 +17,6 @@ description: There's no built-in support for this. Which means that you need to 
 excerpt_separator: <!--more-->
 ---
 # Documents' change history
-<br>
 
 As expressed by David Pilato, one of Elastic's most experienced developer and evangelist, there's no built-in support for keeping documents' change history in an index of Elasticsearch.
 <br>
@@ -48,6 +47,7 @@ Elasticsearch uses this _version number to ensure that changes are applied in th
 `_version` number can be used to ensure that conflicting changes made by applications do not result in data loss, as described in the [Elasticsearch Definitive Guide][guide]  
 But that is not exactly what we want, so let's get through another solution described below..
 <br>
+<br>
 
 # The solution
 
@@ -63,10 +63,68 @@ So what we need to do, step by step:
 <br>
 
 # Sample code
-<br>
 
 #### A simple script to demonstrate how to keep change history of an Elasticsearch document inside the document itself
 <script src="https://gist.github.com/f-f-9-9-0-0/e4e7fd4ab27e488a66386116aeb85790.js"></script>
+<br>
+
+#### The output
+
+The ouput shows exactly what we wanted to achieve, having the documents change history being kept within the field `history` of the document, consisting the technical fields which desribe the details on each change.  
+```json
+{
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "test_history_management",
+        "_id": "93229420-028b-11ed-b440-0358b6de8001",
+        "_score": 1,
+        "_source": {
+          "creation_timestamp": "2024-09-15T00:00:00.000000000",
+          "last_change_timestamp": "2024-09-15T02:00:00.000000000",
+          "field_excluded_from_in_history": "excluded_001",
+          "another_excluded_field": "another_excluded_001",
+          "field_included_in_history": "included_002",
+          "another_included_field": "another_included_001",
+          "history": [
+            {
+              "change_description": "keep history of field 'field_included_in_history' of the document",
+              "field_included_in_history": "included_001",
+              "old": {
+                "field_included_in_history": "included_000"
+              },
+              "change_timestamp": "2024-09-15T01:00:00.000000000"
+            },
+            {
+              "change_description": "keep history of both fields 'field_included_in_history' and 'another_included_field' of the document",
+              "field_included_in_history": "included_002",
+              "old": {
+                "field_included_in_history": "included_001",
+                "another_included_field": "another_included_000"
+              },
+              "change_timestamp": "2024-09-15T02:00:00.000000000",
+              "another_included_field": "another_included_001"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```
 
 [discuss1]: https://discuss.elastic.co/t/how-to-store-document-history-versioning-revisions/32651
 [discuss2]: https://discuss.elastic.co/t/how-to-model-a-documents-state-history/144684

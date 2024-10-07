@@ -2,7 +2,7 @@
 title: "The source or dot operator in Bash"
 layout: post
 date: 2024-06-12 00:00
-image: /assets/images/001/gallery2.jpg
+image: /assets/images/001/circuit.jpg
 headerImage: true
 tag:
 - bash
