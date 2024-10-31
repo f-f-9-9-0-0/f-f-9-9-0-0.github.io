@@ -24,8 +24,8 @@ excerpt_separator: <!--more-->
 
 It all started with Avinash Lakshman and Prashant Malik once they were building the blue book of many faces. And you are right, the similarities between Cassandra and Amazon's DynamoDB is not something comes without a reason. As Lakshman also worked on that project before started at Facebook.  
 So az usual (?) Cassandra got open-sourced and became a top-level project at Apache. And this is how Matthieu Riou, one of the Cassandra Committee members, celebrated it on [18th February 2010][top_level]:  
-> Good news! Yesterday (for those who aren't on private), the board
-> approved the resolution to adopt Cassandra as a top level project,
+> Good news! Yesterday (for those who aren't on private), the board 
+> approved the resolution to adopt Cassandra as a top level project, 
 > you've graduated!
 <br>
 
@@ -57,7 +57,7 @@ Okay, so our expectation is that everything works which is there in Cassandra an
 
 # How to manage your data?
 
-There are many ways to manage data in an AstraDB database, starting from the AstraDB web console, using another one, DataStax Studio or go with APIs.  
+There are many ways to manage data in an AstraDB database, starting from the AstraDB web console, using another one, [DataStax Studio][link_to_other_post] or go with APIs.  
 <br>
 
 And there are tools ready for use which can help you to achieve your goals when it comes to reading and writing records of your tables.  
@@ -152,3 +152,4 @@ dsbulk \
 [wiki_cassandra]: https://en.wikipedia.org/wiki/Apache_Cassandra
 [top_level]: https://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg01518.html
 [daas]: https://en.wikipedia.org/wiki/Cloud_database
+[link_to_other_post]: /datastax-studio
