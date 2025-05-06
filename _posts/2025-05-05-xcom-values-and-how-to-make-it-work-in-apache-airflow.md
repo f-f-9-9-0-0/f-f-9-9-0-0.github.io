@@ -17,8 +17,16 @@ description: XCom is the standard way for tasks to comunicate with each other th
 excerpt_separator: <!--more-->
 ---
 # XCom _(short for “cross-communications”)_
+<br>
 
-While this the standard mechanism to transfer data among tasks, there are certain limitations where XComs can be used.
+<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
+    <p style="color:white">
+        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
+        &nbsp;This post is created based on the Airflow version 2.10.4!
+    </p>
+</div>
+
+While this the standard mechanism to transfer data among tasks, there are certain limitations where XComs can be used.  
 One of these is to use XCom values only for fields included in the operators' `template_fields` private attribute.
 <br>
 
@@ -37,7 +45,7 @@ As I mentioned earlier in [this post][link_to_other_post], Jinja templating is a
 If the field is not up to be rendered (not in the `template_fields` list) then the string will not be touched and the raw value the downstream task gets, not the XCom value set be the upstream task.
 <br>
 
-The sample Dag `dag_example_xcom` below have 2 upstream tasks, which sets XCom values and 3 downstream tasks which pulls those values.
+The sample Dag `dag_example_xcom` below have 2 upstream tasks, which sets XCom values and 3 downstream tasks which pulls those values.  
 The transfer of data also works from within a task group and data can be pulled by tasks in task groups.
 <br>
 
@@ -60,7 +68,7 @@ The output of the task `xcom_target` clearly shows the difference, as only templ
 ```
 <br>
 
-**NOTE:** Fields `other0`and `other1` have exactly the same string being set, demonstrating how Airflow translates the TaskFlow API Python code into a Jinja template _(same applies to fields `other2` and `other3`)_
+**NOTE:** Fields `other0`and `other1` have exactly the same string being set, demonstrating how Airflow translates the TaskFlow API Python code into a Jinja template _(same applies to fields `other2` and `other3`)_  
 The source code for this task:
 <br>
 
@@ -70,8 +78,8 @@ The source code for this task:
 ---
 <br>
 
-To overcome this sort of limitation, for example if you have a built in operator which comes with Airflow, and you have a field which is not in the list of `template_fields`, but you would still need to have an XCom value there, well in this case you can create a custom class inherited from the actual operator and include the fields you need in the list.
-An example for this you can see in the code, using the class `AnotherCustomOperator`.
+To overcome this sort of limitation, for example if you have a built in operator which comes with Airflow, and you have a field which is not in the list of `template_fields`, but you would still need to have an XCom value there, well in this case you can create a custom class inherited from the actual operator and include the fields you need in the list.  
+An example for this you can see in the code, using the class `AnotherCustomOperator`.  
 Field `other0` is added to the list and therefore the value for this field also gets rendered and the XCom value can be used _(output is from task `another_xcom_target`)_:
 ```
       template0: this is output0
