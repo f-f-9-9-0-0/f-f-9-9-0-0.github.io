@@ -13,7 +13,7 @@ tag:
 - airflow
 category: blog
 author: gabor
-description: XCom is the standard way for tasks to comunicate with each other though there are certain limitations.
+description: XCom is the standard way for tasks to communicate with each other though there are certain limitations.
 excerpt_separator: <!--more-->
 ---
 # XCom _(short for “cross-communications”)_

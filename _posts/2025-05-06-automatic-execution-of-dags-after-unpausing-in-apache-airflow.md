@@ -28,7 +28,7 @@ There is an Airflow configuration, that you can set in `airflow.cfg` file or usi
 <br>
 
 This configuration is managed by `dags_are_paused_at_creation` in the file or through the `AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION` environment variable and the default value is `True`.  
-More on the Ariflow configuraiton options you can find [here][dags_are_paused_at_creation].
+More on the Airflow configuration options you can find [here][dags_are_paused_at_creation].
 <br>
 
 <!--more-->
