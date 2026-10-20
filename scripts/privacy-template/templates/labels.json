@@ -1,0 +1,28 @@
+{
+  "en": {
+    "privacy": "Privacy notice", "choices": "Privacy choices", "updated": "Reviewed on",
+    "draft": "DRAFT — fictional or unverified information. Do not publish.",
+    "operator": "Who operates this website", "operator_text": "Website operator and data controller",
+    "contact": "Privacy contact", "site": "Website", "processing": "How we use information",
+    "purpose": "Purpose", "data": "Information involved", "basis": "Legal basis",
+    "recipients": "Recipients", "retention": "Retention", "transfers": "International transfers",
+    "rights": "Your rights", "rights_text": "Depending on the processing and applicable conditions, you may request access, correction, erasure, restriction or portability of your personal data, and object to processing based on legitimate interests. Where we rely on consent, you may withdraw it without affecting the lawfulness of earlier processing. Contact us using the address above to exercise your rights.",
+    "complaints": "Complaints", "complaints_text": "You may lodge a complaint with a supervisory authority, particularly in the EU member state of your habitual residence, place of work or the alleged infringement. The authority identified for this website is",
+    "details": "Additional information", "controls": "Your available controls",
+    "control_link": "Open privacy settings", "none": "This website does not use browser analytics. No analytics consent preference is required.",
+    "home": "Visit website"
+  },
+  "hu": {
+    "privacy": "Adatkezelési tájékoztató", "choices": "Adatvédelmi beállítások", "updated": "Felülvizsgálva",
+    "draft": "TERVEZET — fiktív vagy nem ellenőrzött adatok. Nem publikálható.",
+    "operator": "A weboldal üzemeltetője", "operator_text": "A weboldal üzemeltetője és az adatkezelő",
+    "contact": "Adatvédelmi kapcsolattartás", "site": "Weboldal", "processing": "Az információk felhasználása",
+    "purpose": "Cél", "data": "Érintett adatok", "basis": "Jogalap",
+    "recipients": "Címzettek", "retention": "Megőrzési idő", "transfers": "Nemzetközi adattovábbítás",
+    "rights": "Az Ön jogai", "rights_text": "Az adatkezeléstől és a vonatkozó feltételektől függően kérheti személyes adataihoz való hozzáférést, azok helyesbítését, törlését, az adatkezelés korlátozását vagy az adathordozhatóságot, és tiltakozhat a jogos érdeken alapuló adatkezelés ellen. Ha hozzájárulásra támaszkodunk, azt bármikor visszavonhatja; ez nem érinti a korábbi adatkezelés jogszerűségét. Jogai gyakorlásához a fenti elérhetőségen léphet kapcsolatba velünk.",
+    "complaints": "Panasztétel", "complaints_text": "Panaszt nyújthat be felügyeleti hatósághoz, különösen az EU azon tagállamában, ahol szokásos tartózkodási helye vagy munkahelye található, vagy ahol az állítólagos jogsértés történt. A weboldalhoz megjelölt hatóság",
+    "details": "További információk", "controls": "Elérhető beállítások",
+    "control_link": "Adatvédelmi beállítások megnyitása", "none": "Ez a weboldal nem használ böngészőoldali analitikát. Analitikai hozzájárulás beállítása nem szükséges.",
+    "home": "Vissza a weboldalra"
+  }
+}

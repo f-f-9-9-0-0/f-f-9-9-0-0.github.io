@@ -1,0 +1,85 @@
+name: Build and deploy GitHub Pages
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Test token configuration
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+      - uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1
+        with:
+          ruby-version: '3.3'
+          bundler: '2.5.23'
+      - name: Install site dependencies
+        working-directory: .
+        run: bundle install
+      - name: Test analytics rendering
+        env:
+          BUNDLE_GEMFILE: ./Gemfile
+          ANALYTICS_TEMPLATE: ./_includes/cloudflare-analytics.html
+        run: bundle exec ruby scripts/test-analytics.rb
+      - name: Generate shared privacy pages
+        env:
+          PRIVACY_PUBLISH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+          SITE_OPERATOR_NAME: ${{ github.event_name != 'pull_request' && secrets.SITE_OPERATOR_NAME || '' }}
+          PRIVACY_CONTACT_EMAIL: ${{ github.event_name != 'pull_request' && secrets.PRIVACY_CONTACT_EMAIL || '' }}
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_WEB_ANALYTICS_TOKEN || '' }}
+        run: |
+          args=()
+          if [ "$PRIVACY_PUBLISH" = true ]; then args+=(--publish); fi
+          python3 scripts/configure-privacy.py . "${args[@]}"
+      - name: Configure analytics from repository secret
+        env:
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_WEB_ANALYTICS_TOKEN || '' }}
+        run: python3 scripts/configure-analytics.py ./_data/cloudflare_analytics.json
+      - name: Build Jekyll site
+        working-directory: .
+        env:
+          JEKYLL_ENV: production
+          RUBYOPT: -rlogger
+        run: bundle exec jekyll build --trace
+      - name: Check privacy output
+        run: |
+          test -f ./_site/privacy/en/privacy.html
+          test -f ./_site/privacy/hu/choices.html
+          test ! -d ./_site/scripts
+      - name: Check built HTML for Google Analytics
+        run: |
+          if grep -R -n -E 'googletagmanager\.com/gtag|google-analytics\.com/(analytics|ga)\.js' ./_site --include='*.html'; then
+            echo 'Unexpected Google Analytics tag in built site' >&2
+            exit 1
+          fi
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ./_site
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
