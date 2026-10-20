@@ -1,0 +1,9 @@
+/* Optional: fragments work with the host's CSS alone. All selectors are scoped. */
+.wp-shell { max-width: var(--privacy-width, 72ch); margin-inline: auto; padding: var(--privacy-space, 1.5rem); }
+.wp-privacy { font-family: var(--privacy-font, inherit); color: var(--privacy-text, inherit); background: var(--privacy-background, transparent); line-height: var(--privacy-line-height, 1.6); overflow-wrap: anywhere; }
+.wp-privacy .wp-section { margin-block: var(--privacy-section-space, 2rem); }
+.wp-privacy h1, .wp-privacy h2, .wp-privacy h3 { font-family: var(--privacy-heading-font, inherit); line-height: 1.25; }
+.wp-privacy a { color: var(--privacy-link, LinkText); text-underline-offset: .15em; }
+.wp-privacy a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.wp-privacy .wp-draft { border: 2px solid currentColor; padding: 1rem; font-weight: bold; }
+.wp-privacy .wp-footer { margin-block-start: 2rem; }

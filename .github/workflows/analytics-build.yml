@@ -31,6 +31,16 @@ jobs:
           BUNDLE_GEMFILE: ./Gemfile
           ANALYTICS_TEMPLATE: ./_includes/cloudflare-analytics.html
         run: bundle exec ruby scripts/test-analytics.rb
+      - name: Generate shared privacy pages
+        env:
+          PRIVACY_PUBLISH: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+          SITE_OPERATOR_NAME: ${{ github.event_name != 'pull_request' && secrets.SITE_OPERATOR_NAME || '' }}
+          PRIVACY_CONTACT_EMAIL: ${{ github.event_name != 'pull_request' && secrets.PRIVACY_CONTACT_EMAIL || '' }}
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_WEB_ANALYTICS_TOKEN || '' }}
+        run: |
+          args=()
+          if [ "$PRIVACY_PUBLISH" = true ]; then args+=(--publish); fi
+          python3 scripts/configure-privacy.py . "${args[@]}"
       - name: Configure analytics from repository secret
         env:
           CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_WEB_ANALYTICS_TOKEN || '' }}
@@ -41,6 +51,11 @@ jobs:
           JEKYLL_ENV: production
           RUBYOPT: -rlogger
         run: bundle exec jekyll build --trace
+      - name: Check privacy output
+        run: |
+          test -f ./_site/privacy/en/privacy.html
+          test -f ./_site/privacy/hu/choices.html
+          test ! -d ./_site/scripts
       - name: Check built HTML for Google Analytics
         run: |
           if grep -R -n -E 'googletagmanager\.com/gtag|google-analytics\.com/(analytics|ga)\.js' ./_site --include='*.html'; then

@@ -8,7 +8,7 @@ token. A normal build without the token sends no analytics to either provider.
 
 **Activation review (2026-10-20): not cleared.** Keep the token unset pending
 visitor consent or a documented deployment-specific exemption. See the review
-below before enabling collection. GA removal can ship with Cloudflare disabled.
+below before enabling collection. The combined PR now requires reviewed privacy configuration before publication.
 
 1. Add the hostname in Cloudflare **Web Analytics**, select manual JavaScript
    installation, and copy the 32-character hexadecimal **site token** from the
@@ -35,10 +35,12 @@ No Pages settings are changed by this PR itself. Preserve the existing domain.
 
 ## Build outside Actions
 
-Set `CLOUDFLARE_WEB_ANALYTICS_TOKEN` in the build environment, then run from the
-repository root:
+Complete `scripts/privacy-site.json` and supply the operator/contact environment
+variables first. Leave the analytics token unset unless activation has been reviewed.
+Run from the repository root:
 
 ```sh
+python3 scripts/configure-privacy.py . --publish
 python3 scripts/configure-analytics.py ./_data/cloudflare_analytics.json
 JEKYLL_ENV=production bundle exec jekyll build
 ```
@@ -92,12 +94,11 @@ Kispadon was excluded completely.
 
 - Publish and link an accurate privacy notice. Use build-time secrets
   `SITE_OPERATOR_NAME` and `PRIVACY_CONTACT_EMAIL` for the legal operator and
-  privacy contact, as requested. These are **proposed disclosure inputs, not yet
-  wired into the migration code**. They become public in the generated notice.
+  privacy contact, as requested. These are wired into the shared privacy build. They become public in the generated notice.
   Do not silently publish blank or placeholder identity information.
 - Establish visitor consent before loading the beacon, or document a specific
-  applicable exemption. The current PR has no visitor-consent component; a
-  nonempty analytics token would load the beacon automatically in production.
+  applicable exemption. The current PR has no visitor-consent component; the publication guard only permits a token with a documented exemption;
+  prior-consent operation requires a future runtime integration.
 - Confirm the Cloudflare account's contracting entity and applicable agreement.
   Secret values alone do not verify the account holder or its authority to act
   for the website operator.
@@ -118,3 +119,45 @@ alternative as automatically exempt from all data-protection obligations.
 - [NAIH guidance on non-essential cookies](https://naih.hu/docs/Tovabbi-adatvedelmi-kerdesek.pdf). This is general guidance, not a Cloudflare-specific ruling.
 - [Cloudflare collection documentation](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/).
 - [Cloudflare self-service agreement](https://www.cloudflare.com/terms/), section 6.1, and [DPA](https://www.cloudflare.com/cloudflare-customer-dpa/).
+
+## Shared privacy pages (implemented)
+
+This PR uses `f-f-9-9-0-0/website-privacy` at commit `754449bd78c4823bf41906c91b52d2f8e43741f1`.
+The exact generator/templates are vendored under `scripts/privacy-template`, with
+SHA-256 checksums and source commit in `scripts/privacy-template.lock.json`. This
+lets PRs build without access credentials for the private shared repo. Do not edit
+the vendored files independently; refresh from a reviewed shared commit and update
+the manifest. Only generator/templates are copied, never account secrets.
+
+`scripts/privacy-site.json` owns this site's processing inventory and route/design
+configuration. Its sample text is deliberately unreviewed: replace it with verified
+facts and set `publication_reviewed: true` only after review. `SITE_OPERATOR_NAME`
+and `PRIVACY_CONTACT_EMAIL` are now wired as build-time secrets; rendered values
+are public. PR builds ignore identity secrets and generate watermarked drafts.
+Main/publishing builds require real identity and reviewed configuration, and fail
+closed until supplied. No credentials were created or settings changed by this PR.
+
+The build emits EN/HU privacy and choices pages at `/privacy/<language>/<page>.html`,
+with site footer links. Jekyll wraps shared fragments in a local `privacy` layout;
+Arnado uses standalone output and a local stylesheet. Edit that layout/stylesheet
+to match existing site patterns or add per-page styling. A choice link is not a
+consent implementation. Analytics stays off by default; a token is rejected unless
+publication uses `reviewed_exemption` backed by an applicable documented review.
+The `consent` mode remains blocked until an actual consent runtime is integrated.
+Do not add a token to a notice that says analytics is off.
+
+External publishers must run `python3 scripts/configure-privacy.py . --publish`
+before Jekyll, using the same environment variables as CI. For Arnado, first copy
+`html` into a clean staging directory, then run the command against that directory
+with `--static --publish`. Use clean build directories; generated pages are ignored
+by Git. Never deploy PR draft artifacts. AWS delivery remains with the existing
+publisher; GitHub secrets do not automatically reach AWS.
+
+Arnado is excluded from this privacy integration at the owner’s request.
+The blog hostname remains taken from its existing config (`kalandboci.hu`); confirm
+whether that repository is an independently deployed site before publication.
+
+Validation: shared generator unit tests, integration preview/publication rejection,
+manifest integrity, and workflow checks for generated output. Hosted private CI
+may still be blocked by the account's billing/spending limit. This is not a legal
+certification or a completed review of missing operator/account facts.

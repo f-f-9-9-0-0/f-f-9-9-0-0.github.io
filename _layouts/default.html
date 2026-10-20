@@ -35,6 +35,7 @@ layout: compress
     {{ scss_sheet | scssify }}
     </style>
 
+{% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
 </head>
 <body>
     <div class="wrapper-{% if site.width == "normal" %}normal{% elsif site.width == "large" %}large{% endif %}">

@@ -1,0 +1,63 @@
+{
+  "site_name": "f-f-9-9-0-0.github.io",
+  "site_url": "https://f-f-9-9-0-0.github.io",
+  "languages": [
+    "en",
+    "hu"
+  ],
+  "reviewed_on": "2026-10-20",
+  "publication_reviewed": false,
+  "authority": {
+    "name": "NAIH",
+    "url": "https://www.naih.hu/"
+  },
+  "analytics": {
+    "mode": "off"
+  },
+  "processing": [
+    {
+      "name": {
+        "en": "Website delivery and security — example only",
+        "hu": "A weboldal kiszolgálása és biztonsága — példa"
+      },
+      "purpose": {
+        "en": "Deliver pages and investigate technical or security incidents.",
+        "hu": "Az oldalak kiszolgálása, műszaki és biztonsági események kivizsgálása."
+      },
+      "data": {
+        "en": "Verify the actual host's handling of IP addresses, request paths, timestamps and browser information.",
+        "hu": "Ellenőrizni kell a tárhelyszolgáltató IP-címekre, útvonalakra, időpontokra és böngészőadatokra vonatkozó gyakorlatát."
+      },
+      "basis": {
+        "en": "Specify the reviewed legal basis and, where applicable, the legitimate interest pursued.",
+        "hu": "Adja meg az ellenőrzött jogalapot és szükség esetén az érvényesített jogos érdeket."
+      },
+      "recipients": {
+        "en": "Identify the actual hosting and CDN providers and their roles.",
+        "hu": "Azonosítsa a tényleges tárhely- és CDN-szolgáltatókat, valamint szerepüket."
+      },
+      "retention": {
+        "en": "Specify verified log retention or the criteria used to determine it.",
+        "hu": "Adja meg az ellenőrzött naplómegőrzési időt vagy annak meghatározási szempontjait."
+      },
+      "transfers": {
+        "en": "Describe applicable international transfers, safeguards and how to obtain a copy; verify account terms.",
+        "hu": "Ismertesse a nemzetközi adattovábbításokat, garanciákat és másolatuk elérhetőségét; ellenőrizze a fiók szerződéses feltételeit."
+      }
+    }
+  ],
+  "additional_information": {
+    "en": "Replace with site-specific information: contact messages, mandatory data and consequences of not providing it, automated decisions if any, representative/DPO details where applicable, and other relevant processing. Do not publish this example.",
+    "hu": "Cserélje weboldalspecifikus információkra: kapcsolatfelvételi üzenetek, kötelező adatok és hiányuk következményei, esetleges automatizált döntések, szükség esetén képviselő és adatvédelmi tisztviselő adatai, egyéb adatkezelések. Ez a példa nem publikálható."
+  },
+  "page_urls": {
+    "en": {
+      "privacy": "/privacy/en/privacy.html",
+      "choices": "/privacy/en/choices.html"
+    },
+    "hu": {
+      "privacy": "/privacy/hu/privacy.html",
+      "choices": "/privacy/hu/choices.html"
+    }
+  }
+}
