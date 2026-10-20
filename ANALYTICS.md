@@ -122,11 +122,11 @@ alternative as automatically exempt from all data-protection obligations.
 
 ## Shared privacy pages (implemented)
 
-This PR uses `f-f-9-9-0-0/website-privacy` at commit `754449bd78c4823bf41906c91b52d2f8e43741f1`.
+This PR uses `f-f-9-9-0-0/website-privacy` at release tag [`v0.1.0`](https://github.com/f-f-9-9-0-0/website-privacy/releases/tag/v0.1.0).
 The exact generator/templates are vendored under `scripts/privacy-template`, with
-SHA-256 checksums and source commit in `scripts/privacy-template.lock.json`. This
+SHA-256 checksums and release tag in `scripts/privacy-template.lock.json`. This
 lets PRs build without access credentials for the private shared repo. Do not edit
-the vendored files independently; refresh from a reviewed shared commit and update
+the vendored files independently; refresh from a reviewed shared release tag and update
 the manifest. Only generator/templates are copied, never account secrets.
 
 `scripts/privacy-site.json` owns this site's processing inventory and route/design
