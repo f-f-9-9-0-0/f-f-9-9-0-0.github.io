@@ -5,9 +5,6 @@ layout: compress
 <html lang="en">
 <head>
 
-    {% if site.analytics-google %}
-        {% include analytics-google.html %}
-    {% endif %}
 
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width, initial-scale=1">
@@ -56,5 +53,6 @@ layout: compress
                 </div>
             </div>
     </div>
+    {% include cloudflare-analytics.html %}
 </body>
 </html>
