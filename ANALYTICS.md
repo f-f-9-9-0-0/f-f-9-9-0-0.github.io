@@ -6,6 +6,10 @@ token. A normal build without the token sends no analytics to either provider.
 
 ## Configure the site token
 
+**Activation review (2026-10-20): not cleared.** Keep the token unset pending
+visitor consent or a documented deployment-specific exemption. See the review
+below before enabling collection. GA removal can ship with Cloudflare disabled.
+
 1. Add the hostname in Cloudflare **Web Analytics**, select manual JavaScript
    installation, and copy the 32-character hexadecimal **site token** from the
    supplied snippet. This is not a Cloudflare API token.
@@ -72,3 +76,45 @@ References:
 python3 -m unittest discover -s scripts -p 'test_*.py' -v
 BUNDLE_GEMFILE=./Gemfile ANALYTICS_TEMPLATE=./_includes/cloudflare-analytics.html bundle exec ruby scripts/test-analytics.rb
 ```
+
+## Privacy review — 2026-10-20
+
+### Site evidence
+
+The live homepage still contains GA4 G-EHF7S8SWC1. No linked privacy notice was found in its homepage HTML or inspected source. The checked-in Disqus configuration has no shortname/categories enabled; mere presence of its template is not evidence that Disqus is active. The page also loads third-party Font Awesome code, which belongs in the wider recipient/asset inventory.
+
+The source and public homepage HTML were inspected read-only. Tracking scripts
+were not executed. This is not an exhaustive crawl, a browser-cookie audit, an
+inspection of the authenticated Cloudflare account, or a legal certification.
+Kispadon was excluded completely.
+
+### Required before activation
+
+- Publish and link an accurate privacy notice. Use build-time secrets
+  `SITE_OPERATOR_NAME` and `PRIVACY_CONTACT_EMAIL` for the legal operator and
+  privacy contact, as requested. These are **proposed disclosure inputs, not yet
+  wired into the migration code**. They become public in the generated notice.
+  Do not silently publish blank or placeholder identity information.
+- Establish visitor consent before loading the beacon, or document a specific
+  applicable exemption. The current PR has no visitor-consent component; a
+  nonempty analytics token would load the beacon automatically in production.
+- Confirm the Cloudflare account's contracting entity and applicable agreement.
+  Secret values alone do not verify the account holder or its authority to act
+  for the website operator.
+- Record the actual data purposes, recipients, retention/deletion information,
+  transfer safeguards, and relevant rights/complaint route. Review the site's
+  hosting, contact handling and third-party integrations as separate processing.
+- Verify the deployed configuration and network behaviour after publishing.
+  Source removal is not proof that the live site has stopped loading GA.
+
+The recommendation is to release GA removal with the token absent. If avoiding a
+consent UI is a requirement, keep the browser beacon disabled and assess existing
+server-side aggregate traffic statistics separately. Do not describe that
+alternative as automatically exempt from all data-protection obligations.
+
+### Sources for the assessment
+
+- [EDPB final Guidelines 2/2023](https://www.edpb.europa.eu/documents/guideline/guidelines-22023-on-technical-scope-of-art-53-of-eprivacy-directive_en), paragraphs 12 and 52–53; exemptions are outside the guideline's determination.
+- [NAIH guidance on non-essential cookies](https://naih.hu/docs/Tovabbi-adatvedelmi-kerdesek.pdf). This is general guidance, not a Cloudflare-specific ruling.
+- [Cloudflare collection documentation](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/).
+- [Cloudflare self-service agreement](https://www.cloudflare.com/terms/), section 6.1, and [DPA](https://www.cloudflare.com/cloudflare-customer-dpa/).
