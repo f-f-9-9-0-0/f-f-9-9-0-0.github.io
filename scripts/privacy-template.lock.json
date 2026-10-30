@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/f-f-9-9-0-0/website-privacy",
+  "files": {
+    "build.py": "e2374cef7697a5c99cb6d6f2aed69ce719a8d675b058a7b6cbc528fa9f96b3b1",
+    "templates/article.html": "f9613da2a51612bf549aa7973016a09c8757b970be51f7c8675aa6dc25b54c05",
+    "templates/labels.json": "04a268b36d647688628aa337a380bdd4916383652c6e3059dabc66a5bd04abaf",
+    "templates/page.html": "521ba304dfe51c3daceddcafaa7ffaa18065c5754a7f9c7971ca472ccf187316",
+    "templates/privacy.css": "ba1eaa931ead5a351743138dfe5f4c188d56ef7c5849d7db2fabe51e567b4db2",
+    "templates/section.html": "f6c8f1bde574107034efc274604e7716dd4dd90f66a081a2fe459cd7ecec670f"
+  },
+  "tag": "v0.1.0"
+}

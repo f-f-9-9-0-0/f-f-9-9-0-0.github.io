@@ -4,3 +4,8 @@ _site
 Gemfile.lock
 .bundle
 vendor/
+
+# Generated shared privacy pages
+/privacy/
+
+**/__pycache__/

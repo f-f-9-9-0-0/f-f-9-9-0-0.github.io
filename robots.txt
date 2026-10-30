@@ -1,2 +1,7 @@
+---
+layout: null
+sitemap: false
+---
 User-agent: *
 Disallow:
+Sitemap: {{ "/sitemap.xml" | absolute_url }}
