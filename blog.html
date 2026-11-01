@@ -1,17 +1,14 @@
 ---
 layout: page
 title: Blog
+section: blog
 ---
-<section class="list">
-	{% if site.posts.size == 0 %}
-		<p class="text-center">Nothing published yet!</p>
-	{% else %}
-		{% for post in site.posts %}
-			{% if post.category == 'blog' %}
-				{% if post.hidden != true %}
-					{% include blog-post.html %}
-				{% endif %}
-			{% endif %}
-		{% endfor %}
-	{% endif %}
-</section>
+<p class="page-intro">Notes on data, orchestration and software. <a href="{{ '/tags/' | relative_url }}">Browse by topic</a>.</p>
+<div class="list">
+    {% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
+    {% for post in articles %}
+        {% include blog-post.html %}
+    {% else %}
+        <p>No articles published yet.</p>
+    {% endfor %}
+</div>

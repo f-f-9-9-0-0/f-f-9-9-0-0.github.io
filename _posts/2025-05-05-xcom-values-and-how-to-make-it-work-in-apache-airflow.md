@@ -16,7 +16,7 @@ author: gabor
 description: XCom is the standard way for tasks to communicate with each other though there are certain limitations.
 excerpt_separator: <!--more-->
 ---
-# XCom _(short for “cross-communications”)_
+## XCom _(short for “cross-communications”)_
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -34,7 +34,7 @@ One of these is to use XCom values only for fields included in the operators' `t
 <br>
 <br>
 
-# `template_fields` and how to hack it
+## `template_fields` and how to hack it
 
 Reason is, when processing the Python code, Airflow translates an XCom output from the form of TaskFlow API to a string template, including a `task_instance.xcom_pull` function call for the Jinja engine to render.
 <br>

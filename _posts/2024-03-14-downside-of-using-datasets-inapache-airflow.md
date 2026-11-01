@@ -14,7 +14,7 @@ author: gabor
 description: The good and what else?
 excerpt_separator: <!--more-->
 ---
-# Datasets in Apache Airflow
+## Datasets in Apache Airflow
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -31,7 +31,7 @@ You can find a general introduction to `datasets` in [my other post][link_to_oth
 
 ---
 
-# Multiple events with one timestamp, ouch!
+## Multiple events with one timestamp, ouch!
 
 All datasets have only 1 `updated_at` timestamp stored in Airflow's supporting database. Further details I went through in [a previous post][link_under_the_hoods].
 

@@ -14,7 +14,7 @@ author: gabor
 description: Add it, use it, documentation!
 excerpt_separator: <!--more-->
 ---
-# Documenting DAGs
+## Documenting DAGs
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -31,7 +31,7 @@ Airflow provides a wide range of options for this effort which are ready to use 
 <br>
 <br>
 
-# At which level shall I add docs?
+## At which level shall I add docs?
 <br>
 
 Documentation can be added at different levels in Airflow:
@@ -40,7 +40,7 @@ Documentation can be added at different levels in Airflow:
 <br>
 <br>
 
-# Which form of docs?
+## Which form of docs?
 <br>
 
 Documentation can be created in various forms, which all has their benefit:
@@ -51,7 +51,7 @@ Documentation can be created in various forms, which all has their benefit:
 <br>
 <br>
 
-# Where is docs in the UI?
+## Where is docs in the UI?
 <br>
 
 DAG level docs can be found in a dropdown box below the top menu.  
@@ -62,7 +62,7 @@ Task level docs can be reached through the *More details* link.
 <br>
 <br>
 
-# Samples
+## Samples
 <br>
 
 Find a basic sample of code how it looks like in Python:

@@ -15,7 +15,7 @@ author: gabor
 description: Jinja and the templates
 excerpt_separator: <!--more-->
 ---
-# Jinja templating
+## Jinja templating
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -34,7 +34,7 @@ Templating is a powerful way of passing data to the processing part of task inst
 <br>
 <br>
 
-# Variables, Python instances?
+## Variables, Python instances?
 
 There are numerous variables you can include in your templates. These variables are being replaces with instances of Python classes during rendering the template.  
 A complete list of variables available can be found [here][templates_reference].
@@ -46,9 +46,9 @@ This can be even more exciting if we have a more complex class.
 <br>
 <br>
 
-# Samples, samples
+## Samples, samples
 
-## DAG details
+### DAG details
 <br>
 For example, if you use a variable representing an instance of the class `DAG`, then you can use all the class's attributes in your templates.  
 A string is passed  as an argument to a Python operator which the templates variables are being replaced into.  
@@ -101,7 +101,7 @@ The output looks like this:
 
 <br>
 
-## DAG Run details
+### DAG Run details
 <br>
 Or another example of printing the current and the previous DAG Run's details (note that you can use functions, even static or class level functions of instances replaced, class `DagRun`, specified in [airflow\models\dagrun.py][dagrun.py]):  
 <script src="https://gist.github.com/f-f-9-9-0-0/c7b887852e33bbb9385686a255eca7cc.js"></script>
@@ -155,7 +155,7 @@ The output looks like this:
 
 <br>
 
-## Task instances' details
+### Task instances' details
 <br>
 Another example to print all the task instances' details of the current DAG Run (note that you can use *Jinja control elements*, like loops in the templates, class `TaskInstance` is specified in [airflow\models\taskinstance.py][taskinstance.py]):  
 <script src="https://gist.github.com/f-f-9-9-0-0/f249b12543a72749d66b814cee2bd698.js"></script>
@@ -201,7 +201,7 @@ The output looks like this:
 
 <br>
 
-## Task instances' details through class `BaseOperator`
+### Task instances' details through class `BaseOperator`
 <br>
 This example uses the class `BaseOperator` to print details of the current task instance (class `BaseOperator` is specified in [airflow\models\baseoperator.py][baseoperator.py]):  
 <script src="https://gist.github.com/f-f-9-9-0-0/c111be4437080501ee4af066d7cf6587.js"></script>

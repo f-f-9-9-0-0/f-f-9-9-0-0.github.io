@@ -1,8 +1,9 @@
 ---
 title: About
 layout: page
+section: about
 ---
-![Profile Image]({% if site.external-image %}{{ site.picture }}{% else %}{{ site.url }}/{{ site.picture }}{% endif %})
+![Profile Image]({% if site.external-image %}{{ site.picture }}{% else %}{{ site.picture | relative_url }}{% endif %})
 
 <p>With 15+ years of experience, I implement modern BI solutions so can automate manual processes, turn data into insights, improve data quality, clearly communicate complex data, and predict trends and behavior.</p>
 

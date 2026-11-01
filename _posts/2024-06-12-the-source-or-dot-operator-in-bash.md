@@ -13,7 +13,7 @@ author: gabor
 description: Demistify the source or dot operator in Bash
 excerpt_separator: <!--more-->
 ---
-# Bash shell
+## Bash shell
 <br>
 
 Bash, short for Bourne-Again SHell, is a shell program and command language supported by the Free Software Foundation, first developed by Brian Fox.
@@ -25,7 +25,7 @@ Brian Fox began coding Bash on January 10, 1988 and released Bash as a beta, ver
 <br>
 <br>
 
-# . (source or dot operator)
+## . (source or dot operator)
 <br>
 
 First of all, let's clarify what it means to execute a shell script file in Bash.  
@@ -54,7 +54,7 @@ Also the script's content gets executed in the existing shell invoking it, which
 `source` is a synonym for dot/period '.' in bash, but not in POSIX sh, so for maximum compatibility use the period.  
 <br>
 
-# Sample code
+## Sample code
 <br>
 
 <script src="https://gist.github.com/f-f-9-9-0-0/362970e3c1f6b0afddd218eefe1f6c97.js"></script>

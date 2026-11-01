@@ -17,7 +17,7 @@ author: gabor
 description: There are couple of tools built for facilitating data management in the Apache Cassandra based AstraDB.
 excerpt_separator: <!--more-->
 ---
-# Apache Cassandra
+## Apache Cassandra
 
 > [Apache Cassandra][cassandra] is a free and open-source, distributed, wide-column store, NoSQL, database management system intended to handle large amounts of data across multiple commodity servers, providing availability with no single point of failure. - [wikipedia][wiki_cassandra]
 <br>
@@ -36,7 +36,7 @@ As this post is not about to go into the details of how Cassandra works, let me 
 <br>
 <br>
 
-# AstraDB, another level?
+## AstraDB, another level?
 
 Okay, but What does AstraDB add to Cassandra then? Straight from Santa Clara, California, DataStax came to the rescue, namely Jonathan Ellis and Matt Pfeil.  
 This is how Pfeil commented on their early days in 2018:  
@@ -55,7 +55,7 @@ Okay, so our expectation is that everything works which is there in Cassandra an
 <br>
 <br>
 
-# How to manage your data?
+## How to manage your data?
 
 There are many ways to manage data in an AstraDB database, starting from the AstraDB web console, using another one, [DataStax Studio][link_to_other_post] or go with APIs.  
 <br>
@@ -63,7 +63,7 @@ There are many ways to manage data in an AstraDB database, starting from the Ast
 And there are tools ready for use which can help you to achieve your goals when it comes to reading and writing records of your tables.  
 <br>
 
-## CQLSH Standalone Tool
+### CQLSH Standalone Tool
 
 `cqlsh` is a command-line interface for interacting with Cassandra using CQL (the Cassandra Query Language). It is shipped with every Cassandra package, and can be found in the `bin/` directory alongside the `cassandra` executable.  
 <br>
@@ -71,16 +71,16 @@ And there are tools ready for use which can help you to achieve your goals when 
 As you plan to go with a cloud database, you do not have the Cassandra package at hand. You need to download it separately.  
 <br>
 
-## DataStax Bulk Loader
+### DataStax Bulk Loader
 
 The DataStax Bulk Loader tool (DSBulk) is a unified tool for loading into and unloading from Cassandra-compatible storage engines, such as Apache Cassandra, DataStax AstraDB and DataStax Enterprise (DSE).  
 Three subcommands, `load`, `unload`, and `count` are straightforward. The subcommands require the options `keyspace` and `table`, or a `schema.query`. The load and unload commands also require a designated data source (`CSV` or `JSON`).  
 <br>
 <br>
 
-# Sample code
+## Sample code
 
-#### This is a simple Dockerfile to prepare an environment to manage AstraDB data.
+##### This is a simple Dockerfile to prepare an environment to manage AstraDB data.
 <script src="https://gist.github.com/f-f-9-9-0-0/f6634e9cc2cd9b987df9ad5952ce773a.js"></script>
 <br>
 
@@ -120,7 +120,7 @@ secure_connect_bundle=<PATH_TO_THE_SECURE_CONNECT_BUNDLE>
 Now you can start using the tools installed.
 <br>
 
-### CQLSH Standalone Tool
+#### CQLSH Standalone Tool
 
 Sample code to print current timestamp in format of `timeUUID`
 ```bash
@@ -132,7 +132,7 @@ cqlsh \
 ```
 <br>
 
-### Datastax Bulk Loader
+#### Datastax Bulk Loader
 
 Sample code to get one record from a table in form of a `CSV`
 ```bash

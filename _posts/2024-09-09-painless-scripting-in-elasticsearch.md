@@ -15,7 +15,7 @@ author: gabor
 description: Painless is a scripting language designed for security and performance
 excerpt_separator: <!--more-->
 ---
-# Painless
+## Painless
 <br>
 
 Painless is a scripting language designed for security and performance. Painless syntax is similar to Java syntax along with some additional features such as dynamic typing, Map and List accessor shortcuts, and array initializers.
@@ -28,7 +28,7 @@ Scripts are compiled directly into Java Virtual Machine (JVM) byte code and exec
 <br>
 <br>
 
-# A brief history of search engines
+## A brief history of search engines
 
 It all started with Vannevar Bush's essay back in 1945..
 > 'Consider a future device …  in which an individual stores all his books, records, and communications, and which is mechanized so that it may be consulted with exceeding speed and flexibility. It is an enlarged intimate supplement to his memory.'
@@ -68,7 +68,7 @@ All these are being used ever since then..
 <br>
 <br>
 
-# Elasticsearch
+## Elasticsearch
 
 Elasticsearch is a search engine, a software program designed to help users find information stored on a specific database, based on the [Lucene library][lucene].  
 In addition to this open source library Elasticsearch provides:
@@ -95,7 +95,7 @@ Although nowadays many other implementations are available for this library in o
 <br>
 <br>
 
-# Painless, designed specifically for use with Elasticsearch
+## Painless, designed specifically for use with Elasticsearch
 
 You can use Painless anywhere scripts are used in Elasticsearch.  
 Painless is a simple, secure scripting language designed specifically for use with Elasticsearch.
@@ -125,17 +125,17 @@ The full language specification can be found here: [Painless Language Specificat
 <br>
 <br>
 
-# Sample code
+## Sample code
 <br>
 
-#### Parsing a date field
+### Parsing a date field
 <script src="https://gist.github.com/f-f-9-9-0-0/4f372cbce47b63a319eb87f08f42b8e0.js"></script>
 
-#### Mapping a value to another
+### Mapping a value to another
 Multi-line script
 <script src="https://gist.github.com/f-f-9-9-0-0/f62804cd61c6fd216e3cb69a9e702f97.js"></script>
 
-#### Classification
+### Classification
 Multi-line script
 <script src="https://gist.github.com/f-f-9-9-0-0/56e81a16d0164900b78a8d217cd1ddf8.js"></script>
 

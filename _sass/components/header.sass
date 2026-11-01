@@ -1,34 +1,54 @@
-.header-home
-    display: block
-    margin: 0 auto
-    text-align: center
-    position: relative
-    z-index: 99
+.site-header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+    gap: 12px 24px
+    padding: 24px 0
+    border-bottom: 1px solid $epsilon
 
-    > .link > .selfie
-        width: 125px
-        height: 125px
-        margin-bottom: 25px
-        border-radius: 100%
-        transition: all .2s
-        opacity: 1
+.site-name
+    font-size: 1.7rem
+    font-weight: 600
+    color: $beta
+    text-decoration: none
+    padding: 10px 0
 
-        &:hover
-            box-shadow: 0 0px 4px 0 rgba(0,0,0,0.18), 0 0px 12px 0 rgba(0,0,0,0.15)
-            opacity: .8
+.home-intro
+    padding: 24px 0 40px
 
-    > .title
-        font-size: 4rem
-        margin: 0 0 13px
+    .selfie
+        width: 96px
+        height: 96px
+        border-radius: 50%
+        float: right
+        margin: 0 0 16px 24px
 
-    > .description
-        font-size: 1.85rem
-        font-weight: $thin-font
-        font-style: normal
+    h1
+        margin: 10px 0 20px
+        font-size: clamp(3.2rem, 6vw, 4.4rem)
+
+    .eyebrow
+        font-size: 1.2rem
+        font-weight: 600
+        text-transform: uppercase
+        letter-spacing: 1.5px
+        color: $delta
+        margin: 0
+
+    .intro-description
+        font-size: 2rem
+        line-height: 1.6
+        color: $beta
+        max-width: 48ch
+
+    .personal-note
+        max-width: 48ch
+        font-size: 1.5rem
         color: $gama
-        width: 70%
-        margin: 0 auto 30px
 
-        // if you put some links in your bio. ;)
-        a
-            font-weight: 200
+    @media (max-width: 400px)
+        .selfie
+            width: 64px
+            height: 64px
+            margin-left: 12px

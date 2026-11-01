@@ -1,74 +1,46 @@
-.home,
-.blog,
-.projects
-    margin-top: 125px
+.section-heading
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    justify-content: space-between
+    gap: 8px 24px
+    border-bottom: 1px solid $epsilon
+    padding-bottom: 16px
 
-    > .list
-        border-top: 1px solid $epsilon
-        margin-top: 30px
-        padding-top: 40px
-        position: relative
+    h2
+        margin: 0
 
-        &:before
-            display: block
-            content: " "
-            width: 7px
-            height: 7px
-            border: $epsilon 1px solid
-            position: absolute
-            top: -5px
-            left: 50%
-            margin-left: -5px
-            background: $omega
-            box-shadow: $omega 0 0 0 5px
-            border-radius: 3px
+    a
+        font-size: 1.4rem
+        padding: 10px 0
 
-.home > .list,
+.home-writing > .list,
 .blog > .list,
-.projects > .list
+.projects > .list,
+.tag-list .list
     > .item
-        display: block
-        width: 95%
-        margin: 0 auto
+        padding: 24px 0
+        border-bottom: 1px solid $epsilon
 
-    > .item > .url
-        width: 100%
-        display: block
-        padding: 20px 0
-        text-decoration: none
+        > .title
+            margin: 0 0 8px
+            font-size: 2rem
+            line-height: 1.45
 
-    > .item > .url > .title
-        margin: 0
-        width: 75%
-        font-weight: 500
-        transition: all ease-in-out .2s
+            a
+                color: $beta
+                font-weight: 600
+                text-decoration: none
 
-    > .item:hover > .url > .title
-        color: $delta
+                &:hover
+                    color: $delta
+                    text-decoration: underline
 
-    // maybe we can't nest html5 elements
-    // can you help me?
-    aside
-        position: relative
-        top: 2px
-        margin: 0
-        width: 25%
-        float: right
-        font-weight: 300
-        color: $gama
-        text-align: right
-        transition: all ease-in-out .2s
+        > .date
+            display: block
+            font-size: 1.3rem
+            color: $gama
 
-    .item:hover .url aside
-        color: $alpha
-
-.blog > .list > .item > .url,
-.projects > .list > .item > .url
-    > .title
-        display: inline
-
-    > .emoji
-        display: inline
-        position: relative
-        top: -4px
-        margin-right: 10px
+        > .summary
+            margin: 10px 0 0
+            font-size: 1.5rem

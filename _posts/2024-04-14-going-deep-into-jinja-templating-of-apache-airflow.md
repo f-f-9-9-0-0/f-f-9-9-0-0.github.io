@@ -15,7 +15,7 @@ author: gabor
 description: Jinja and the templates
 excerpt_separator: <!--more-->
 ---
-# Jinja templating
+## Jinja templating
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -34,7 +34,7 @@ Templating is a powerful way of passing data to the processing part of task inst
 <br>
 <br>
 
-# What to render?
+## What to render?
 <br>
 
 Each operator has to have the fields specified which Jinja Template Rendering should be applied onto.  
@@ -81,7 +81,7 @@ template_ext: Sequence[str] = (
 <br>
 <br>
 
-# Rendering nested fields
+## Rendering nested fields
 <br>
 
 For common built-in collections rendeiring is implemented on each element separately as shown below (function `render_template()` in class `Templater`):
@@ -104,7 +104,7 @@ More complex collection can also be rendered, where `template_fields` from each 
 <br>
 <br>
 
-# What is field `template_fields_renderers` used for?
+## What is field `template_fields_renderers` used for?
 <br>
 
 You can see something like this being set in this field:

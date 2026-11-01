@@ -1,4 +1,21 @@
 ---
 layout: page
 title: Home
+home: true
+section: home
 ---
+<section class="home-intro" aria-labelledby="intro-title">
+    <img class="selfie" width="96" height="96" src="{% if site.external-image %}{{ site.picture }}{% else %}{{ site.picture | relative_url }}{% endif %}" alt="">
+    <p class="eyebrow">Notes on technology</p>
+    <h1 id="intro-title">{{ site.title | escape }}</h1>
+    <p class="intro-description">{{ site.home_intro | escape }}</p>
+    <p class="personal-note">{{ site.bio | escape }}</p>
+    {% include social-links.html %}
+</section>
+<section class="home-writing" aria-labelledby="writing-title">
+    <div class="section-heading"><h2 id="writing-title">Latest writing</h2><a href="{{ '/blog/' | relative_url }}">All articles →</a></div>
+    <div class="list">
+    {% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
+    {% for post in articles limit:3 %}{% include blog-post.html heading=3 %}{% endfor %}
+    </div>
+</section>

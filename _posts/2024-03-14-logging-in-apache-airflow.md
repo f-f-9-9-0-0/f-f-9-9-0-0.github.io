@@ -14,7 +14,7 @@ author: gabor
 description: Can you see your logs? DEBUG vs. INFO
 excerpt_separator: <!--more-->
 ---
-# Logging for tasks
+## Logging for tasks
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -36,7 +36,7 @@ Logging in Airflow is pretty much documented here: [logging_for_tasks]
 <br>
 <br>
 
-# Where is my log? I am debugging..
+## Where is my log? I am debugging..
 
 Ok, so we have logs and we are still deep in development. Perfect use case for writing some debug information into the logs. Wait! I cannot find that..  
 <br>
@@ -46,13 +46,13 @@ This means that logs at the level of `DEBUG` aren't logged. To see `DEBUG` logs 
 <br>
 <br>
 
-# If you have ever wondered about where INFO level is being set
+## If you have ever wondered about where INFO level is being set
 
 Logging level is being set in Python code, explicitly in the [airflow/settings.py][settings.py] file: `LOGGING_LEVEL = logging.INFO`
 <br>
 <br>
 
-# Samples, samples
+## Samples, samples
 
 Below you can see a sample DAG specification to highlight logging capabilities:
 <script src="https://gist.github.com/f-f-9-9-0-0/66a923aeb0b005f5ce7c6d5b8784ecad.js"></script>

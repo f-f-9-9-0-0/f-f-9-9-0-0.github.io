@@ -1,0 +1,15 @@
+- title: Home
+  url: /
+  section: home
+- title: Blog
+  url: /blog/
+  section: blog
+  setting: blog
+- title: Projects
+  url: /projects/
+  section: projects
+  setting: projects
+- title: About
+  url: /about/
+  section: about
+  setting: about

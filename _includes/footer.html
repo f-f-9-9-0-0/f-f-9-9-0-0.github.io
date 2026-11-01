@@ -1,15 +1,8 @@
 <footer class="footer-main">
-    {{ site.title }} © {{ site.time | date: '%Y' }}
-
-    <a class="link" href="{{ site.url }}/feed.xml" target="_blank" alt="anchor link to rss feed" aria-label="anchor link to rss feed">
-        <i class="fa-solid fa-rss"></i>
-    </a>
-
-    <p class="extra">
-        <a class="link" href="https://github.com/sergiokopplin/indigo">Indigo theme</a>
-        by
-        <a class="link" href="https://github.com/sergiokopplin/indigo">Kopplin</a>
-    </p>
+    <div class="footer-meta"><span>{{ site.title | escape }} © {{ site.time | date: '%Y' }}</span><a href="{{ '/feed.xml' | relative_url }}">{% include icon.html name='rss' %} RSS</a></div>
+    <nav class="privacy-links" aria-label="Privacy">
+        <a href="{{ '/privacy/en/privacy.html' | relative_url }}" lang="en">Privacy</a>
+        <a href="{{ '/privacy/en/choices.html' | relative_url }}" lang="en">Privacy choices</a>
+    </nav>
+    <p class="theme-credit">Based on <a href="https://github.com/sergiokopplin/indigo">Indigo by Kopplin</a>.</p>
 </footer>
-
-<nav aria-label="Privacy"><a href="{{ "/privacy/en/privacy.html" | relative_url }}">Privacy</a> · <a href="{{ "/privacy/en/choices.html" | relative_url }}">Privacy choices</a></nav>

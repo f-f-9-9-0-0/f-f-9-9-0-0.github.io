@@ -14,7 +14,7 @@ author: gabor
 description: First execution of Dags with a schedule are automatic but the way it happens might not be straightforward.
 excerpt_separator: <!--more-->
 ---
-# Unpausing a Dag
+## Unpausing a Dag
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -35,7 +35,7 @@ More on the Airflow configuration options you can find [here][dags_are_paused_at
 <br>
 <br>
 
-# DagRuns created
+## DagRuns created
 
 If the Dag gets created with a valid schedule then it gets executed when unpaused, which means DagRuns get created.  
 However that is not the same how Airflow forms DagRuns for each Dag.
@@ -44,7 +44,7 @@ However that is not the same how Airflow forms DagRuns for each Dag.
 The difference comes from the `catchup` and `depends_on_past` definitions of Dags.  
 <br>
 
-## `catchup`
+### `catchup`
 <br>
 
 If this value is not set at Dag level, then the default Airflow configuration value comes in. This value can be set in the above mentioned configuration file (`catchup_by_default`) or through the environment variable `AIRFLOW__SCHEDULER__CATCHUP_BY_DEFAULT`. Further details [here][catchup_by_default].
@@ -61,7 +61,7 @@ If you set `catchup=True` in the DAG, the scheduler will kick off a DAG Run for 
 This concept is called `Catchup`.
 <br>
 
-## `depends_on_past`
+### `depends_on_past`
 <br>
 
 You can also say a task can only run if the previous run of the **task** in the previous DAG Run succeeded.  
@@ -75,11 +75,11 @@ Note that if you are running the DAG at the very start of its life—specificall
 <br>
 <br>
 
-# Sample
+## Sample
 Below Dags have only one task to demonstrate how DagRuns are generated once the newly created Dags get unpaused.
 <br>
 
-## `dag_example_catchup_false`
+### `dag_example_catchup_false`
 <br>
 
 This Dag has only one task to demonstrate how DagRuns are generated once the newly created Dag gets unpaused.  
@@ -90,7 +90,7 @@ Executed only once for the last completed data interval:
 ![DagRuns created after unpausing the Dag](/assets/images/001/dag_example_catchup_false.jpg)
 <br>
 
-## `dag_example_catchup_true_simultaneous`
+### `dag_example_catchup_true_simultaneous`
 <br>
 This Dag has only one task to demonstrate how DAG Runs are generated once the newly created DAG gets unpaused.  
 As the `dag.catchup` value is **True**, the scheduler would create a DAG Run for each completed interval between the `start_date` and the last completed data interval (based on `schedule`, *in this case this is the last completed hour*) and the scheduler will execute them **simultaneously** as `dag.default_args.depends_on_past` is set to **False**.  
@@ -100,7 +100,7 @@ Executed for all the completed data intervals as soon as a free slot got availab
 ![DagRuns created after unpausing the Dag](/assets/images/001/dag_example_catchup_true_simultaneous.jpg)
 <br>
 
-## `dag_example_catchup_true_depends_on_past`
+### `dag_example_catchup_true_depends_on_past`
 <br>
 
 This Dag has only one task to demonstrate how Dag Runs are generated once the newly created Dag gets unpaused.  
@@ -111,7 +111,7 @@ Executed for all the completed data intervals and while multiple DagRuns got sta
 ![DagRuns created after unpausing the Dag](/assets/images/001/dag_example_catchup_true_depends_on_past.jpg)
 <br>
 
-## Source code for all Dags
+### Source code for all Dags
 <br>
 
 <script src="https://gist.github.com/f-f-9-9-0-0/fd08d111db57ec86e2af058c2c5ac142.js"></script>

@@ -17,7 +17,7 @@ author: gabor
 description: DataStax Studio, the best developer tool to visualize, profile, and manipulate data stored in DataStax databases.
 excerpt_separator: <!--more-->
 ---
-# DataStax Studio
+## DataStax Studio
 
 In my [other post][link_to_other_post] I shared some techniques how to manage data in e.g. Datastax AstraDB.  
 The best developer tool to visualize, profile, and manipulate data stored in DataStax databases, however is DataStax Studio.  
@@ -31,9 +31,9 @@ The best developer tool to visualize, profile, and manipulate data stored in Dat
 <br>
 <br>
 
-# Sample code
+## Sample code
 
-#### This is a simple Dockerfile to prepare an environment for DataStax Studio.
+### This is a simple Dockerfile to prepare an environment for DataStax Studio.
 <script src="https://gist.github.com/f-f-9-9-0-0/77df05c6a05ab185e35af6386051036e.js"></script>
 <br>
 

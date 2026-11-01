@@ -14,7 +14,7 @@ author: gabor
 description: Airflow datasets under the hoods
 excerpt_separator: <!--more-->
 ---
-# Datasets in Apache Airflow
+## Datasets in Apache Airflow
 <br>
 
 <div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
@@ -29,7 +29,7 @@ You can find a general introduction to `datasets` in [my other post][link_to_oth
 <br>
 <br>
 
-# How does this work?
+## How does this work?
 <br>
 
 The concept is simple, one DAG *touches* the dataset (updates its `last updated timestamp`) while another depends on the same.  

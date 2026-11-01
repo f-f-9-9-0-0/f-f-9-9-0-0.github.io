@@ -16,7 +16,7 @@ author: gabor
 description: There's no built-in support for this. Which means that you need to manage this by yourself.
 excerpt_separator: <!--more-->
 ---
-# Documents' change history
+## Documents' change history
 
 As expressed by [David Pilato][pilato], one of Elastic's most experienced developer and evangelist, there's no built-in support for keeping documents' change history in an index of Elasticsearch.
 <br>
@@ -32,7 +32,7 @@ Here are some questions where the community make their voice heard:
 <br>
 <br>
 
-# `_version` metadata field in Elasticsearch
+## `_version` metadata field in Elasticsearch
 
 Every document in Elasticsearch has a version number. Every time a change is made to a document (including deleting it), the _version number is incremented.  
 Elasticsearch uses this _version number to ensure that changes are applied in the correct order. If an older version of a document arrives after a new version, it can simply be ignored.  
@@ -49,7 +49,7 @@ But that is not exactly what we want, so let's get through another solution desc
 <br>
 <br>
 
-# The solution
+## The solution
 
 As I described in my previous post [Painless scripting in Elasticsearch][link_painless], we have Painless scripting which can come in handy now, and always.  
 <br>
@@ -62,13 +62,13 @@ So what we need to do, step by step:
 <br>
 <br>
 
-# Sample code
+## Sample code
 
-#### A simple script to demonstrate how to keep change history of an Elasticsearch document inside the document itself
+### A simple script to demonstrate how to keep change history of an Elasticsearch document inside the document itself
 <script src="https://gist.github.com/f-f-9-9-0-0/e4e7fd4ab27e488a66386116aeb85790.js"></script>
 <br>
 
-#### The output
+### The output
 
 The ouput shows exactly what we wanted to achieve, having the documents change history being kept within the field `history` of the document, consisting the technical fields which desribe the details on each change.  
 ```json

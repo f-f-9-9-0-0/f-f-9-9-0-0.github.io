@@ -1,6 +1,7 @@
 # main text of home
 title: Gábor Tóth
 bio: What makes us who we are, if not the way we experience the world
+home_intro: Practical notes on data engineering, Apache Airflow and the tools behind reliable data workflows.
 
 # twitter summary info
 description: A blog about technology and stuff related
@@ -49,7 +50,7 @@ authors:
 
 # do you want a larger site? change the option below
 # options: [normal, large] | default: normal
-# normal = 560px / large = 810px
+# normal = 720px / large = 810px
 width: normal
 
 # if you don't need projects, comment the *projects* configs below

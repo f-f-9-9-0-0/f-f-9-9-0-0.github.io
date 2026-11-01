@@ -60,6 +60,8 @@ jobs:
         env:
           PRIVACY_PUBLISH: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy && github.ref == 'refs/heads/main' && 'true' || 'false' }}
         run: python3 scripts/check-site.py _site
+      - name: Check generated website structure
+        run: bundle exec ruby scripts/check-design.rb _site
       - name: Test published privacy output with synthetic configuration
         run: python3 scripts/test-site-build.py
       - name: Check built HTML for Google Analytics
