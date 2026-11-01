@@ -7,7 +7,7 @@
     "_layouts/post.html": "1c270e199d2e84747b96e4b7e04d58007329a0dfc0728d453654a59257d5ce4a",
     "_includes/header.html": "f800943fed6160b0d27d165ea444cfcfd89bc7f38ad3e93a7ff87ad0ba0d98eb",
     "_includes/nav.html": "4510798a6f1d88f3cbc344fb19e6f3dd370f26f623446896617d5e4ff1203edf",
-    "_includes/footer.html": "34a8385647503dc7b4f3aee2379e4df5e9675b1541945fce11f41f179ea3258d",
+    "_includes/footer.html": "af315c802553750b8008c17c5374cf6132c6309d558b5dfe032247ed4748e3b3",
     "_includes/social-links.html": "4d826f4dcb9f992c028d4b8173e7e022a5a3dd01a61604a80ac07a5579b52241",
     "_includes/icon.html": "e38ebaadf6beb84ef561f0d396c437e3edd103e09913894156103b9f0620e8dc",
     "_includes/blog-post.html": "84b301536b057901110cdb265d340652dd5a4878e1aa547412b43e86415d19a7",
@@ -17,5 +17,5 @@
     "_includes/gist.html": "191bcf3b2651079564e8bad31d86a06173a2716bbe5346fe27b8fc679afaa98b",
     "_includes/article-image.html": "de2bc1bf7795d3d76e235389cbc45927430007ac548265473224ca50d0fe052f"
   },
-  "source_commit": "879969b40230e1487194a3ef2d0eea421346130d"
+  "source_commit": "616ca4337f6a22973f1d7bbc78d27878e00a5345"
 }

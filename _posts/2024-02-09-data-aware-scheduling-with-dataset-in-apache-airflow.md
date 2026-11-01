@@ -32,7 +32,17 @@ There are multiple ways of triggering a DAG Run in Airflow:
 - Programmatically using [*Airflow REST Api*][airflow_rest_api]
 <!--more-->
   
-[Sensors][sensors], a special type of [Operator][operator], are a way of controlling an already triggered DAG Run by making it deferred until certain events occur and re-trigger its execution from the point it stopped running.
+[Sensors][sensors] are a special type of [Operator][operator] that wait for a condition within an existing DAG run. When a sensor succeeds, its downstream tasks can proceed.
+
+### Waiting is not always deferral
+
+- **`poke` mode:** the sensor task stays running on a worker. If the condition is not met, it sleeps between checks while retaining its worker slot. It is **not deferred**.
+- **`reschedule` mode:** after an unsuccessful check, the task releases its worker slot and enters `up_for_reschedule`. The scheduler schedules another check after the interval. This is periodic rescheduling, not deferral.
+- **Deferrable execution:** a sensor that supports deferral releases its worker slot and enters `deferred`. An asynchronous trigger runs in the triggerer process. When the trigger emits an event, the scheduler queues the task to resume on a worker.
+
+`poke` and `reschedule` are sensor modes; deferrable execution is a separate mechanism, not a third value for `mode`. It requires a supported sensor implementation and a running triggerer. See [Deferrable Operators & Triggers for Airflow 2.7.3][deferring].
+
+None of these mechanisms defers or retriggers the **whole DAG run**. The sensor task waits; other tasks whose dependencies are satisfied can continue.
 
 ---
 ### Complex environments lead to.. dependencies
@@ -65,7 +75,7 @@ This is how the *official documentation* describes a `dataset`:
 
 Datasets are there like `OK files` on a Linux file system. If an application wants to trigger another, for example when it completes its operation, it creates an empty file with the proper timestamp, just like an OK file. The other application can realise the completion of the first one by checking on the file, and can get event the exact timestamp of that event.  
 
-Datasets are the same, one DAG updates them (specially the timestamp associated with them) and other DAGs can be triggered depending on those.  
+The analogy is about signalling readiness: a successful producer task emits a dataset event, which can make a consuming DAG eligible to run. Airflow records these events in its metadata database; it does not inspect an external file or change the underlying data on behalf of the task.
 
 One DAG can depend on multiple datasets and can also update multiple datasets during its run. To be more precise, datasets are updated by *task instances*, not the DAG itself, which means those updates can happen even before the DAG completes, so other DAGs can start their execution and run in parallel with the source DAG.  
 Another interesting aspect of this is that datasets are not necessarily updated by a DAG, during a run, just imagine a branch of the acyclic graph of tasks which gets skipped.
@@ -103,7 +113,9 @@ Still the dependencies are recorded by Airflow, even though datasets are not upd
 [creating_the_DAG]: https://airflow.apache.org/docs/apache-airflow/2.7.3/administration-and-deployment/scheduler.html
 [data_aware_scheduling]: https://airflow.apache.org/docs/apache-airflow/2.7.3/authoring-and-scheduling/datasets.html
 [triggerdagrunoperator]: https://airflow.apache.org/docs/apache-airflow/2.7.3/_api/airflow/operators/trigger_dagrun/index.html
-[airflow_rest_api]: https://airflow.apache.org/docs/apache-airflow/stable/stable-rest-api-ref.html#operation/post_dag_run
+[airflow_rest_api]: https://airflow.apache.org/docs/apache-airflow/2.7.3/stable-rest-api-ref.html#operation/post_dag_run
 [sensors]: https://airflow.apache.org/docs/apache-airflow/2.7.3/core-concepts/sensors.html
 [operator]: https://airflow.apache.org/docs/apache-airflow/2.7.3/core-concepts/operators.html
 [uri_wiki]: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+
+[deferring]: https://airflow.apache.org/docs/apache-airflow/2.7.3/authoring-and-scheduling/deferring.html

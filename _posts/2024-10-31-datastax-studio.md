@@ -55,7 +55,15 @@ docker run -d -p :9091 -v "$(pwd):/work_dir" --name dsstudio test/dsstudio
 You would need a `secure connect bundle` to be able to connect to e.g. AstraDB from the Studio, so keep that in the folder which you attached to the container.  
 Then you can specify the **full PATH** in a DataStax Studio connection as `/work_dir/secure-connect.zip`
 
-If started you get the URL printed on the console where DataStax Studio is available.  
-Copy that link and paste into the browser (or you can click directly on Docker Desktop's link next to the container)
+Detached mode prints the container ID, not the application’s startup output. Inspect the logs and the assigned host port with:
+
+```bash
+docker logs dsstudio
+docker port dsstudio 9091
+```
+
+Because `-p :9091` assigns an available host port, use the reported port to open `http://localhost:<HOST_PORT>` when Docker runs locally. The application logs show startup details but may show the container’s internal port. See the [Docker run reference][docker_run].
 
 [link_to_other_post]: /how-to-manage-data-in-datastax-astradb-effectively
+
+[docker_run]: https://docs.docker.com/reference/cli/docker/container/run/

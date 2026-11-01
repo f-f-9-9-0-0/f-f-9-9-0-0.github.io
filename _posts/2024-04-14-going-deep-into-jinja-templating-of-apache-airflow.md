@@ -25,7 +25,7 @@ excerpt_separator: <!--more-->
     </p>
 </aside>
 
-Templating is a powerful way of passing data to the processing part of task instances. Providing a simple mechanism, it is easy to manage, without the need of using XCom or any custom code for implementing it.
+Templating is a powerful way of passing data to the processing part of task instances. Templates expose runtime context and configured values. They do not replace XCom for exchanging computed results between tasks, although a template can call `xcom_pull()` to access those results.
 
 [Jinja][jinja_docs] is a templating engine, which uses placeholders in the template allow writing code similar to Python syntax. The template is passed data to render the final document.
 <!--more-->
@@ -56,7 +56,7 @@ Another example for a **Bash Operator** (class `BashOperator`) is: `("bash_comma
 
 ---
 
-How aboout a `BigQueryInsertJobOperator`? The fields rendered (specified in [airflow\providers\google\cloud\operators\bigquery.py][bigquery.py]):  
+How about a `BigQueryInsertJobOperator`? The following source is pinned to the Airflow 2.8.4 repository snapshot. Google provider packages are released independently, so check your installed provider version before applying these details. The fields rendered (specified in [airflow\providers\google\cloud\operators\bigquery.py][bigquery.py]):
 ```python
 template_fields: Sequence[str] = (
     "configuration",
@@ -154,12 +154,12 @@ return {
 So on the UI in the above example, you will see values of field `configuration` highlighted as json, while values for `configuration.query.query` are being highlighted as SQL.
 
 [jinja_docs]: https://jinja.palletsprojects.com/en/3.1.x/
-[templater.py]: https://github.com/apache/airflow/blob/main/airflow/template/templater.py
-[python.py]: https://github.com/apache/airflow/blob/main/airflow/decorators/python.py
-[bash.py]: https://github.com/apache/airflow/blob/main/airflow/operators/bash.py
-[bigquery.py]: https://github.com/apache/airflow/blob/main/airflow/providers/google/cloud/operators/bigquery.py
-[views.py]: https://github.com/apache/airflow/blob/main/airflow/www/views.py
-[utils.py]: https://github.com/apache/airflow/blob/main/airflow/www/utils.py
+[templater.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/template/templater.py
+[python.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/decorators/python.py
+[bash.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/operators/bash.py
+[bigquery.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/providers/google/cloud/operators/bigquery.py
+[views.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/www/views.py
+[utils.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/www/utils.py
 [pygments]: https://pygments.org/
 [flask]: https://flask.palletsprojects.com/
-[ti_code.html]: https://github.com/apache/airflow/blob/main/airflow/www/templates/airflow/ti_code.html
+[ti_code.html]: https://github.com/apache/airflow/blob/2.8.4/airflow/www/templates/airflow/ti_code.html

@@ -22,7 +22,7 @@ excerpt_separator: <!--more-->
 
 > [Apache Cassandra][cassandra] is a free and open-source, distributed, wide-column store, NoSQL, database management system intended to handle large amounts of data across multiple commodity servers, providing availability with no single point of failure. - [wikipedia][wiki_cassandra]
 
-It all started with Avinash Lakshman and Prashant Malik once they were building the blue book of many faces. And you are right, the similarities between Cassandra and Amazon's DynamoDB is not something comes without a reason. As Lakshman also worked on that project before started at Facebook.  
+It all started with Avinash Lakshman and Prashant Malik once they were building the blue book of many faces. Cassandra’s design drew on Amazon’s **Dynamo**, the system described in the 2007 paper co-authored by Lakshman. Dynamo should not be confused with the later DynamoDB service. See the [original Dynamo paper][dynamo].
 So az usual (?) Cassandra got open-sourced and became a top-level project at Apache. And this is how Matthieu Riou, one of the Cassandra Committee members, celebrated it on [18th February 2010][top_level]:  
 > Good news! Yesterday (for those who aren't on private), the board 
 > approved the resolution to adopt Cassandra as a top level project, 
@@ -31,7 +31,7 @@ So az usual (?) Cassandra got open-sourced and became a top-level project at Apa
 <!--more-->
 So what is Cassandra good for? It can handle really huge volume of data. Also it is lightning fast if it comes to writing and reading data.  
 Sounds great, but wait.. is this magic? No, it is not. So there are limitations.  
-As this post is not about to go into the details of how Cassandra works, let me shorten this into a couple of examples, where Cassandra is struggling. Updates and deletes are not tolerated, or at least affects performance. Another similar kind of a data engineer use case is to get that data out, I mean all of it! Yeah, this is not something you should do with Cassandra, though if you want one single record out of the billion only, then.. yes you rockin' it.
+As this post is not about to go into the details of how Cassandra works, let me shorten this into a couple of examples, where Cassandra is struggling. Cassandra supports updates and deletes. Updates use its write path, while deletes create tombstones that are later removed when safe during compaction. Performance depends on the data model, access patterns and tombstone workload; these operations are not inherently unsupported. See [CQL data manipulation][cql_dml] and [tombstones][tombstones]. Another similar kind of a data engineer use case is to get that data out, I mean all of it! Full-table exports need appropriate tooling and capacity planning; partition-key-based reads are a different access pattern. DSBulk, discussed below, supports bulk unloading.
 
 ## AstraDB, another level?
 
@@ -47,7 +47,7 @@ This is how Pfeil commented on their early days in 2018:
 > and get them talking about it to the world. Repeat.  
 
 AstraDB is a cloud [database-as-a-service][daas] based on Apache Cassandra. You get rid of the administration overhead and managing the software, which is usual for any such solution and also you can get professional support.  
-Okay, so our expectation is that everything works which is there in Cassandra and even more functionalities included into the cloud based product, which is not open-sourced of course.  
+Compatibility is not unrestricted: Astra’s managed service imposes guardrails and does not expose every Cassandra operation. Check the [documented CQL limitations][astra_cql] for the database offering you use.
 
 ## How to manage your data?
 
@@ -130,3 +130,8 @@ dsbulk \
 [top_level]: https://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg01518.html
 [daas]: https://en.wikipedia.org/wiki/Cloud_database
 [link_to_other_post]: /datastax-studio
+
+[dynamo]: https://www.amazon.science/publications/dynamo-amazons-highly-available-key-value-store
+[cql_dml]: https://cassandra.apache.org/doc/4.1/cassandra/cql/dml.html
+[tombstones]: https://cassandra.apache.org/doc/4.1/cassandra/operating/compaction/index.html
+[astra_cql]: https://docs.datastax.com/en/astra-db-classic/cql/develop-with-cql.html

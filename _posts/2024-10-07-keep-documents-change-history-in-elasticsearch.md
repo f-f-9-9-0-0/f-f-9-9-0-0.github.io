@@ -31,15 +31,11 @@ Here are some questions where the community make their voice heard:
 
 ## `_version` metadata field in Elasticsearch
 
-Every document in Elasticsearch has a version number. Every time a change is made to a document (including deleting it), the _version number is incremented.  
-Elasticsearch uses this _version number to ensure that changes are applied in the correct order. If an older version of a document arrives after a new version, it can simply be ignored.  
-
-`_version`: the source document’s version. The field is of the type long.
+In Elasticsearch 8.15, `_version` tracks a document’s internal version, but it does not retain previous document contents. Replication ordering uses sequence numbers assigned by the primary shard. To protect application read-modify-write operations, send the last observed `if_seq_no` and `if_primary_term`; conflicting writes are rejected rather than silently applied. External versioning is a separate, explicitly selected mechanism. See [optimistic concurrency control][concurrency] and [index versioning][versioning].
 
 ---
 
-`_version` number can be used to ensure that conflicting changes made by applications do not result in data loss, as described in the [Elasticsearch Definitive Guide][guide]  
-But that is not exactly what we want, so let's get through another solution described below..
+Concurrency control prevents certain conflicting writes; it is not a revision archive. The example below explicitly stores selected previous values inside the document.
 
 ## The solution
 
@@ -118,5 +114,6 @@ The ouput shows exactly what we wanted to achieve, having the documents change h
 [discuss1]: https://discuss.elastic.co/t/how-to-store-document-history-versioning-revisions/32651
 [discuss2]: https://discuss.elastic.co/t/how-to-model-a-documents-state-history/144684
 [discuss3]: https://discuss.elastic.co/t/is-it-possible-to-store-document-versions-in-elastic-search/337496
-[guide]: https://github.com/elastic/elasticsearch-definitive-guide/blob/master/030_Data/40_Version_control.asciidoc
+[concurrency]: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/optimistic-concurrency-control.html
+[versioning]: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docs-index_.html#versioning
 [link_painless]: /painless-scripting-in-elasticsearch

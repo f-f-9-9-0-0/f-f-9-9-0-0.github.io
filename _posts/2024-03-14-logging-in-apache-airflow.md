@@ -40,7 +40,7 @@ This means that logs at the level of `DEBUG` aren't logged. To see `DEBUG` logs 
 
 ## If you have ever wondered about where INFO level is being set
 
-Logging level is being set in Python code, explicitly in the [airflow/settings.py][settings.py] file: `LOGGING_LEVEL = logging.INFO`
+The [settings module][settings.py] includes an `INFO` logging constant, but effective task logging is configured through Airflow’s logging configuration and handlers. Use the `[logging] logging_level` setting for the standard setup; custom logging configurations can impose additional logger or handler thresholds.
 
 ## Samples, samples
 
@@ -49,5 +49,5 @@ Below you can see a sample DAG specification to highlight logging capabilities:
 
 [logging_for_tasks]: https://airflow.apache.org/docs/apache-airflow/2.8.2/administration-and-deployment/logging-monitoring/logging-tasks.html#writing-to-task-logs-from-your-code
 [python.org]: https://docs.python.org/3/howto/logging.html
-[airflow_configuration]: https://{ID}-{region}.composer.googleusercontent.com/configuration
-[settings.py]: https://github.com/apache/airflow/blob/main/airflow/settings.py
+[airflow_configuration]: https://airflow.apache.org/docs/apache-airflow/2.8.2/configurations-ref.html#logging-level
+[settings.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/settings.py

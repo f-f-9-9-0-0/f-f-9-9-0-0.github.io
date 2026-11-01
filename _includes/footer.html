@@ -1,4 +1,5 @@
 <footer class="footer-main" lang="en">
   <div class="footer-meta"><span>© {{ site.time | date: '%Y' }} {{ site.title | escape }}</span><a href="{{ '/feed.xml' | relative_url }}">RSS <span aria-hidden="true">↗</span></a></div>
-  {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endfor %}</nav>{% endif %}
+  {% assign privacy_language = page.lang | default: site.lang | default: 'en' %}
+  {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}{% assign link_language = link.lang | default: 'en' %}{% if link_language == privacy_language %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endif %}{% endfor %}</nav>{% endif %}
 </footer>

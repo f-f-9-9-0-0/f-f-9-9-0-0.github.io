@@ -36,7 +36,7 @@ Documentation can be added at different levels in Airflow:
 
 ## Which form of docs?
 
-Documentation can be created in various forms, which all has their benefit:
+At the **task level**, Airflow supports `doc` for monospace text and the following rich-content attributes: `doc_md`, `doc_yaml`, `doc_rst` and `doc_json`. At the **DAG level**, only `doc_md` is interpreted. See the [Airflow 2.8.2 documentation][airflow_docs].
 - markdown ([->][markdown])
 - YAML ([->][yaml])
 - reStructuredText ([->][reStructuredText])
@@ -58,3 +58,5 @@ Find a basic sample of code how it looks like in Python:
 [yaml]: https://yaml.org/
 [reStructuredText]: https://docutils.sourceforge.io/rst.html
 [json]: https://www.json.org/json-en.html
+
+[airflow_docs]: https://airflow.apache.org/docs/apache-airflow/2.8.2/core-concepts/dags.html#dag-task-documentation

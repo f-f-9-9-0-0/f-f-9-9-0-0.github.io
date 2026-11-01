@@ -25,7 +25,7 @@ Brian Fox began coding Bash on January 10, 1988 and released Bash as a beta, ver
 
 First of all, let's clarify what it means to execute a shell script file in Bash.  
 If you type simply the script name (e.g. `script0.sh`) into Bash then it looks for the file in the `PATH` environment variable and if it is not there then it fails with `command not found`.  
-If the script's path is there in the `PATH` environment variable then it can get executed. Same applies if you specify the full path to the script (e.g. `./script0.sh`, this case '.' represents the current directory, not the dot operator!)  
+If the script's path is there in the `PATH` environment variable then it can get executed. Same applies if you specify a path to the script (e.g. `./script0.sh`, this case '.' represents the current directory, not the dot operator!)
 
 In both cases the script needs to be made executable (e.g. `chmod 744 script0.sh`)  
 
@@ -42,5 +42,14 @@ Also the script's content gets executed in the existing shell invoking it, which
 `source` is a synonym for dot/period '.' in bash, but not in POSIX sh, so for maximum compatibility use the period.  
 
 ## Sample code
+
+When creating the example file, preserve `$0` literally so it is evaluated when the script runs:
+
+```bash
+printf '%s\n' 'echo "$0"' >>script0.sh
+```
+
+Use this instead of the embedded example’s `echo "echo $0" >>script0.sh`, which expands `$0` in the shell writing the file. To source the file from the current directory explicitly, use `. ./script0.sh`. The embedded Gist below retains its original code.
+
 
 {% include gist.html id="f-f-9-9-0-0/362970e3c1f6b0afddd218eefe1f6c97" %}

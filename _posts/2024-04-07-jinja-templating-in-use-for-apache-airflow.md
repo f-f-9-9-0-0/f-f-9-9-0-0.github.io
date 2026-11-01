@@ -25,18 +25,17 @@ excerpt_separator: <!--more-->
     </p>
 </aside>
 
-Templating is a powerful way of passing data to the processing part of task instances. Providing a simple mechanism, it is easy to manage, without the need of using XCom or any custom code for implementing it.
+Templating is a powerful way of passing data to the processing part of task instances. Templates expose runtime context and configured values. They do not replace XCom for exchanging computed results between tasks, although a template can call `xcom_pull()` to access those results.
 
 [Jinja][jinja_docs] is a templating engine, which uses placeholders in the template allow writing code similar to Python syntax. The template is passed data to render the final document.
 <!--more-->
 
 ## Variables, Python instances?
 
-There are numerous variables you can include in your templates. These variables are being replaces with instances of Python classes during rendering the template.  
+There are numerous variables you can include in your templates. These names refer to values and objects in the rendering context.
 A complete list of variables available can be found [here][templates_reference].
 
-When you include a variable in the template (e.g. {% raw %}`{{ run_id }}`{% endraw %}) then the engine replaces it with the corresponding Python class (`str` in case of `run_id`).  
-Then you can use all the attributes and functions available for the actual class.  
+For example, {% raw %}`{{ run_id }}`{% endraw %} evaluates the `run_id` value from the context, which is a string. Expressions can access permitted attributes and methods of context objects; Jinja does not replace a variable with its Python class. By default the rendered result is a string. Airflow can instead use native-object rendering when `render_template_as_native_obj=True`.
 This can be even more exciting if we have a more complex class.
 
 ## Samples, samples
@@ -91,7 +90,20 @@ The output looks like this:
 ### DAG Run details
 Or another example of printing the current and the previous DAG Run's details (note that you can use functions, even static or class level functions of instances replaced, class `DagRun`, specified in [airflow\models\dagrun.py][dagrun.py]):  
 {% include gist.html id="f-f-9-9-0-0/c7b887852e33bbb9385686a255eca7cc" %}
-The output looks like this:
+The embedded example assumes a previous run exists. On the first run, `get_previous_dagrun()` returns `None`, so guard attribute access. For example:
+
+{% raw %}
+```jinja
+{% set previous_run = dag_run.get_previous_dagrun(dag_run) %}
+{% if previous_run is not none %}
+Previous run ID: {{ previous_run.run_id }}
+{% else %}
+No previous run.
+{% endif %}
+```
+{% endraw %}
+
+Apply this guard around the previous-run section when using the embedded example. The output shown here is from a later run:
 ```
     Current DAG Run details:
       id                        : 4370
@@ -177,7 +189,7 @@ The output looks like this:
 ---
 
 ### Task instances' details through class `BaseOperator`
-This example uses the class `BaseOperator` to print details of the current task instance (class `BaseOperator` is specified in [airflow\models\baseoperator.py][baseoperator.py]):  
+This example uses the task’s `BaseOperator` object to print its operator configuration, rather than the per-run state held by `TaskInstance` (class `BaseOperator` is specified in [airflow\models\baseoperator.py][baseoperator.py]):
 {% include gist.html id="f-f-9-9-0-0/c111be4437080501ee4af066d7cf6587" %}
 The output looks like this:
 ```
@@ -227,8 +239,8 @@ The output looks like this:
 ```
 
 [jinja_docs]: https://jinja.palletsprojects.com/en/3.1.x/
-[templates_reference]: https://airflow.apache.org/docs/apache-airflow/2.7.3/templates-ref.html
-[dag.py]: https://github.com/apache/airflow/blob/main/airflow/models/dag.py
-[dagrun.py]: https://github.com/apache/airflow/blob/main/airflow/models/dagrun.py
-[taskinstance.py]: https://github.com/apache/airflow/blob/main/airflow/models/taskinstance.py
-[baseoperator.py]: https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py
+[templates_reference]: https://airflow.apache.org/docs/apache-airflow/2.8.4/templates-ref.html
+[dag.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/dag.py
+[dagrun.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/dagrun.py
+[taskinstance.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/taskinstance.py
+[baseoperator.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/baseoperator.py

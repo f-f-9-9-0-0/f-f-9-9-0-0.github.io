@@ -59,10 +59,10 @@ Elasticsearch is a search engine, a software program designed to help users find
 In addition to this open source library Elasticsearch provides:
 - distributed, multitenant-capable full-text search engine with an
 - HTTP web interface and
-- schema-free JSON documents
+- JSON documents with explicit or automatically inferred [field mappings][mapping]
 
 Elasticsearch is developed in Java. And the main reason for this is because Apache Lucene, its high-performance, full-featured search engine library, is also written entirely in Java.  
-Although nowadays many other implementations are available for this library in other languages:  
+Historically, several ports and related projects have targeted other languages. The following list includes legacy and discontinued projects and should not be read as a list of currently maintained alternatives:
 - CLucene - Lucene implementation in C++
 - Lucene.Net - Lucene implementation in .NET
 - Lucene4c - Lucene implementation in C
@@ -72,7 +72,7 @@ Although nowadays many other implementations are available for this library in o
 - Zend Search - Lucene implementation in the Zend Framework for PHP 5
 - Plucene - Lucene implementation in Perl
 - KinoSearch - a new Lucene implementation in Perl
-- PyLucene - GCJ-compiled version of Java Lucene integrated with Python
+- PyLucene - a Python interface to Java Lucene, built with JCC and JNI (see the [project documentation][pylucene])
 - MUTIS - Lucene implementation in Delphi
 - Ferret - Lucene implementation in Ruby
 - Montezuma - Lucene implementation in Common Lisp
@@ -82,7 +82,7 @@ Although nowadays many other implementations are available for this library in o
 You can use Painless anywhere scripts are used in Elasticsearch.  
 Painless is a simple, secure scripting language designed specifically for use with Elasticsearch.
 
-Painless was introduced first in September 2016, as part of the [Elasticsearch 5.0 release][release_5] (*at the time of writing we are at version 8.15.1*).  
+Painless shipped with the [Elasticsearch 5.0 GA release][release_5] on October 26, 2016 (*at the time of writing we are at version 8.15.1*).
 Jack Conradson put the code together, and reasons of '*Why build a brand new language when there are already so many to choose from?*' you can found [here][painless_jack].
 
 ---
@@ -119,3 +119,6 @@ Multi-line script
 [release_5]: https://www.elastic.co/blog/elasticsearch-5-0-0-released
 [painless_jack]: https://www.elastic.co/blog/painless-a-new-scripting-language
 [painless_spec]: https://www.elastic.co/guide/en/elasticsearch/painless/8.15/painless-lang-spec.html
+
+[mapping]: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/mapping.html
+[pylucene]: https://lucene.apache.org/pylucene/
