@@ -12,7 +12,7 @@ tag:
 - airflow
 category: blog
 author: gabor
-description: Jinja and the templates
+description: Use Airflow context variables and Jinja templates to inspect DAGs, DAG runs and task instances.
 excerpt_separator: <!--more-->
 ---
 ## Jinja templating

@@ -34,7 +34,7 @@ layout: page
     </ul>
 </details>
 {% endif %}
-{{ content }}
+{{ content | replace: '<pre', '<pre tabindex="0" role="region" aria-label="Code example"' }}
 
 {% if site.post-advance-links contains page.category %}
     <div class="blog-navigation">

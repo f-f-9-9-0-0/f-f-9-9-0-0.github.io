@@ -12,7 +12,7 @@ tag:
 - airflow
 category: blog
 author: gabor
-description: Jinja and the templates
+description: Explore how Apache Airflow renders Jinja templates, including nested fields and custom template behavior.
 excerpt_separator: <!--more-->
 ---
 ## Jinja templating

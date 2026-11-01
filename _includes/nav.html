@@ -2,7 +2,7 @@
     <ul class="list">
         {% for item in site.data.navigation %}
             {% if item.setting == nil or site[item.setting] %}
-            <li class="item"><a class="link" href="{{ item.url | relative_url }}"{% if page.section == item.section or page.layout == 'post' and item.section == 'blog' %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+            <li class="item"><a class="link" href="{{ item.url | relative_url }}"{% if page.section == item.section or page.layout == 'post' and item.section == 'blog' %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>{{ item.title }}</a></li>
             {% endif %}
         {% endfor %}
         {% if site.resume %}

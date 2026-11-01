@@ -24,7 +24,7 @@ layout: compress
 {% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a lang="en" class="skip-link" href="#main-content">Skip to content</a>
     <div class="wrapper-{% if site.width == 'large' %}large{% else %}normal{% endif %}">
         {% include header.html %}
         <main id="main-content" tabindex="-1" class="{% if page.layout == 'post' %}post{% else %}page{% endif %} {{ page.section | default: 'content' | escape }}">

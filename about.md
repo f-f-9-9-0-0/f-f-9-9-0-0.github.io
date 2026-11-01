@@ -1,6 +1,9 @@
 ---
+description: About Gábor Tóth and his work on business intelligence, data quality and automating data workflows.
 title: About
 layout: page
+seo:
+  type: AboutPage
 section: about
 ---
 ![Profile Image]({% if site.external-image %}{{ site.picture }}{% else %}{{ site.picture | relative_url }}{% endif %})
