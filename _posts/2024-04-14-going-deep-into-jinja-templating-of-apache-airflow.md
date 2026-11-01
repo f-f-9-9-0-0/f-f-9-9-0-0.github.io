@@ -3,6 +3,7 @@ title: "Going deep into Jinja Templating of Apache Airflow"
 layout: post
 date: 2024-04-14 00:00
 image: /assets/images/001/gallery2.jpg
+illustration: /assets/images/articles/template-context.svg
 headerImage: true
 tag:
 - jinja
@@ -16,32 +17,25 @@ description: Explore how Apache Airflow renders Jinja templates, including neste
 excerpt_separator: <!--more-->
 ---
 ## Jinja templating
-<br>
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.8.4!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.8.4!
     </p>
-</div>
+</aside>
 
 Templating is a powerful way of passing data to the processing part of task instances. Providing a simple mechanism, it is easy to manage, without the need of using XCom or any custom code for implementing it.
-<br>
 
 [Jinja][jinja_docs] is a templating engine, which uses placeholders in the template allow writing code similar to Python syntax. The template is passed data to render the final document.
-<br>
 <!--more-->
-<br>
-<br>
 
 ## What to render?
-<br>
 
 Each operator has to have the fields specified which Jinja Template Rendering should be applied onto.  
 That is being specified in the specific class' attribute `template_fields`.  
 Another option is to specify an extension of files where rendering needs to be in place for their content: `template_ext`.  
 For some operators, file paths can be passed a value in `template_fields`. When the specified extension in `template_ext` is at the end of the value passed, then the file content will be rendered (not the file path itself).
-<br>
 
 Above behavious on file content rendering is being implemented in class `Templater` as below (specified in [airflow\template\templater.py][templater.py]):
 ```python
@@ -78,11 +72,8 @@ template_ext: Sequence[str] = (
     ".sql",
 )
 ```
-<br>
-<br>
 
 ## Rendering nested fields
-<br>
 
 For common built-in collections rendeiring is implemented on each element separately as shown below (function `render_template()` in class `Templater`):
 ```python
@@ -98,14 +89,10 @@ elif isinstance(value, dict):
 elif isinstance(value, set):
     return {self.render_template(element, context, jinja_env, oids) for element in value}
 ```
-<br>
 
 More complex collection can also be rendered, where `template_fields` from each element of the wrapper collection is being rendered individually.  
-<br>
-<br>
 
 ## What is field `template_fields_renderers` used for?
-<br>
 
 You can see something like this being set in this field:
 ```python
@@ -114,11 +101,9 @@ You can see something like this being set in this field:
       "configuration.query.query": "sql"
     }
 ```
-<br>
 
 That field is there to render Airflow UI HTML pages highlighting template fields as the languages specified.  
 This functionality is processed in function `rendered_templates()` of class `Airflow` (specified in [airflow\www\views.py][views.py]).  
-<br>
 
 1. `pygments` provides HTML code for highlighting the content of template fields of Airflow, implemented in function `get_attr_renderer()` ([airflow\www\utils.py][utils.py])
 ```python
@@ -147,7 +132,6 @@ return {
     "yaml": lambda x: render(x, lexers.YamlLexer),
 }
 ```
-<br>
 
 2. The HTML code returned by `pygments` [Lexers][pygments] is being passed over to [Flask App builder][flask] function `render_template()` of class `flask_appbuilder.BaseView` to render HTML page [airflow\www\templates\airflow\ti_code.html][ti_code.html] (which is actually another Jinja template itself!). HTML code of `pygments` is passed as `html_dict`.
 
@@ -166,13 +150,8 @@ return {
 {% endblock %}
 ```
 {% endraw %}
-<br>
 
 So on the UI in the above example, you will see values of field `configuration` highlighted as json, while values for `configuration.query.query` are being highlighted as SQL.
-<br>
-
-<br>
-<br>
 
 [jinja_docs]: https://jinja.palletsprojects.com/en/3.1.x/
 [templater.py]: https://github.com/apache/airflow/blob/main/airflow/template/templater.py

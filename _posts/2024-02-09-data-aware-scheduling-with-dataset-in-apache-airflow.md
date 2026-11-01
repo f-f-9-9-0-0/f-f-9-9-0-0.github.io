@@ -3,6 +3,7 @@ title: "Data-aware scheduling with Datasets in Apache Airflow"
 layout: post
 date: 2024-02-09 00:00
 image: /assets/images/001/coworking.jpg
+illustration: /assets/images/articles/dataset-trigger.svg
 headerImage: true
 tag:
 - data-aware scheduling
@@ -15,14 +16,13 @@ description: Airflow datasets unleashed
 excerpt_separator: <!--more-->
 ---
 ## Datasets in Apache Airflow
-<br>
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.7.3!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.7.3!
     </p>
-</div>
+</aside>
 
 There are multiple ways of triggering a DAG Run in Airflow:
 - Through a `schedule interval` specified when [creating the DAG][creating_the_DAG]
@@ -79,14 +79,14 @@ Downstream datasets are specified in the argument `outlets` of tasks when those 
 Both can accept lists of instances of class `Dataset`.
 
 There are two upstream datasets which DAG `example_upstream_datasets` depends on in the below example:  
-<script src="https://gist.github.com/f-f-9-9-0-0/6d22dbe61ff4b1717d1e53eb88ae395b.js"></script>
+{% include gist.html id="f-f-9-9-0-0/6d22dbe61ff4b1717d1e53eb88ae395b" %}
 
 And this is the DAG which updates those two datasets: `example_downstream_datasets`  
 **NOTE:** While the name of the *Python variables* are different (`ds_003` and `ds_004`) than in the previous DAG, the string for the datasets are the same (`any_string_001` and `any_string_002`)  
-<script src="https://gist.github.com/f-f-9-9-0-0/ddf908525fed6fc99618b19a297d8bed.js"></script>
+{% include gist.html id="f-f-9-9-0-0/ddf908525fed6fc99618b19a297d8bed" %}
 
 On the *Airflow UI*, you can get a nice representation of these dependencies in the form of a directed acyclic graph, by clicking on the **Datasets** item in the navbar:  
-![Airflow UI Datasets](/assets/images/001/airflow_ui.png)
+{% include article-image.html src="/assets/images/001/airflow_ui.png" alt="Airflow UI Datasets" %}
 
 ---
 
@@ -94,12 +94,11 @@ Ok, you can ask a very valid question: *What if there is no guarantee in the Pyt
 The answer is **yes**, Airflow still record the dependency, however datasets might not be updated by all the runs of the actual DAG.  
   
 Let's see the below example DAG, which has a branch in itself, resulting in an update for only one of the two datasets at a time:  
-<script src="https://gist.github.com/f-f-9-9-0-0/3dd72b1f003512556edc065c61d4c84a.js"></script>
+{% include gist.html id="f-f-9-9-0-0/3dd72b1f003512556edc065c61d4c84a" %}
 
 Still the dependencies are recorded by Airflow, even though datasets are not updated by every run:  
-![Airflow UI Branch Datasets](/assets/images/001/airflow_ui2.png)
-![Airflow UI Branch DAG](/assets/images/001/airflow_ui3.png)
-
+{% include article-image.html src="/assets/images/001/airflow_ui2.png" alt="Airflow UI Branch Datasets" %}
+{% include article-image.html src="/assets/images/001/airflow_ui3.png" alt="Airflow UI Branch DAG" %}
 
 [creating_the_DAG]: https://airflow.apache.org/docs/apache-airflow/2.7.3/administration-and-deployment/scheduler.html
 [data_aware_scheduling]: https://airflow.apache.org/docs/apache-airflow/2.7.3/authoring-and-scheduling/datasets.html

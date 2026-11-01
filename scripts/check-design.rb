@@ -63,7 +63,7 @@ pages.each do |path|
   page.css('.site-header a, .footer-main a, .home-writing a, link[rel="stylesheet"]').each do |link|
     href = link['href']
     next unless href&.start_with?('/') && !href.start_with?('//')
-    target = root.join(URI::DEFAULT_PARSER.unescape(href.split('#').first).delete_prefix('/'))
+    target = root.join(URI::DEFAULT_PARSER.unescape(URI.parse(href).path).delete_prefix('/'))
     target = target.join('index.html') if target.directory?
     raise "#{name}: missing local target #{href}" unless target.file?
   end

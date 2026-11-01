@@ -3,6 +3,7 @@ title: "Apache Airflow Datasets Under The Hoods"
 layout: post
 date: 2024-02-09 01:00
 image: /assets/images/001/ufo.jpg
+illustration: /assets/images/articles/dataset-internals.svg
 headerImage: true
 tag:
 - data-aware scheduling
@@ -15,22 +16,18 @@ description: Airflow datasets under the hoods
 excerpt_separator: <!--more-->
 ---
 ## Datasets in Apache Airflow
-<br>
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.8.2!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.8.2!
     </p>
-</div>
+</aside>
 
 You can find a general introduction to `datasets` in [my other post][link_to_other_post], while I go into details in this one and show you what happens under the hoods if you start to deal with `datasets` in Apache Airflow.
 <!--more-->
-<br>
-<br>
 
 ## How does this work?
-<br>
 
 The concept is simple, one DAG *touches* the dataset (updates its `last updated timestamp`) while another depends on the same.  
 The **Scheduler** periodically checks on the DAGs and datasets in its [database backend][database_backend], and if there is a match, *which means a DAG can be triggered as the dataset (it depends on) was updated already*, then the latter DAG is selected for a run.
@@ -44,16 +41,14 @@ Datasets, as per above, are being used as:
 Based on this, datasets used for scheduling a DAG are being registered (stored in Airflows internal database) when the DAG Processor processes the DAG's file.  
 While datasets used as outlets of tasks are not necessarily updated throughout the execution of the DAG (imagine a branch which got skipped) these are still getting registered.  
 
-<div style="margin:10px;padding:5px;background-color:#fef0d2">
+<aside class="callout" aria-label="Important">
     <p>
-        <b style="font-weight: bold">IMPORTANT</b><br>
-        The <b style="font-weight: bold">Scheduler</b> compares the dependant DAG's last execution time to the dataset's last update time (<b style="font-weight: bold">for datasets one timestamp is being preserved only for updates</b>)
-        <br>
+        <strong class="callout-title">Important</strong>
+        The <b>Scheduler</b> compares the dependant DAG's last execution time to the dataset's last update time (<b>for datasets one timestamp is being preserved only for updates</b>)
         <a href="https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd.png" alt="ERD Schema of the Database"></a>
-        <br>
         <a href="https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd2.png" alt="ERD Schema of the Database"></a>
     </p>
-</div>
+</aside>
 
 ---
 
@@ -168,7 +163,6 @@ having
                 )
 ```
 The **latest dataset update timestamp** is being considered (`last_queued_time` from the query above) for each consumer DAG as a filter later on.  
-<br>
 For each consumer DAG (collected above), gets the last **DAG Run** execution with the below 2 conditions satisfied:
 - execution started before the **latest dataset update timestamp** and
 - triggered by **datasets**  
@@ -218,9 +212,6 @@ Records for the triggered DAG is being removed from table `dataset_dag_run_queue
 ```sql
 delete from dataset_dag_run_queue where target_dag_id = <dag_id>
 ```
-
-
-
 
 [database_backend]: https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html
 [airflow\dag_processing\processor.py]: https://github.com/apache/airflow/blob/main/airflow/dag_processing/processor.py

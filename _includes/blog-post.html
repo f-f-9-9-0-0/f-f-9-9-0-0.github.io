@@ -1,5 +1,5 @@
 <article class="article-row">
-  <img class="article-thumb" src="{% if post.image %}{{ post.image | relative_url }}{% else %}{{ '/assets/images/data-network.svg' | relative_url }}{% endif %}" alt="" width="96" height="72" loading="lazy">
+  <img class="article-thumb" src="{% if post.illustration %}{{ post.illustration | relative_url }}{% elsif post.image %}{{ post.image | relative_url }}{% else %}{{ '/assets/images/data-network.svg' | relative_url }}{% endif %}" alt="" width="96" height="72" loading="lazy">
   <div class="article-details">
     {% if post.tags.first %}<span class="article-topic">[{{ post.tags.first | escape }}]</span>{% endif %}
     <h{% if page.home %}3{% else %}{{ include.heading | default: 2 }}{% endif %}><a href="{% if post.externalLink %}{{ post.externalLink | escape }}{% else %}{{ post.url | relative_url }}{% endif %}">{{ post.title | escape }}</a></h{% if page.home %}3{% else %}{{ include.heading | default: 2 }}{% endif %}>

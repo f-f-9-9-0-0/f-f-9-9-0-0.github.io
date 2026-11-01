@@ -1,19 +1,21 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "files": {
-    "_layouts/default.html": "953d3faef82a1252f578733ede89b09e6d6e2da7474814a1499607417bf4405f",
+    "_layouts/default.html": "7c448cc2fecdb86028ffedb52d3795419bfbe3056d037792f24e0773199a775b",
     "_layouts/page.html": "8e75af90e0d1b7241d23ca40b36c7e84cd924ffc22d7a0e64d71e6a17d590921",
     "_layouts/home.html": "12eba58e9f4b65d877eda1fa861ec939a53b38061e36b11410d28cc1880cff92",
-    "_layouts/post.html": "5933ef6c0de6582b56f7340251f093b338fc27acdcd53b469e874a8beb34197d",
+    "_layouts/post.html": "1c270e199d2e84747b96e4b7e04d58007329a0dfc0728d453654a59257d5ce4a",
     "_includes/header.html": "f800943fed6160b0d27d165ea444cfcfd89bc7f38ad3e93a7ff87ad0ba0d98eb",
     "_includes/nav.html": "4510798a6f1d88f3cbc344fb19e6f3dd370f26f623446896617d5e4ff1203edf",
     "_includes/footer.html": "34a8385647503dc7b4f3aee2379e4df5e9675b1541945fce11f41f179ea3258d",
     "_includes/social-links.html": "4d826f4dcb9f992c028d4b8173e7e022a5a3dd01a61604a80ac07a5579b52241",
     "_includes/icon.html": "e38ebaadf6beb84ef561f0d396c437e3edd103e09913894156103b9f0620e8dc",
-    "_includes/blog-post.html": "8679d4138f31cb6e8b0da6b3e1fed22a3430d87314a838834bc271886748249b",
+    "_includes/blog-post.html": "84b301536b057901110cdb265d340652dd5a4878e1aa547412b43e86415d19a7",
     "_includes/contents.html": "023c0835f68316ee9a514a24b33f518ca6687d171e88fd605d6911e244edd67a",
-    "assets/css/portfolio.css": "e06c86bee2dad8f1252efedb097ba4722ca28407f9d17a5299382fc9a7926d62",
-    "assets/images/data-network.svg": "c4dbdc915abe85a1fbe5065246fa4a146c336b52f24372ad7fbe712740b5bb55"
+    "assets/css/portfolio.css": "006debc76b80734a0b84a226cb0ee7766d1949724011127f6acb560b417a038f",
+    "assets/images/data-network.svg": "c4dbdc915abe85a1fbe5065246fa4a146c336b52f24372ad7fbe712740b5bb55",
+    "_includes/gist.html": "191bcf3b2651079564e8bad31d86a06173a2716bbe5346fe27b8fc679afaa98b",
+    "_includes/article-image.html": "de2bc1bf7795d3d76e235389cbc45927430007ac548265473224ca50d0fe052f"
   },
-  "source_commit": "4ef89ea01d14a2a5584a7eed4f40c23b75641217"
+  "source_commit": "879969b40230e1487194a3ef2d0eea421346130d"
 }

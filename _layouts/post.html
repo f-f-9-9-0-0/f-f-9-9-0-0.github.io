@@ -6,9 +6,11 @@ layout: default
   <h1>{{ page.title | escape }}</h1>
   <p class="date"><time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %-d, %Y' }}</time></p>
   {% if page.description %}<p class="article-deck">{{ page.description | escape }}</p>{% endif %}
-  {% if page.image and page.headerImage %}<img class="title-image" src="{{ page.image | relative_url }}" alt="" width="900" height="360">{% endif %}
+  {% assign artwork = page.illustration | default: page.image %}{% if artwork and page.headerImage %}<img class="title-image" src="{{ artwork | relative_url }}" alt="" width="640" height="320">{% endif %}
 </header>
 {% if page.tags.size > 0 %}<nav class="post-tags" aria-label="Article topics">{% for tag in page.tags %}<a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag | escape }}</a>{% endfor %}</nav>{% endif %}
 {% include contents.html %}
+<div class="article-body">
 {{ content | replace: '<pre', '<pre tabindex="0" role="region" aria-label="Code example"' }}
+</div>
 {% include post-footer.html %}

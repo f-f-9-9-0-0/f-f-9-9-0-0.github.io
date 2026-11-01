@@ -6,7 +6,7 @@
   {% seo %}
   {% for alternate in page.alternates %}<link rel="alternate" hreflang="{{ alternate[0] | escape }}" href="{{ alternate[1] | absolute_url | escape }}">{% endfor %}
   {% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
-  <link rel="stylesheet" href="{{ '/assets/css/portfolio.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/portfolio.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ '/feed.xml' | absolute_url }}">
   {% if site.favicon %}<link rel="icon" href="{{ site.favicon | relative_url }}">{% endif %}
 </head>
