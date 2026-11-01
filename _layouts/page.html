@@ -1,7 +1,5 @@
 ---
 layout: default
 ---
-{% unless page.home or page.layout == 'post' or page.layout == 'privacy' %}
-<h1 class="page-title">{{ page.title | escape }}</h1>
-{% endunless %}
+{% unless page.layout == 'privacy' %}<h1 class="page-title">{{ page.title | escape }}</h1>{% endunless %}
 {{ content }}

@@ -1,37 +1,22 @@
----
-layout: compress
----
-<!DOCTYPE html>
-<html lang="{{ page.lang | default: 'en' | escape }}">
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' | escape }}">
 <head>
-
-
-    <meta charset="utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1">
-    <meta name=author content="{{ site.title }}">
-
-    {% seo %}
-    {% for alternate in page.alternates %}
-    <link rel="alternate" hreflang="{{ alternate[0] | escape }}" href="{{ alternate[1] | absolute_url | escape }}">
-    {% endfor %}
-
-    {% include favicon.html %}
-
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | absolute_url }}" />
-
-    <link rel="stylesheet" href="{{ "/assets/css/site.css" | relative_url }}">
-
-{% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% seo %}
+  {% for alternate in page.alternates %}<link rel="alternate" hreflang="{{ alternate[0] | escape }}" href="{{ alternate[1] | absolute_url | escape }}">{% endfor %}
+  {% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/portfolio.css' | relative_url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ '/feed.xml' | absolute_url }}">
+  {% if site.favicon %}<link rel="icon" href="{{ site.favicon | relative_url }}">{% endif %}
 </head>
 <body>
-    <a lang="en" class="skip-link" href="#main-content">Skip to content</a>
-    <div class="wrapper-{% if site.width == 'large' %}large{% else %}normal{% endif %}">
-        {% include header.html %}
-        <main id="main-content" tabindex="-1" class="{% if page.layout == 'post' %}post{% else %}page{% endif %} {{ page.section | default: 'content' | escape }}">
-            {{ content }}
-        </main>
-        {% include footer.html %}
-    </div>
-    {% include cloudflare-analytics.html %}
+  <a class="skip-link" lang="en" href="#main-content">Skip to content</a>
+  <div class="site-frame">
+    {% include header.html %}
+    <main id="main-content" tabindex="-1" class="{% if page.layout == 'post' %}post{% elsif page.home %}home{% else %}page{% endif %} {{ page.section | escape }}">{{ content }}</main>
+    {% include footer.html %}
+  </div>
+  {% include analytics.html %}
 </body>
 </html>

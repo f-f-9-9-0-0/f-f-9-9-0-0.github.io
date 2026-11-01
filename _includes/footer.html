@@ -1,8 +1,4 @@
 <footer class="footer-main" lang="en">
-    <div class="footer-meta"><span>{{ site.title | escape }} © {{ site.time | date: '%Y' }}</span><a href="{{ '/feed.xml' | relative_url }}">{% include icon.html name='rss' %} RSS</a></div>
-    <nav class="privacy-links" aria-label="Privacy">
-        <a href="{{ '/privacy/en/privacy.html' | relative_url }}" lang="en">Privacy</a>
-        <a href="{{ '/privacy/en/choices.html' | relative_url }}" lang="en">Privacy choices</a>
-    </nav>
-    <p class="theme-credit">Based on <a href="https://github.com/sergiokopplin/indigo">Indigo by Kopplin</a>.</p>
+  <div class="footer-meta"><span>© {{ site.time | date: '%Y' }} {{ site.title | escape }}</span><a href="{{ '/feed.xml' | relative_url }}">RSS <span aria-hidden="true">↗</span></a></div>
+  {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endfor %}</nav>{% endif %}
 </footer>

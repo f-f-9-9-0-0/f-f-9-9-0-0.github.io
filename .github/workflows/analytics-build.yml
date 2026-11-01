@@ -22,6 +22,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+      - name: Check presentation snapshot
+        run: python3 scripts/check-portfolio-template.py
       - name: Test token configuration
         run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
       - uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1

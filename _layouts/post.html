@@ -1,62 +1,14 @@
 ---
-layout: page
+layout: default
 ---
-
-{% if page.image and page.headerImage %}
-    <img class="title-image" src="{{ page.image | relative_url }}" alt="{{ page.title }}">
-{% endif %}
-
-<h1 class="title">{{ page.title }}</h1>
-
-<span class="date">
-    <time datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date: "%A. %B %d, %Y" }}</time>
-    {% if site.read-time %} - {% include read-time.html %}{% endif %}
-</span>
-
-{% if site.show-tags %}
-    <div class="post-tags">
-        {% for tag in page.tags %}
-            <a class="item" href="{{ "/tags/" | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% assign sections = content | split: '<h2 id="' %}
-{% if sections.size > 3 %}
-<details class="post-toc">
-    <summary>On this page</summary>
-    <ul>
-    {% for section in sections offset:1 %}
-        {% assign section_id = section | split: '"' | first %}
-        {% assign section_heading = section | split: '</h2>' | first | split: '">' | last | strip_html %}
-        <li><a href="#{{ section_id | escape }}">{{ section_heading }}</a></li>
-    {% endfor %}
-    </ul>
-</details>
-{% endif %}
+<header class="article-header">
+  <p class="eyebrow">{{ page.tags.first | default: 'Writing' | escape }}</p>
+  <h1>{{ page.title | escape }}</h1>
+  <p class="date"><time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %-d, %Y' }}</time></p>
+  {% if page.description %}<p class="article-deck">{{ page.description | escape }}</p>{% endif %}
+  {% if page.image and page.headerImage %}<img class="title-image" src="{{ page.image | relative_url }}" alt="" width="900" height="360">{% endif %}
+</header>
+{% if page.tags.size > 0 %}<nav class="post-tags" aria-label="Article topics">{% for tag in page.tags %}<a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag | escape }}</a>{% endfor %}</nav>{% endif %}
+{% include contents.html %}
 {{ content | replace: '<pre', '<pre tabindex="0" role="region" aria-label="Code example"' }}
-
-{% if site.post-advance-links contains page.category %}
-    <div class="blog-navigation">
-        {% if page.previous.hidden == false and page.previous.url %}
-            <a class="prev" href="{{ page.previous.url | relative_url }}">&laquo; {{ page.previous.title }}</a>
-        {% else %}
-            <a class="prev"></a>
-        {% endif %}
-        {% if page.next.hidden == false and page.next.url %}
-            <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &raquo;</a>
-        {% endif %}
-    </div>
-{% endif %}
-
-{% if site.related %}
-    {% include related.html %}
-{% endif %}
-
-{% if site.show-author %}
-    {% include author.html %}
-{% endif %}
-
-{% if site.disqus.categories contains page.category %}
-    {% include disqus.html %}
-{% endif %}
+{% include post-footer.html %}

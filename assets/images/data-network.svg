@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="360" viewBox="0 0 400 360" fill="none">
+<defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#254454"/></pattern></defs>
+<rect width="400" height="360" fill="url(#dots)"/>
+<g stroke="#32829b" stroke-width="1.5" stroke-dasharray="3 5"><path d="M200 175V70L125 40M200 175 70 100M200 175 325 85M200 205 310 285M200 205 100 285M200 205V330"/></g>
+<g stroke="#54ddf5" stroke-width="1.5" fill="#102430">
+<path d="m125 20 22 12v26l-22 12-22-12V32zM103 32l22 13 22-13m-22 13v25"/>
+<path d="m325 60 22 12v26l-22 12-22-12V72zM303 72l22 13 22-13m-22 13v25"/>
+<path d="m100 265 22 12v26l-22 12-22-12v-26zM78 277l22 13 22-13m-22 13v25"/>
+<path d="M53 75 85 94v57l-32-19zM60 91l18 11m-18 1 18 11m-18 1 18 11"/>
+<path d="M300 250 332 269v57l-32-19zM307 266l18 11m-18 1 18 11m-18 1 18 11"/>
+<path d="M164 163v58c0 25 72 25 72 0v-58"/><ellipse cx="200" cy="163" rx="36" ry="15"/>
+<path d="M164 182c0 20 72 20 72 0m-72 20c0 20 72 20 72 0"/>
+</g></svg>

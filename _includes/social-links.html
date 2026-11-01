@@ -1,8 +1,7 @@
+{% if site.linkedin or site.github or site.email %}
 <div class="social-links">
-{% if site.linkedin %}<a href="https://www.linkedin.com/in/{{ site.linkedin | escape }}">{% include icon.html %} LinkedIn</a>{% endif %}
+{% if site.linkedin %}<a href="https://www.linkedin.com/in/{{ site.linkedin | escape }}">{% include icon.html name='external' %} LinkedIn</a>{% endif %}
 {% if site.github %}<a href="https://github.com/{{ site.github | escape }}">{% include icon.html name='code' %} GitHub</a>{% endif %}
 {% if site.email %}<a href="mailto:{{ site.email | escape }}">{% include icon.html name='mail' %} Email</a>{% endif %}
-{% if site.twitter %}<a href="https://twitter.com/{{ site.twitter | escape }}">{% include icon.html %} Twitter</a>{% endif %}
-{% if site.facebook %}<a href="https://facebook.com/{{ site.facebook | escape }}">{% include icon.html %} Facebook</a>{% endif %}
-{% if site.instagram %}<a href="https://instagram.com/{{ site.instagram | escape }}">{% include icon.html %} Instagram</a>{% endif %}
 </div>
+{% endif %}

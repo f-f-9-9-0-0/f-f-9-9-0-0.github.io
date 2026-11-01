@@ -1,0 +1,4 @@
+{% assign headings = content | split: '<h2 id="' %}
+{% if headings.size > 3 %}<details class="post-toc"><summary>On this page</summary><ul>
+{% for heading in headings offset:1 %}{% assign id = heading | split: '"' | first %}{% assign label = heading | split: '</h2>' | first | split: '">' | last | strip_html %}<li><a href="#{{ id | escape }}">{{ label }}</a></li>{% endfor %}
+</ul></details>{% endif %}

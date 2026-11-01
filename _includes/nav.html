@@ -1,12 +1,7 @@
-<nav class="nav" aria-label="Main navigation">
-    <ul class="list">
-        {% for item in site.data.navigation %}
-            {% if item.setting == nil or site[item.setting] %}
-            <li class="item"><a class="link" href="{{ item.url | relative_url }}"{% if page.section == item.section or page.layout == 'post' and item.section == 'blog' %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>{{ item.title }}</a></li>
-            {% endif %}
-        {% endfor %}
-        {% if site.resume %}
-        <li class="item"><a class="link" href="{% if site.resume-external %}{{ site.resume-url }}{% else %}{{ site.resume-url | relative_url }}{% endif %}">Résumé</a></li>
-        {% endif %}
-    </ul>
-</nav>
+<nav class="nav" aria-label="Main navigation"><ul>
+{% for item in site.data.navigation %}
+  {% if item.setting == nil or site[item.setting] %}
+  <li><a href="{{ item.url | relative_url }}"{% if page.section == item.section or page.layout == 'post' and item.section == 'blog' %} aria-current="{% if page.url == item.url %}page{% else %}true{% endif %}"{% endif %}>{{ item.title | escape }}</a></li>
+  {% endif %}
+{% endfor %}
+</ul></nav>
