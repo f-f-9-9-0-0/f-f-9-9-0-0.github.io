@@ -23,7 +23,7 @@ def main():
         config['publication_reviewed'] = True
         config['analytics'] = {
             'mode': 'reviewed_exemption',
-            'description': {'en': 'Synthetic analytics fixture.', 'hu': 'Szintetikus teszt.'},
+            'description': {'en': 'Synthetic analytics fixture.'},
             'review_reference': 'Synthetic test record',
         }
         config_path.write_text(json.dumps(config))

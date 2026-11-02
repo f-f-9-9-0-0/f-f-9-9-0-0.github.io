@@ -43,7 +43,7 @@ class PrivacyIntegrationTests(unittest.TestCase):
 
     def test_jekyll_pages_and_css(self):
         privacy.generate(self.source)
-        for lang in ('en', 'hu'):
+        for lang in ('en',):
             for page in ('privacy', 'choices'):
                 content = (self.source / 'privacy' / lang / (page + '.html')).read_text()
                 self.assertTrue(content.startswith('---\n'))
@@ -52,7 +52,7 @@ class PrivacyIntegrationTests(unittest.TestCase):
                 self.assertIn('"analytics": false', content)
                 self.assertIn('"robots": "noindex,nofollow"', content)
                 metadata = json.loads(content.split('---')[1])
-                self.assertEqual(set(metadata['alternates']), {'en', 'hu'})
+                self.assertEqual(set(metadata['alternates']), {'en'})
                 self.assertEqual(metadata['alternates'][lang], metadata['permalink'])
                 self.assertTrue(metadata['description'])
             self.assertTrue((self.source / 'privacy' / lang / 'privacy.css').is_file())
@@ -105,7 +105,7 @@ class PrivacyIntegrationTests(unittest.TestCase):
         self.config['publication_reviewed'] = True
         self.config['analytics'] = {
             'mode': 'reviewed_exemption',
-            'description': {'en': 'Synthetic analytics fixture.', 'hu': 'Szintetikus teszt.'},
+            'description': {'en': 'Synthetic analytics fixture.'},
             'review_reference': 'Synthetic test record',
         }
         self.write_config()

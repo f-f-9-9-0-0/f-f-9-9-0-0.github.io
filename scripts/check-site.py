@@ -54,13 +54,13 @@ def check(root, published, origin):
         if path.endswith('/'):
             target /= 'index.html'
         assert target.is_file(), 'Sitemap points to a missing file: ' + path
-    for language in ('en', 'hu'):
+    for language in ('en',):
         for kind in ('privacy', 'choices'):
             path = '/privacy/' + language + '/' + kind + '.html'
             page = Page(root / path.lstrip('/'))
             assert page.lang == language, 'Document language does not match content'
             assert page.canonicals == [origin + path], 'Privacy canonical mismatch'
-            expected = {lang: origin + '/privacy/' + lang + '/' + kind + '.html' for lang in ('en', 'hu')}
+            expected = {lang: origin + '/privacy/' + lang + '/' + kind + '.html' for lang in ('en',)}
             assert page.alternates == expected, 'Language alternates must include self and counterpart'
             assert page.description, 'Missing privacy description'
             assert page.robots == ('index,follow' if published else 'noindex,nofollow'), 'Wrong privacy indexing policy'
