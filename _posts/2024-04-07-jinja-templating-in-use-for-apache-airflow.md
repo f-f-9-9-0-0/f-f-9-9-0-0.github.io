@@ -3,6 +3,7 @@ title: "Jinja Templating in Use for Apache Airflow"
 layout: post
 date: 2024-04-07 00:00
 image: /assets/images/001/disguise.jpg
+illustration: /assets/images/articles/template-rendering.svg
 headerImage: true
 tag:
 - jinja
@@ -12,49 +13,38 @@ tag:
 - airflow
 category: blog
 author: gabor
-description: Jinja and the templates
+description: Use Airflow context variables and Jinja templates to inspect DAGs, DAG runs and task instances.
 excerpt_separator: <!--more-->
 ---
-# Jinja templating
-<br>
+## Jinja templating
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.8.4!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.8.4!
     </p>
-</div>
+</aside>
 
-Templating is a powerful way of passing data to the processing part of task instances. Providing a simple mechanism, it is easy to manage, without the need of using XCom or any custom code for implementing it.
-<br>
+Templating is a powerful way of passing data to the processing part of task instances. Templates expose runtime context and configured values. They do not replace XCom for exchanging computed results between tasks, although a template can call `xcom_pull()` to access those results.
 
 [Jinja][jinja_docs] is a templating engine, which uses placeholders in the template allow writing code similar to Python syntax. The template is passed data to render the final document.
-<br>
 <!--more-->
-<br>
-<br>
 
-# Variables, Python instances?
+## Variables, Python instances?
 
-There are numerous variables you can include in your templates. These variables are being replaces with instances of Python classes during rendering the template.  
+There are numerous variables you can include in your templates. These names refer to values and objects in the rendering context.
 A complete list of variables available can be found [here][templates_reference].
-<br>
 
-When you include a variable in the template (e.g. {% raw %}`{{ run_id }}`{% endraw %}) then the engine replaces it with the corresponding Python class (`str` in case of `run_id`).  
-Then you can use all the attributes and functions available for the actual class.  
+For example, {% raw %}`{{ run_id }}`{% endraw %} evaluates the `run_id` value from the context, which is a string. Expressions can access permitted attributes and methods of context objects; Jinja does not replace a variable with its Python class. By default the rendered result is a string. Airflow can instead use native-object rendering when `render_template_as_native_obj=True`.
 This can be even more exciting if we have a more complex class.
-<br>
-<br>
 
-# Samples, samples
+## Samples, samples
 
-## DAG details
-<br>
+### DAG details
 For example, if you use a variable representing an instance of the class `DAG`, then you can use all the class's attributes in your templates.  
 A string is passed  as an argument to a Python operator which the templates variables are being replaced into.  
 Print current DAG's details (class `DAG`, specified in [airflow\models\dag.py][dag.py]):
-<script src="https://gist.github.com/f-f-9-9-0-0/16dd8ff2d8c61cd8774cc4003fdc0ba8.js"></script>
-<br>
+{% include gist.html id="f-f-9-9-0-0/16dd8ff2d8c61cd8774cc4003fdc0ba8" %}
 The output looks like this:
 ```
     Current DAG details:
@@ -95,18 +85,25 @@ The output looks like this:
       fail_stop                       : False
 ```
 
-<br>
-
 ---
 
-<br>
-
-## DAG Run details
-<br>
+### DAG Run details
 Or another example of printing the current and the previous DAG Run's details (note that you can use functions, even static or class level functions of instances replaced, class `DagRun`, specified in [airflow\models\dagrun.py][dagrun.py]):  
-<script src="https://gist.github.com/f-f-9-9-0-0/c7b887852e33bbb9385686a255eca7cc.js"></script>
-<br>
-The output looks like this:
+{% include gist.html id="f-f-9-9-0-0/c7b887852e33bbb9385686a255eca7cc" %}
+The embedded example assumes a previous run exists. On the first run, `get_previous_dagrun()` returns `None`, so guard attribute access. For example:
+
+{% raw %}
+```jinja
+{% set previous_run = dag_run.get_previous_dagrun(dag_run) %}
+{% if previous_run is not none %}
+Previous run ID: {{ previous_run.run_id }}
+{% else %}
+No previous run.
+{% endif %}
+```
+{% endraw %}
+
+Apply this guard around the previous-run section when using the embedded example. The output shown here is from a later run:
 ```
     Current DAG Run details:
       id                        : 4370
@@ -149,17 +146,11 @@ The output looks like this:
       updated_at                : 2024-04-07 20:17:38.836489+00:00
 ```
 
-<br>
-
 ---
 
-<br>
-
-## Task instances' details
-<br>
+### Task instances' details
 Another example to print all the task instances' details of the current DAG Run (note that you can use *Jinja control elements*, like loops in the templates, class `TaskInstance` is specified in [airflow\models\taskinstance.py][taskinstance.py]):  
-<script src="https://gist.github.com/f-f-9-9-0-0/f249b12543a72749d66b814cee2bd698.js"></script>
-<br>
+{% include gist.html id="f-f-9-9-0-0/f249b12543a72749d66b814cee2bd698" %}
 The output looks like this:
 ```
     All task instances' details of the current DAG Run:
@@ -195,17 +186,11 @@ The output looks like this:
         next_kwargs                 : None
 ```
 
-<br>
-
 ---
 
-<br>
-
-## Task instances' details through class `BaseOperator`
-<br>
-This example uses the class `BaseOperator` to print details of the current task instance (class `BaseOperator` is specified in [airflow\models\baseoperator.py][baseoperator.py]):  
-<script src="https://gist.github.com/f-f-9-9-0-0/c111be4437080501ee4af066d7cf6587.js"></script>
-<br>
+### Task instances' details through class `BaseOperator`
+This example uses the task’s `BaseOperator` object to print its operator configuration, rather than the per-run state held by `TaskInstance` (class `BaseOperator` is specified in [airflow\models\baseoperator.py][baseoperator.py]):
+{% include gist.html id="f-f-9-9-0-0/c111be4437080501ee4af066d7cf6587" %}
 The output looks like this:
 ```
     Current task instance's details for the current DAG Run:
@@ -253,10 +238,9 @@ The output looks like this:
       doc_yaml                              : None  -  (Add documentation (in YAML format) or notes to your Task objects)
 ```
 
-
 [jinja_docs]: https://jinja.palletsprojects.com/en/3.1.x/
-[templates_reference]: https://airflow.apache.org/docs/apache-airflow/2.7.3/templates-ref.html
-[dag.py]: https://github.com/apache/airflow/blob/main/airflow/models/dag.py
-[dagrun.py]: https://github.com/apache/airflow/blob/main/airflow/models/dagrun.py
-[taskinstance.py]: https://github.com/apache/airflow/blob/main/airflow/models/taskinstance.py
-[baseoperator.py]: https://github.com/apache/airflow/blob/main/airflow/models/baseoperator.py
+[templates_reference]: https://airflow.apache.org/docs/apache-airflow/2.8.4/templates-ref.html
+[dag.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/dag.py
+[dagrun.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/dagrun.py
+[taskinstance.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/taskinstance.py
+[baseoperator.py]: https://github.com/apache/airflow/blob/2.8.4/airflow/models/baseoperator.py

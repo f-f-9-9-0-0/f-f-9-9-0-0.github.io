@@ -1,16 +1,16 @@
 ---
+description: Project write-ups are coming soon. Explore technical articles and GitHub repositories by Gábor Tóth.
 layout: page
+seo:
+  type: CollectionPage
 title: Projects
+section: projects
 ---
-<section class="list">
-    {% for post in site.posts %}
-        {% if post.projects %}
-            <div class="item {% if post.star %}star{% endif %}">
-                <a class="url" href="{% if post.externalLink %}{{ post.externalLink }}{% else %}{{ site.url }}{{ post.url }}{% endif %}">
-                    <aside><time datetime="{{ post.date | date:"%d-%m-%Y" }}">{{ post.date | date: "%b %d %Y" }}</time></aside>
-                    <h3 class="title">{{ post.title }}</h3>
-                </a>
-            </div>
-        {% endif %}
+<div class="list">
+    {% assign projects = site.posts | where: 'projects', true | where_exp: 'post', 'post.hidden != true' %}
+    {% for post in projects %}
+        {% include blog-post.html %}
+    {% else %}
+        <p>Project write-ups are coming soon. In the meantime, explore the <a href="{{ '/blog/' | relative_url }}">technical articles</a>{% if site.github %} or <a href="https://github.com/{{ site.github | escape }}">GitHub repositories</a>{% endif %}.</p>
     {% endfor %}
-</section>
+</div>

@@ -3,6 +3,7 @@ title: "XCom values and how to make it work in Apache Airflow"
 layout: post
 date: 2025-05-05 00:00
 image: /assets/images/001/xcom.jpg
+illustration: /assets/images/articles/task-messages.svg
 headerImage: true
 tag:
 - xcom
@@ -16,46 +17,35 @@ author: gabor
 description: XCom is the standard way for tasks to communicate with each other though there are certain limitations.
 excerpt_separator: <!--more-->
 ---
-# XCom _(short for “cross-communications”)_
-<br>
+## XCom _(short for “cross-communications”)_
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.10.4!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.10.4!
     </p>
-</div>
+</aside>
 
-While this the standard mechanism to transfer data among tasks, there are certain limitations where XComs can be used.  
-One of these is to use XCom values only for fields included in the operators' `template_fields` private attribute.
-<br>
+XComs let tasks exchange small serializable values. Tasks can pull values directly with `task_instance.xcom_pull()`, and TaskFlow supports passing task outputs as arguments. This article focuses on a narrower rule: automatic resolution of values passed to classic operator fields uses the operator’s `template_fields` attribute. That attribute is part of the operator authoring interface, not a private attribute. See the [XCom documentation][xcom_docs].
 
 <!--more-->
-<br>
-<br>
 
-# `template_fields` and how to hack it
+## `template_fields` and automatic resolution
 
-Reason is, when processing the Python code, Airflow translates an XCom output from the form of TaskFlow API to a string template, including a `task_instance.xcom_pull` function call for the Jinja engine to render.
-<br>
+A TaskFlow output is represented by an `XComArg`. When passed directly to a templated operator field, it can be resolved to the stored value at runtime. It does not have to become a Jinja string. Converting a plain `XComArg` to a string produces a Jinja `xcom_pull` expression for compatibility; that is why unresolved objects printed by the example look like templates. See the [implementation][xcom_arg].
 
 As I mentioned earlier in [this post][link_to_other_post], Jinja templating is a very powerful way of interacting with Airflow in runtime.
-<br>
 
-If the field is not up to be rendered (not in the `template_fields` list) then the string will not be touched and the raw value the downstream task gets, not the XCom value set be the upstream task.
-<br>
+A field outside `template_fields` is not automatically resolved. An `XComArg` remains an object and an explicitly supplied template remains a string, unless the operator implements its own runtime handling.
 
 The sample Dag `dag_example_xcom` below have 2 upstream tasks, which sets XCom values and 3 downstream tasks which pulls those values.  
 The transfer of data also works from within a task group and data can be pulled by tasks in task groups.
-<br>
 
-![XCom tasks](/assets/images/001/xcom_tasks.jpg)
-<br>
+{% include article-image.html src="/assets/images/001/xcom_tasks.jpg" alt="XCom tasks" %}
 
-<script src="https://gist.github.com/f-f-9-9-0-0/8c82f1495e8d42e59a67637975bc25d1.js"></script>
-<br>
+{% include gist.html id="f-f-9-9-0-0/8c82f1495e8d42e59a67637975bc25d1" %}
 
-The output of the task `xcom_target` clearly shows the difference, as only template fields are getting the XCom values form the Jinja engine, other fields remain as raw strings:
+The output of `xcom_target` shows resolved values for templated fields. For the other fields, the f-string used to print the values makes an unresolved `XComArg` look like an explicitly supplied Jinja string:
 ```
       template0: this is output0
       template1: this is output0
@@ -66,17 +56,13 @@ The output of the task `xcom_target` clearly shows the difference, as only templ
       other2   : \{\{ task_instance.xcom_pull(task_ids='wrapper_source.xcom_source', dag_id='dag_example_xcom', key='output0') \}\}
       other3   : \{\{ task_instance.xcom_pull(task_ids='wrapper_source.xcom_source', dag_id='dag_example_xcom', key='output0') \}\}
 ```
-<br>
 
-**NOTE:** Fields `other0`and `other1` have exactly the same string being set, demonstrating how Airflow translates the TaskFlow API Python code into a Jinja template _(same applies to fields `other2` and `other3`)_  
+**NOTE:** `other0` receives an `XComArg`, while `other1` receives a string. Their printed representations match because printing invokes string conversion; their stored Python values are not the same type. The same distinction applies to `other2` and `other3`.
 The source code for this task:
-<br>
 
-![Source code for target task](/assets/images/001/xcom_target_code.jpg)
-<br>
+{% include article-image.html src="/assets/images/001/xcom_target_code.jpg" alt="Source code for target task" %}
 
 ---
-<br>
 
 To overcome this sort of limitation, for example if you have a built in operator which comes with Airflow, and you have a field which is not in the list of `template_fields`, but you would still need to have an XCom value there, well in this case you can create a custom class inherited from the actual operator and include the fields you need in the list.  
 An example for this you can see in the code, using the class `AnotherCustomOperator`.  
@@ -91,6 +77,8 @@ Field `other0` is added to the list and therefore the value for this field also 
       other2   : \{\{ task_instance.xcom_pull(task_ids='wrapper_source.xcom_source', dag_id='dag_example_xcom', key='output0') \}\}
       other3   : \{\{ task_instance.xcom_pull(task_ids='wrapper_source.xcom_source', dag_id='dag_example_xcom', key='output0') \}\}
 ```
-<br>
 
 [link_to_other_post]: /jinja-templating-in-use-for-apache-airflow
+
+[xcom_docs]: https://airflow.apache.org/docs/apache-airflow/2.10.4/core-concepts/xcoms.html
+[xcom_arg]: https://github.com/apache/airflow/blob/2.10.4/airflow/models/xcom_arg.py

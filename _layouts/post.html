@@ -1,49 +1,16 @@
 ---
-layout: page
+layout: default
 ---
-
-{% if page.image and page.headerImage %}
-    <img class="title-image" src="{{ page.image }}" alt="{{ page.title }}">
-{% endif %}
-
-<h1 class="title">{{ page.title }}</h1>
-
-<span class="date">
-    <time datetime="{{ page.date | date:"%d-%m-%Y" }}">{{ page.date | date: "%A. %B %d, %Y" }}</time>
-    {% if site.read-time %} - {% include read-time.html %}{% endif %}
-</span>
-
-{% if site.show-tags %}
-    <div class="post-tags">
-        {% for tag in page.tags %}
-            <a class="item" href="{{ site.url }}/tags/#{{ tag | slugify }}">{{ tag }}</a>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{{content}}
-
-{% if site.post-advance-links contains page.category %}
-    <div class="blog-navigation">
-        {% if page.previous.hidden == false and page.previous.url %}
-            <a class="prev" href="{{ site.url }}{{ page.previous.url }}">&laquo; {{ page.previous.title }}</a>
-        {% else %}
-            <a class="prev"></a>
-        {% endif %}
-        {% if page.next.hidden == false and page.next.url %}
-            <a class="next" href="{{ site.url }}{{ page.next.url }}">{{ page.next.title }} &raquo;</a>
-        {% endif %}
-    </div>
-{% endif %}
-
-{% if site.related %}
-    {% include related.html %}
-{% endif %}
-
-{% if site.show-author %}
-    {% include author.html %}
-{% endif %}
-
-{% if site.disqus.categories contains page.category %}
-    {% include disqus.html %}
-{% endif %}
+<header class="article-header">
+  <p class="eyebrow">{{ page.tags.first | default: 'Writing' | escape }}</p>
+  <h1>{{ page.title | escape }}</h1>
+  <p class="date"><time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %-d, %Y' }}</time></p>
+  {% if page.description %}<p class="article-deck">{{ page.description | escape }}</p>{% endif %}
+  {% assign artwork = page.illustration | default: page.image %}{% if artwork and page.headerImage %}<img class="title-image" src="{{ artwork | relative_url }}" alt="" width="640" height="320">{% endif %}
+</header>
+{% if page.tags.size > 0 %}<nav class="post-tags" aria-label="Article topics">{% for tag in page.tags %}<a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag | escape }}</a>{% endfor %}</nav>{% endif %}
+{% include contents.html %}
+<div class="article-body">
+{{ content | replace: '<pre', '<pre tabindex="0" role="region" aria-label="Code example"' }}
+</div>
+{% include post-footer.html %}

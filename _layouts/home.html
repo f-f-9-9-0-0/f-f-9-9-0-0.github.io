@@ -1,0 +1,22 @@
+---
+layout: default
+---
+<section class="portfolio-hero" aria-labelledby="intro-title">
+  <div class="hero-copy">
+    <p class="eyebrow">{{ site.hero_label | default: 'Technical writing' | escape }}</p>
+    <h1 id="intro-title">{{ site.hero_title | default: site.title | escape }}</h1>
+    <p class="hero-description">{{ site.description | escape }}</p>
+    {% include social-links.html %}
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <span class="monogram">{{ site.initials | default: 'TP' | escape }}</span>
+    <img src="{{ '/assets/images/data-network.svg' | relative_url }}" alt="" width="400" height="360">
+  </div>
+</section>
+<section class="home-writing" aria-labelledby="writing-title">
+  <div class="section-heading"><h2 id="writing-title">Latest writing</h2><a href="{{ '/blog/' | relative_url }}">View all posts <span aria-hidden="true">→</span></a></div>
+  <div class="list">
+  {% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
+  {% for post in articles limit:3 %}{% include blog-post.html %}{% else %}<p>No articles yet. Add a post to get started.</p>{% endfor %}
+  </div>
+</section>

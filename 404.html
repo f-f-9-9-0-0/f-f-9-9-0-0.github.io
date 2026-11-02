@@ -1,5 +1,7 @@
 ---
+description: This page could not be found. Return to the homepage to browse the latest articles.
 layout: default
+title: Page not found
 sitemap: false
 robots: noindex,follow
 permalink: /404.html 
@@ -8,9 +10,9 @@ permalink: /404.html
 <section class="lost-container">
   <h1>Uh oh!</h1>
   <div class="link">
-    <img class="selfie" alt="{{ site.title }}" src="{{ site.url }}/assets/images/error.gif" />
+    <img class="selfie" alt="{{ site.title }}" src="{{ "/assets/images/error.gif" | relative_url }}" />
   </div>
   <br />
   <br />
-  <a href="/">Oops!</a>
+  <a href="{{ "/" | relative_url }}">Return home</a>
 </section>

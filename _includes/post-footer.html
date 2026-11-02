@@ -1,0 +1,4 @@
+<nav class="post-navigation" aria-label="More writing"><a href="{{ '/blog/' | relative_url }}">← All articles</a></nav>
+{% if site.related %}{% include related.html %}{% endif %}
+{% if site.show-author %}{% include author.html %}{% endif %}
+{% if site.disqus.categories contains page.category %}{% include disqus.html %}{% endif %}

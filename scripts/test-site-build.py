@@ -36,6 +36,7 @@ def main():
         subprocess.run([sys.executable, str(source / 'scripts/configure-analytics.py'), str(source / '_data/cloudflare_analytics.json')], env=env, check=True)
         subprocess.run(['bundle', 'exec', 'jekyll', 'build', '--source', str(source), '--destination', str(output)], cwd=source, env=env, check=True)
         subprocess.run([sys.executable, str(source / 'scripts/check-site.py'), str(output)], env=env, check=True)
+        subprocess.run(['bundle', 'exec', 'ruby', str(source / 'scripts/check-design.rb'), str(output)], env=env, check=True)
         spec = importlib.util.spec_from_file_location('site_checks', source / 'scripts/check-site.py')
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)

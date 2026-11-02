@@ -3,6 +3,7 @@ title: "Apache Airflow Datasets Under The Hoods"
 layout: post
 date: 2024-02-09 01:00
 image: /assets/images/001/ufo.jpg
+illustration: /assets/images/articles/dataset-internals.svg
 headerImage: true
 tag:
 - data-aware scheduling
@@ -14,26 +15,21 @@ author: gabor
 description: Airflow datasets under the hoods
 excerpt_separator: <!--more-->
 ---
-# Datasets in Apache Airflow
-<br>
+## Datasets in Apache Airflow
 
-<div style="margin:10px;padding:5px;background-color:#7569cc;color:white">
-    <p style="color:white">
-        <b style="font-weight: bold">&nbsp;IMPORTANT</b><br>
-        &nbsp;This post is created based on the Airflow version 2.8.2!
+<aside class="callout" aria-label="Important">
+    <p>
+        <strong class="callout-title">Important</strong>
+        This post is created based on the Airflow version 2.8.2!
     </p>
-</div>
+</aside>
 
 You can find a general introduction to `datasets` in [my other post][link_to_other_post], while I go into details in this one and show you what happens under the hoods if you start to deal with `datasets` in Apache Airflow.
 <!--more-->
-<br>
-<br>
 
-# How does this work?
-<br>
+## How does this work?
 
-The concept is simple, one DAG *touches* the dataset (updates its `last updated timestamp`) while another depends on the same.  
-The **Scheduler** periodically checks on the DAGs and datasets in its [database backend][database_backend], and if there is a match, *which means a DAG can be triggered as the dataset (it depends on) was updated already*, then the latter DAG is selected for a run.
+When a producer task succeeds, Airflow records a dataset event and queues updates for consuming DAGs. The **Scheduler** checks these queue records in its [metadata database][database_backend]. For a DAG scheduled on a list of datasets, every required dataset must have a pending update before a run can be created, subject to scheduling limits.
 
 ---
 
@@ -44,16 +40,14 @@ Datasets, as per above, are being used as:
 Based on this, datasets used for scheduling a DAG are being registered (stored in Airflows internal database) when the DAG Processor processes the DAG's file.  
 While datasets used as outlets of tasks are not necessarily updated throughout the execution of the DAG (imagine a branch which got skipped) these are still getting registered.  
 
-<div style="margin:10px;padding:5px;background-color:#fef0d2">
+<aside class="callout" aria-label="Important">
     <p>
-        <b style="font-weight: bold">IMPORTANT</b><br>
-        The <b style="font-weight: bold">Scheduler</b> compares the dependant DAG's last execution time to the dataset's last update time (<b style="font-weight: bold">for datasets one timestamp is being preserved only for updates</b>)
-        <br>
-        <a href="https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd.png" alt="ERD Schema of the Database"></a>
-        <br>
-        <a href="https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd2.png" alt="ERD Schema of the Database"></a>
+        <strong class="callout-title">Important</strong>
+        Airflow stores individual updates in <code>dataset_event</code>, each with its own timestamp. The <code>dataset_dag_run_queue</code> table tracks pending dataset updates for each consuming DAG. <b>These dependencies do not match events by business date or require producer DAGs to finish together.</b>
+        <a href="https://airflow.apache.org/docs/apache-airflow/2.8.2/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd.png" alt="ERD Schema of the Database"></a>
+        <a href="https://airflow.apache.org/docs/apache-airflow/2.8.2/database-erd-ref.html" alt="ERD Schema of the Database"><img src="/assets/images/001/dataset_erd2.png" alt="ERD Schema of the Database"></a>
     </p>
-</div>
+</aside>
 
 ---
 
@@ -80,7 +74,7 @@ These above tables are being populated when the the DAG Processor parses Python 
    [`DagFileProcessor::save_dag_to_db()`]
 
 3. [airflow\models\dagbag.py][airflow\models\dagbag.py]  
-   [`DagFileProcessor::_sync_to_db()`]
+   [`DagBag::_sync_to_db()`]
     > Save attributes about list of DAG to the DB.
 
 4. [airflow\models\dag.py][airflow\models\dag.py]  
@@ -97,7 +91,7 @@ These above tables are being populated when the the DAG Processor parses Python 
 
 ---
 
-If a **DAG Run's task updates a dataset** then a record is being added to the table `dataset_event` with all the DAG Run's details ([airflow\models\manager.py][airflow\models\manager.py])  
+If a **DAG Run's task updates a dataset** then a record is being added to the table `dataset_event` with references to the producing task instance and DAG run ([airflow\models\manager.py][airflow\models\manager.py])
 [`DatasetManager::register_dataset_change()`]
 > Register dataset related changes.
 > For local datasets, look them up, record the dataset event, queue dagruns, and broadcast the dataset event
@@ -134,7 +128,7 @@ The *Scheduler* gathers all DAGs in its loop where a DAG Run is needed after a d
 
     -> [`SchedulerJobRunner::_create_dag_runs_dataset_triggered()`]  
     > For DAGs that are triggered by datasets, create dag runs.
-    > Once the DAG Run is started, all records for the triggered DAG is being removed from table dataset_dag_run_queue
+    > When the DAG run is created in the queued state, its pending records are removed from dataset_dag_run_queue
 
     -> [`Dag::create_dagrun()`] ([airflow\models\dag.py][airflow\models\dag.py])  
     > Create a dag run from this dag including the tasks associated with this dag.  
@@ -144,7 +138,7 @@ The *Scheduler* gathers all DAGs in its loop where a DAG Run is needed after a d
 5. [`SchedulerJobRunner::_start_queued_dagruns()`]  
     > Find DagRuns in queued state and decide moving them to running state.
   
-The DAG IDs in step **4.**, *where all datasets are updated which the DAG depends on*, are being retrieved by this query from the backend database [`DagModel::dags_needing_dagruns()`] ([airflow\models\dag.py][airflow\models\dag.py]):
+The DAG IDs in step **4.**, *where all datasets are updated which the DAG depends on*, are selected using the following simplified SQL equivalent of the ORM query [`DagModel::dags_needing_dagruns()`] ([airflow\models\dag.py][airflow\models\dag.py]):
 ```sql
 select
     dsdr.dag_id,
@@ -160,18 +154,14 @@ from
 group by
     dsdr.dag_id
 having
-    count() = sum(
+    count(*) = sum(
                     case
-                        when ddrq.target_dag_id <> NULL then 1
+                        when ddrq.target_dag_id IS NOT NULL then 1
                         else 0
                     end
                 )
 ```
-The **latest dataset update timestamp** is being considered (`last_queued_time` from the query above) for each consumer DAG as a filter later on.  
-<br>
-For each consumer DAG (collected above), gets the last **DAG Run** execution with the below 2 conditions satisfied:
-- execution started before the **latest dataset update timestamp** and
-- triggered by **datasets**  
+The **latest queue creation time** (`last_queued_time`) becomes the logical date of the new dataset-triggered run. For each consumer DAG, the scheduler looks up the previous dataset-triggered run with an earlier logical date. Here `execution_date` means the logical date, not the wall-clock time when execution started. The following SQL snippets use angle-bracket placeholders and illustrate the source queries rather than being executable unchanged.
 
 ```sql
 select
@@ -197,18 +187,18 @@ from
     on
         dsdr.dataset_id = de.dataset_id
     inner join
-        # retrieve DAG Run details which updated the dataset (NOT the consumer)
+        -- retrieve DAG Run details which updated the dataset (NOT the consumer)
         dag_run dr
     on
         dr.dag_id = de.source_dag_id and
         dr.run_id = de.source_run_id
 where
-    # this filter is for the consumer DAG ID
+    -- this filter is for the consumer DAG ID
     dsdr.dag_id = <dag_id> and
-    de.timestamp < <last_queued_time> and
-    # this condition is applicable only if there is a previous DAG Run available
-    # for the CONSUMER DAG
-    # execution_date comes from the previous query
+    de.timestamp <= <last_queued_time> and
+    -- this condition is applicable only if there is a previous DAG Run available
+    -- for the CONSUMER DAG
+    -- execution_date comes from the previous query
     de.timestamp > <execution_date from previous DAG Run, if any>
 ```
 
@@ -219,16 +209,13 @@ Records for the triggered DAG is being removed from table `dataset_dag_run_queue
 delete from dataset_dag_run_queue where target_dag_id = <dag_id>
 ```
 
-
-
-
-[database_backend]: https://airflow.apache.org/docs/apache-airflow/stable/database-erd-ref.html
-[airflow\dag_processing\processor.py]: https://github.com/apache/airflow/blob/main/airflow/dag_processing/processor.py
-[airflow\models\dagbag.py]: https://github.com/apache/airflow/blob/main/airflow/models/dagbag.py
-[airflow\models\dag.py]: https://github.com/apache/airflow/blob/main/airflow/models/dag.py
-[airflow\models\dagrun.py]: https://github.com/apache/airflow/blob/main/airflow/models/dagrun.py
-[airflow\models\dataset.py]: https://github.com/apache/airflow/blob/main/airflow/models/dataset.py
-[airflow\models\manager.py]: https://github.com/apache/airflow/blob/main/airflow/datasets/manager.py
-[airflow\jobs\scheduler_job_runner.py]: https://github.com/apache/airflow/blob/main/airflow/jobs/scheduler_job_runner.py
+[database_backend]: https://airflow.apache.org/docs/apache-airflow/2.8.2/database-erd-ref.html
+[airflow\dag_processing\processor.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/dag_processing/processor.py
+[airflow\models\dagbag.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/models/dagbag.py
+[airflow\models\dag.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/models/dag.py
+[airflow\models\dagrun.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/models/dagrun.py
+[airflow\models\dataset.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/models/dataset.py
+[airflow\models\manager.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/datasets/manager.py
+[airflow\jobs\scheduler_job_runner.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/jobs/scheduler_job_runner.py
 
 [link_to_other_post]: /data-aware-scheduling-with-dataset-in-apache-airflow

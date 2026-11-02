@@ -1,15 +1,5 @@
-<footer class="footer-main">
-    {{ site.title }} © {{ site.time | date: '%Y' }}
-
-    <a class="link" href="{{ site.url }}/feed.xml" target="_blank" alt="anchor link to rss feed" aria-label="anchor link to rss feed">
-        <i class="fa-solid fa-rss"></i>
-    </a>
-
-    <p class="extra">
-        <a class="link" href="https://github.com/sergiokopplin/indigo">Indigo theme</a>
-        by
-        <a class="link" href="https://github.com/sergiokopplin/indigo">Kopplin</a>
-    </p>
+<footer class="footer-main" lang="en">
+  <div class="footer-meta"><span>© {{ site.time | date: '%Y' }} {{ site.title | escape }}</span><a href="{{ '/feed.xml' | relative_url }}">RSS <span aria-hidden="true">↗</span></a></div>
+  {% assign privacy_language = page.lang | default: site.lang | default: 'en' %}
+  {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}{% assign link_language = link.lang | default: 'en' %}{% if link_language == privacy_language %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endif %}{% endfor %}</nav>{% endif %}
 </footer>
-
-<nav aria-label="Privacy"><a href="{{ "/privacy/en/privacy.html" | relative_url }}">Privacy</a> · <a href="{{ "/privacy/en/choices.html" | relative_url }}">Privacy choices</a></nav>
