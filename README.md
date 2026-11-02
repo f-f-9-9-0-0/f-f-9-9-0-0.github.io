@@ -7,3 +7,8 @@ This site is powered by [Jekyll](https://jekyllrb.com/)
 ## License
 
 [MIT](https://kopplin.mit-license.org/) License © Sérgio Kopplin
+
+## Analytics
+
+See [Cloudflare Web Analytics setup](ANALYTICS.md) for the optional build-time
+GitHub secret, hosting integration, and privacy/rollout checks.

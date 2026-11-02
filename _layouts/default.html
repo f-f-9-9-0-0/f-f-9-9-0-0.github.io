@@ -2,18 +2,18 @@
 layout: compress
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ page.lang | default: 'en' | escape }}">
 <head>
 
-    {% if site.analytics-google %}
-        {% include analytics-google.html %}
-    {% endif %}
 
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta name=author content="{{ site.title }}">
 
     {% seo %}
+    {% for alternate in page.alternates %}
+    <link rel="alternate" hreflang="{{ alternate[0] | escape }}" href="{{ alternate[1] | absolute_url | escape }}">
+    {% endfor %}
 
     {% include favicon.html %}
 
@@ -38,6 +38,7 @@ layout: compress
     {{ scss_sheet | scssify }}
     </style>
 
+{% if page.robots %}<meta name="robots" content="{{ page.robots | escape }}">{% endif %}
 </head>
 <body>
     <div class="wrapper-{% if site.width == "normal" %}normal{% elsif site.width == "large" %}large{% endif %}">
@@ -56,5 +57,6 @@ layout: compress
                 </div>
             </div>
     </div>
+    {% include cloudflare-analytics.html %}
 </body>
 </html>

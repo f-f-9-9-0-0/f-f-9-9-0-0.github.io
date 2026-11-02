@@ -1,0 +1,96 @@
+{
+  "site_name": "f-f-9-9-0-0.github.io",
+  "site_url": "https://f-f-9-9-0-0.github.io",
+  "languages": [
+    "en"
+  ],
+  "reviewed_on": "2026-11-02",
+  "publication_reviewed": true,
+  "analytics": {
+    "mode": "reviewed_exemption",
+    "description": {
+      "en": "This website uses Cloudflare Web Analytics to count page views and measure page performance. It sets no cookies, stores nothing on your device and does not track you across websites, so no consent choice is required. Privacy pages do not load analytics."
+    },
+    "review_reference": "Cookieless Cloudflare Web Analytics: no information stored on or read from the visitor's device, so no ePrivacy consent required; reviewed by the operator on 2026-11-02."
+  },
+  "processing": [
+    {
+      "name": {
+        "en": "Website hosting (GitHub Pages)"
+      },
+      "purpose": {
+        "en": "Deliver the pages of this website and keep the service secure."
+      },
+      "data": {
+        "en": "When you open a page, your browser sends your IP address and technical request details (requested page, time, browser type) to GitHub Pages, which hosts this website. GitHub logs visitor IP addresses for security purposes. The operator does not receive these logs."
+      },
+      "basis": {
+        "en": "Legitimate interest (Article 6(1)(f) GDPR) in delivering the website securely."
+      },
+      "recipients": {
+        "en": "GitHub, Inc., the hosting provider, under the GitHub General Privacy Statement (docs.github.com/site-policy/privacy-policies/github-general-privacy-statement)."
+      },
+      "retention": {
+        "en": "The operator stores no visitor data. GitHub retains its logs as described in its privacy statement."
+      },
+      "transfers": {
+        "en": "GitHub, Inc. is located in the United States. Transfers rely on the EU-U.S. Data Privacy Framework, in which GitHub participates, and on Standard Contractual Clauses."
+      }
+    },
+    {
+      "name": {
+        "en": "Embedded code snippets (GitHub Gist)"
+      },
+      "purpose": {
+        "en": "Display code examples inside blog posts."
+      },
+      "data": {
+        "en": "Some posts embed code from gist.github.com. When such a post loads, your browser connects to GitHub and sends your IP address, the address of the page and browser information."
+      },
+      "basis": {
+        "en": "Legitimate interest (Article 6(1)(f) GDPR) in presenting readable code examples."
+      },
+      "recipients": {
+        "en": "GitHub, Inc., under the GitHub General Privacy Statement."
+      },
+      "retention": {
+        "en": "The operator stores no visitor data. GitHub retains its data as described in its privacy statement."
+      },
+      "transfers": {
+        "en": "GitHub, Inc. is located in the United States. Transfers rely on the EU-U.S. Data Privacy Framework and on Standard Contractual Clauses."
+      }
+    },
+    {
+      "name": {
+        "en": "Website analytics (Cloudflare Web Analytics)"
+      },
+      "purpose": {
+        "en": "Count page views and measure page load performance to improve the website."
+      },
+      "data": {
+        "en": "A script from Cloudflare records the visited page, the referring page, browser and device type, country and page load timings. Your IP address is used to determine the country but is not stored for analytics. No cookies or other device storage are used, and no individual visitor profile is created."
+      },
+      "basis": {
+        "en": "Legitimate interest (Article 6(1)(f) GDPR) in understanding how the website is used, in aggregate."
+      },
+      "recipients": {
+        "en": "Cloudflare, Inc., the analytics provider, under the Cloudflare Privacy Policy (cloudflare.com/privacypolicy)."
+      },
+      "retention": {
+        "en": "The operator only sees aggregated statistics. Cloudflare retains analytics data as described in its privacy policy."
+      },
+      "transfers": {
+        "en": "Cloudflare, Inc. is located in the United States. Transfers rely on the EU-U.S. Data Privacy Framework, in which Cloudflare participates, and on Standard Contractual Clauses."
+      }
+    }
+  ],
+  "additional_information": {
+    "en": "This website has no contact forms, comments, user accounts or advertising, and sets no cookies. If you email the operator, your email address and message are used only to reply and are deleted when no longer needed. No automated decision-making or profiling takes place."
+  },
+  "page_urls": {
+    "en": {
+      "privacy": "/privacy/en/privacy.html",
+      "choices": "/privacy/en/choices.html"
+    }
+  }
+}
