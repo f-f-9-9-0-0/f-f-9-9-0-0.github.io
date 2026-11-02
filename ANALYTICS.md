@@ -1,18 +1,18 @@
 # Analytics and privacy pages
 
-Analytics is disabled by default. Google Analytics is not included in the site templates. Optional Cloudflare Web Analytics uses a public site token, not a Cloudflare API credential.
+The site uses cookieless Cloudflare Web Analytics (mode `reviewed_exemption` in `scripts/privacy-site.json`). Google Analytics is not included in the site templates. Cloudflare Web Analytics uses a public site token, not a Cloudflare API credential; publication fails until the `CLOUDFLARE_WEB_ANALYTICS_TOKEN` secret is set.
 
 ## Publication setup
 
-Complete `scripts/privacy-site.json` with this website's actual processing information. Set `publication_reviewed` to true only after the inventory and disclosures have been reviewed. Publication also requires the repository secrets `SITE_OPERATOR_NAME` and `PRIVACY_CONTACT_EMAIL`; their values become public in the rendered notice.
+Complete `scripts/privacy-site.json` with this website's actual processing information. Set `publication_reviewed` to true only after the inventory and disclosures have been reviewed. Publication also requires the repository secrets `SITE_OPERATOR_NAME` and `PRIVACY_CONTACT_EMAIL` (and `CLOUDFLARE_WEB_ANALYTICS_TOKEN` while analytics is enabled); their values become public in the rendered notice.
 
 Before merging the workflow, select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Legacy branch publishing bypasses the privacy generator and the manual publication gate. Keep the existing site URL/domain configuration. Restrict the `github-pages` environment to `main`.
 
 Pull requests, pushes to `main`, and default manual runs validate draft output without identity or analytics secrets. They cannot publish. To publish, run **Build and deploy GitHub Pages** from `main` and explicitly enable the `deploy` input. Publication requires a successful build and reviewed configuration. No workflow automatically enables Pages or changes its source.
 
-## Optional Cloudflare analytics
+## Cloudflare analytics
 
-Keep analytics mode `off` and the token unset unless activation has been reviewed. The integration has no consent runtime. Automatic beacon activation is supported only with mode `reviewed_exemption`, bilingual descriptions, and a documented applicable `review_reference`. Selecting `consent` does not implement consent and cannot enable the beacon.
+To disable analytics, set the mode to `off` and remove the token. The integration has no consent runtime. Automatic beacon activation is supported only with mode `reviewed_exemption`, a description for each configured language, and a documented applicable `review_reference`. Selecting `consent` does not implement consent and cannot enable the beacon.
 
 For approved activation, add the hostname in Cloudflare Web Analytics, choose manual installation, and save its 32-character hexadecimal site token in the `CLOUDFLARE_WEB_ANALYTICS_TOKEN` repository secret. The token is visible in generated HTML. Do not also enable automatic beacon injection. Empty tokens disable analytics; invalid tokens or mismatched disclosures fail publication.
 
@@ -20,9 +20,9 @@ To disable collection, remove the token, set the disclosure mode to `off`, and p
 
 ## Shared privacy pages
 
-The generator and templates are bundled from `website-privacy` release `v0.1.0` with SHA-256 integrity checks in `scripts/privacy-template.lock.json`. Refresh the bundle and manifest together from a reviewed release; do not edit bundled templates independently.
+The generator and templates are bundled from `website-privacy` release `v0.2.0` with SHA-256 integrity checks in `scripts/privacy-template.lock.json`. Refresh the bundle and manifest together from a reviewed release; do not edit bundled templates independently.
 
-The site wrapper generates English and Hungarian privacy and choices pages under `/privacy/<language>/<page>.html`. Drafts use fictional identity, visible draft notices, and `noindex,nofollow`; reviewed publication includes the pages in the sitemap. Each language pair declares reciprocal alternates and self-canonical URLs. Privacy pages never load analytics.
+The site wrapper generates English privacy and choices pages under `/privacy/en/<page>.html`; `languages` in `scripts/privacy-site.json` also accepts `hu`. Drafts use fictional identity, visible draft notices, and `noindex,nofollow`; reviewed publication includes the pages in the sitemap. Each page declares a self-canonical URL and alternates for every configured language. Privacy pages never load analytics.
 
 ## Build and checks
 
