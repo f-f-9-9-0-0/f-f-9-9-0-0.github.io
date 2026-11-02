@@ -13,8 +13,8 @@ HERE = Path(__file__).resolve().parent
 
 def generate(source, publish=False, static=False):
     source = Path(source)
-    config = json.loads((HERE / 'privacy-site.json').read_text())
-    lock = json.loads((HERE / 'privacy-template.lock.json').read_text())
+    config = json.loads((HERE / 'privacy-site.json').read_text(encoding='utf-8'))
+    lock = json.loads((HERE / 'privacy-template.lock.json').read_text(encoding='utf-8'))
     tool = HERE / 'privacy-template'
     for name, digest in lock['files'].items():
         if hashlib.sha256((tool / name).read_bytes()).hexdigest() != digest:
@@ -25,7 +25,7 @@ def generate(source, publish=False, static=False):
         raise ValueError('A token requires publication and a documented exemption; consent runtime is not implemented')
     if publish and mode != 'off' and not token:
         raise ValueError('Analytics disclosure does not match disabled runtime')
-    if publish and static and 'adsbygoogle' in (source / 'index.html').read_text():
+    if publish and static and 'adsbygoogle' in (source / 'index.html').read_text(encoding='utf-8'):
         raise ValueError('Remove AdSense before publishing the planned advertising-free notice')
     spec = importlib.util.spec_from_file_location('shared_privacy', tool / 'build.py')
     module = importlib.util.module_from_spec(spec)
@@ -41,7 +41,7 @@ def generate(source, publish=False, static=False):
                 for page in ('privacy', 'choices'):
                     path = rendered / language / (page + '.html')
                     # Prevent literal Liquid syntax in public identity/text being executed by Jekyll.
-                    body = path.read_text().replace('{', '&#123;').replace('}', '&#125;')
+                    body = path.read_text(encoding='utf-8').replace('{', '&#123;').replace('}', '&#125;')
                     title = {'en': {'privacy': 'Privacy notice', 'choices': 'Privacy choices'},
                              'hu': {'privacy': 'Adatkezelési tájékoztató', 'choices': 'Adatvédelmi beállítások'}}[language][page]
                     description = {
@@ -56,7 +56,7 @@ def generate(source, publish=False, static=False):
                                 'analytics': False, 'comments': False, 'sitemap': publish,
                                 'robots': 'index,follow' if publish else 'noindex,nofollow'}
                     # JSON is valid YAML; one mapping between front matter delimiters.
-                    path.write_text('---\n' + json.dumps(metadata, ensure_ascii=False) + '\n---\n' + body)
+                    path.write_text('---\n' + json.dumps(metadata, ensure_ascii=False) + '\n---\n' + body, encoding='utf-8')
         shutil.copytree(rendered, destination)
     print('Privacy pages generated: ' + ('reviewed publication' if publish else 'draft preview'))
 
