@@ -94,12 +94,11 @@ def validate(
             "languages",
             "reviewed_on",
             "publication_reviewed",
-            "authority",
             "processing",
             "analytics",
             "additional_information",
         ),
-        ("design", "page_urls"),
+        ("authority", "design", "page_urls"),
     )
     require_text(config["site_name"])
     require_url(config["site_url"])
@@ -122,9 +121,10 @@ def validate(
         isinstance(config["publication_reviewed"], bool),
         "publication_reviewed must be boolean",
     )
-    require_object(config["authority"], ("name", "url"))
-    require_text(config["authority"]["name"])
-    require_url(config["authority"]["url"])
+    if "authority" in config:
+        require_object(config["authority"], ("name", "url"))
+        require_text(config["authority"]["name"])
+        require_url(config["authority"]["url"])
     require_translations(config["additional_information"], languages)
     require(
         isinstance(config["processing"], list) and config["processing"],
@@ -279,14 +279,19 @@ def render_privacy(
                 + "</dd>"
             )
         processing += "</dl>"
-    authority = config["authority"]
+    complaints = paragraph(words["complaints_text"])
+    if "authority" in config:
+        authority = config["authority"]
+        complaints = paragraph(
+            words["complaints_text"] + " " + words["authority_text"]
+        ) + link(authority["url"], authority["name"])
     privacy = section("wp-operator", words["operator"], identity)
     privacy += section("wp-processing", words["processing"], processing)
     privacy += section("wp-rights", words["rights"], paragraph(words["rights_text"]))
     privacy += section(
         "wp-complaints",
         words["complaints"],
-        paragraph(words["complaints_text"]) + link(authority["url"], authority["name"]),
+        complaints,
     )
     privacy += section(
         "wp-details",
