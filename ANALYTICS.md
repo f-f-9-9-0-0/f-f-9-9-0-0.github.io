@@ -6,9 +6,9 @@ The site uses cookieless Cloudflare Web Analytics (mode `reviewed_exemption` in 
 
 Complete `scripts/privacy-site.json` with this website's actual processing information. Set `publication_reviewed` to true only after the inventory and disclosures have been reviewed. Publication also requires the repository secrets `SITE_OPERATOR_NAME` and `PRIVACY_CONTACT_EMAIL` (and `CLOUDFLARE_WEB_ANALYTICS_TOKEN` while analytics is enabled); their values become public in the rendered notice.
 
-Before merging the workflow, select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Legacy branch publishing bypasses the privacy generator and the manual publication gate. Keep the existing site URL/domain configuration. Restrict the `github-pages` environment to `main`.
+Before merging the workflow, select **Settings → Pages → Build and deployment → Source → GitHub Actions**. Legacy branch publishing bypasses the privacy generator and the build checks. Keep the existing site URL/domain configuration. Restrict the `github-pages` environment to `main`.
 
-Pull requests, pushes to `main`, and default manual runs validate draft output without identity or analytics secrets. They cannot publish. To publish, run **Build and deploy GitHub Pages** from `main` and explicitly enable the `deploy` input. Publication requires a successful build and reviewed configuration. No workflow automatically enables Pages or changes its source.
+Every push to `main` builds the site with the publication secrets and deploys it after all checks pass. Pull requests and default manual runs validate draft output without identity or analytics secrets and cannot publish. To redeploy without a new commit, run **Build and deploy GitHub Pages** from `main` with the `deploy` input enabled. Publication requires a successful build and reviewed configuration; a failed build leaves the published site unchanged. No workflow automatically enables Pages or changes its source.
 
 ## Cloudflare analytics
 
