@@ -110,6 +110,22 @@ difference into a site-owned include, or into `_config.yml`.
 5. Read the generated privacy and choices pages in a local preview. A generator release can
    change the wording of a published notice.
 
+### Re-rendering the project charts
+
+The BorrowdaleJS project page shows charts rendered by `scripts/borrowdale-examples/`, pinned to
+one release of the library. A new library release changes nothing on the site until the pin is
+moved.
+
+1. In `scripts/borrowdale-examples/`, set the new version of each `@borrowdale` package in
+   `package.json`, then run `npm install` to update the lockfile.
+2. Run `npm run render`. It fails, and writes nothing, if a chart spec no longer validates or a
+   label uses a character the font lacks.
+3. Review the image diff, and read the page in a local preview. The drawings may change between
+   library versions.
+4. Check that the code sample on the page still matches the first chart's spec.
+
+The workflow does not run the script, so the committed images are what is published.
+
 ### Actions and Ruby
 
 - Actions in `pages.yml` are pinned to a commit SHA. To move one, replace the SHA and the

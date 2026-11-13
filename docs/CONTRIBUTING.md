@@ -40,10 +40,12 @@ into `privacy/`, which git ignores; delete that directory before running it agai
 | Path | What it holds |
 |---|---|
 | `_posts/` | The articles, one Markdown file each |
-| `assets/images/` | Screenshots, photographs and the topic illustrations |
+| `projects/` | The project pages, one Markdown file each |
+| `assets/images/` | Screenshots, photographs, the topic illustrations, and the images of project pages under `projects/` |
 | `_layouts/`, `_includes/`, `assets/css/` | The presentation. Most of these files are a pinned copy and are not edited here |
 | `_config.yml`, `_data/` | Site settings and navigation |
 | `scripts/` | The build checks, the privacy page generator and their tests |
+| `scripts/borrowdale-examples/` | The script that renders the BorrowdaleJS chart examples. Run it with Node.js 22 or later: `npm ci`, `npx playwright-core install chromium`, then `npm run render` |
 | `.github/workflows/pages.yml` | The build and deployment |
 | `docs/` | These guides |
 

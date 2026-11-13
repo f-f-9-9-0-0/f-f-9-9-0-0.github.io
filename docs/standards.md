@@ -37,7 +37,8 @@ Every post sets these, in this order:
 | `description` | One sentence. It becomes the meta description and the listing summary, and the build fails on a page without one |
 | `excerpt_separator` | `<!--more-->` |
 
-A project write-up is a post with `projects: true`. It appears on the Projects page.
+A post with `projects: true` is listed on the Projects page as well as in the Blog. A project
+that should appear on Projects only is a page instead; see [Project pages](#project-pages).
 
 ### Body
 
@@ -58,6 +59,8 @@ A project write-up is a post with `projects: true`. It appears on the Projects p
 
 - Screenshots and photographs live under `assets/images/<nnn>/`; topic illustrations under
   `assets/images/articles/`, one SVG per post, named after the topic.
+- Images for a project page live under `assets/images/projects/<project>/`. Where a script
+  generates them, they are never edited by hand: change the script and run it again.
 - A screenshot shows no account name, token, internal hostname or other private detail.
 - Use only images you have the right to publish.
 
@@ -80,6 +83,34 @@ A project write-up is a post with `projects: true`. It appears on the Projects p
 - `sitemap.xml` is built from the pages and posts. Do not list URLs in it by hand. A page that
   must stay out sets `sitemap: false`.
 
+### Project pages
+
+A project is described on a page under `projects/`, for example `projects/borrowdalejs.md` at
+`/projects/borrowdalejs/`. The Projects page lists every page and post with `projects: true`,
+newest first.
+
+| Key | Value |
+|---|---|
+| `title`, `description` | As for any page |
+| `layout` | `page` |
+| `section` | `projects`, so the navigation marks Projects |
+| `projects` | `true` |
+| `permalink` | `/projects/<project>/` |
+| `date` | `YYYY-MM-DD HH:MM:SS`, **with seconds**. Without them the value is text, not a date, and the Projects list fails to sort as soon as a project post exists |
+| `illustration` | The listing thumbnail |
+| `image` | A raster image (PNG or JPEG) for link previews, ideally 1200×630. Most platforms ignore SVG here |
+| `tags` | A list. The first is shown as the topic in the listing |
+| `seo` | `type: WebPage`, so the structured data does not call the page a blog post |
+| `hidden` | `true` keeps it off the Projects page and out of the sitemap while it is drafted |
+
+A project page is not a post. It stays off the Blog list, the home page, the tags page and the
+feed, and the page layout adds nothing around its content:
+
+- Wrap the content in `<div class="article-body" markdown="1">` to get the article styles.
+- Write code blocks as `<pre tabindex="0" role="region" aria-label="…">`. The post layout adds
+  those attributes for posts; on a page they are written by hand, and the build fails without
+  them.
+
 ## Configuration and secrets
 
 - `_data/cloudflare_analytics.json` is committed with an empty token. The build fills it from a
@@ -97,6 +128,11 @@ A project write-up is a post with `projects: true`. It appears on the Projects p
   names the page and the problem.
 - Python is invoked as `python3`, uses only the standard library, and reads and writes text as
   UTF-8. Paths are resolved from the script's own location.
+- The one exception is `scripts/borrowdale-examples/`, a Node.js script (version 22 or later) that
+  renders the BorrowdaleJS chart examples. Its dependencies are pinned exactly and locked in
+  `package-lock.json`, and its `node_modules/` is ignored. The workflow does not run it: the
+  images it writes are committed ([`releases.md`](releases.md), "Re-rendering the project
+  charts").
 - Unit tests are `scripts/test_*.py`, discovered by `python3 -m unittest`. A test arranges its
   input, acts once and asserts literal values.
 - A new rule for the rendered site gets its check in the same pull request, so the next change
