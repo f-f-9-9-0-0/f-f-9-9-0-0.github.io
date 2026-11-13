@@ -30,7 +30,7 @@ pages.each do |path|
   canonical_path = '/' + name.delete_suffix('index.html')
   raise "#{name}: canonical mismatch" unless page.css('link[rel="canonical"]').map { |element| element['href'] } == [origin + canonical_path]
   page.css('script[type="application/ld+json"]').each { |script| JSON.parse(script.text) }
-  page.css('main.post pre').each do |code|
+  page.css('main pre').each do |code|
     raise "#{name}: code block is not keyboard accessible" unless code['tabindex'] == '0' && code['role'] == 'region' && !code['aria-label'].to_s.empty?
   end
   page.css('.share a').each do |link|
@@ -60,8 +60,8 @@ pages.each do |path|
     raise "#{name}: broken contents link #{id}" unless page.xpath('//*[@id=$id]', nil, id: id).size == 1
     raise "#{name}: empty contents label" if link.text.strip.empty?
   end
-  page.css('.site-header a, .footer-main a, .home-writing a, link[rel="stylesheet"]').each do |link|
-    href = link['href']
+  page.css('.site-header a, .footer-main a, .home-writing a, link[rel="stylesheet"], main img[src], main a[href]').each do |link|
+    href = link['href'] || link['src']
     next unless href&.start_with?('/') && !href.start_with?('//')
     target = root.join(URI::DEFAULT_PARSER.unescape(URI.parse(href).path).delete_prefix('/'))
     target = target.join('index.html') if target.directory?

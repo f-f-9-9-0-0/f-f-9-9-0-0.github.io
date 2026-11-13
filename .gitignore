@@ -9,3 +9,5 @@ vendor/
 /privacy/
 
 **/__pycache__/
+
+node_modules/

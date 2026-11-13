@@ -22,5 +22,5 @@ section: about
 <h2>Projects</h2>
 
 <ul>
-	<li>coming soon..</li>
+	<li><a href="{{ '/projects/borrowdalejs/' | relative_url }}">BorrowdaleJS</a>: hand-drawn charts, text and backgrounds for the web</li>
 </ul>

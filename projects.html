@@ -1,5 +1,5 @@
 ---
-description: Project write-ups are coming soon. Explore technical articles and GitHub repositories by Gábor Tóth.
+description: Open-source projects by Gábor Tóth, what they do and the problems behind them.
 layout: page
 seo:
   type: CollectionPage
@@ -7,7 +7,9 @@ title: Projects
 section: projects
 ---
 <div class="list">
-    {% assign projects = site.posts | where: 'projects', true | where_exp: 'post', 'post.hidden != true' %}
+    {% assign project_pages = site.pages | where: 'projects', true | where_exp: 'item', 'item.hidden != true' %}
+    {% assign project_posts = site.posts | where: 'projects', true | where_exp: 'post', 'post.hidden != true' %}
+    {% assign projects = project_pages | concat: project_posts | sort: 'date' | reverse %}
     {% for post in projects %}
         {% include blog-post.html %}
     {% else %}

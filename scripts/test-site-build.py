@@ -17,7 +17,7 @@ def main():
         source = Path(directory) / 'source'
         output = Path(directory) / 'output'
         shutil.copytree(ROOT, source, ignore=shutil.ignore_patterns(
-            '.git', '.bundle', '_site', 'vendor', 'privacy', 'docs', '__pycache__'))
+            '.git', '.bundle', '_site', 'vendor', 'privacy', 'docs', '__pycache__', 'node_modules'))
         config_path = source / 'scripts/privacy-site.json'
         config = json.loads(config_path.read_text())
         config['publication_reviewed'] = True

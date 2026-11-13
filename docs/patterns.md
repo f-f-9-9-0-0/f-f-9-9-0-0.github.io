@@ -124,6 +124,8 @@ raise "#{name}: expected one page heading" unless page.css('h1').size == 1
 - The message is `<page>: <what is wrong>`.
 - The check also asserts what must be absent: `scripts`, `docs` and `ANALYTICS.md` must not
   exist in the output.
+- Every root-relative image and link inside `main` must point at a file in `_site`, so a renamed
+  or deleted image fails the build instead of shipping a broken figure.
 - A new site-wide rule is one more assertion in the script that already walks the pages, not a
   new script.
 
@@ -140,6 +142,29 @@ output. Reference: `scripts/test-site-build.py`.
 - The fixtures are plainly fictional (`Test operator`, a `.test` address, a token of repeated
   characters), so a leak of the test output could not be mistaken for real data.
 - It asserts the positive case the draft build cannot: exactly one beacon on the homepage.
+
+## Examples rendered by the library they show
+
+**Problem.** A project page shows charts drawn by the library it describes. A screenshot or a
+hand-edited copy would drift from what the library draws, and nobody could make it again.
+
+**Pattern.** A small pinned script renders the examples, and its output is committed. Reference:
+`scripts/borrowdale-examples/render.mjs`, which writes `assets/images/projects/borrowdalejs/`.
+
+- The library version is pinned exactly in `package.json`, with a lockfile, so a re-render
+  reproduces the committed files byte for byte until the pin is moved on purpose.
+- Every file is produced in memory first and written only when all of them succeeded, so a
+  failure leaves the committed images as they were.
+- Each SVG embeds the font files its labels need, so it looks the same wherever it is opened.
+  The script fails if a label uses a character the font does not cover, rather than letting the
+  browser substitute another font.
+- Each SVG gets a paper-coloured background, because the library draws dark ink on a
+  transparent ground that the site's dark theme would hide. It also gets the embedded font's
+  licence notice (SIL OFL 1.1), which must travel with every copy of the font.
+- The link-preview PNG is the first chart laid out at 600 by 315 and photographed by headless
+  Chromium at twice the pixel density.
+- A code sample on the page that claims to draw an image must use the same spec as the script,
+  seed included. The two are kept in step by hand.
 
 ## Important callout
 

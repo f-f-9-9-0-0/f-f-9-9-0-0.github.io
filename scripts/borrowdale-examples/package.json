@@ -1,0 +1,17 @@
+{
+  "name": "borrowdale-examples",
+  "private": true,
+  "description": "Renders the BorrowdaleJS chart examples on the BorrowdaleJS project page",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "@borrowdale/charts": "0.5.0",
+    "@borrowdale/text": "0.5.0",
+    "playwright-core": "1.61.1"
+  }
+}
