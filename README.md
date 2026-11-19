@@ -1,7 +1,7 @@
 ## f-f-9-9-0-0
 
 This site is powered by [Jekyll](https://jekyllrb.com/)  
-The presentation uses a pinned Technical Portfolio starter snapshot. Shared file checksums are recorded in `scripts/portfolio-template.lock.json`.
+The layouts, includes and stylesheet are maintained in this repository. The fonts, Playfair Display and IBM Plex, are served from the site under the SIL Open Font License, and the drawings are rendered with [BorrowdaleJS](https://borrowdalejs.com/).
 
 Legacy components are derived from [Indigo](https://github.com/sergiokopplin/indigo), created by [Kopplin](https://github.com/sergiokopplin/indigo).
 
