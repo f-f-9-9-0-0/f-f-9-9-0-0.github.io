@@ -26,6 +26,17 @@ pages.each do |path|
   raise "#{name}: missing document title" if page.at_css('title')&.text.to_s.strip.empty?
   description = page.at_css('meta[name="description"]')&.[]('content').to_s.strip
   raise "#{name}: missing description" if description.empty?
+  post = page.at_css('main.post')
+  # A post is a page the post layout rendered, or one whose structured data says so (a post on another
+  # layout); either way it is checked.
+  article = post || page.css('script[type="application/ld+json"]').any? do |script|
+    data = JSON.parse(script.text)
+    data.is_a?(Hash) && Array(data['@type']).include?('BlogPosting')
+  end
+  # A post's intro text is rendered only from its own description; without one, the meta tag holds its excerpt.
+  raise "#{name}: post has no intro text (it needs the post layout and its own description)" if article && !page.at_css('header.article-intro .intro-text')
+  # The author box is left out when a post's `author` names no one in _data/authors.yml.
+  raise "#{name}: post shows no author" if article && page.at_css('.author #author-name')&.text.to_s.strip.empty?
   descriptions[name] = description
   canonical_path = '/' + name.delete_suffix('index.html')
   raise "#{name}: canonical mismatch" unless page.css('link[rel="canonical"]').map { |element| element['href'] } == [origin + canonical_path]
@@ -39,7 +50,7 @@ pages.each do |path|
   nav = page.at_css('nav[aria-label="Main navigation"]')
   raise "#{name}: missing persistent navigation" unless nav && nav.css('a').map(&:text).include?('Home')
   current = nav.css('[aria-current]')
-  expected = if page.at_css('main.post')
+  expected = if post
     'Blog'
   else
     { 'index.html' => 'Home', 'blog/index.html' => 'Blog', 'projects/index.html' => 'Projects', 'about/index.html' => 'About', 'tags/index.html' => 'Blog' }[name]
