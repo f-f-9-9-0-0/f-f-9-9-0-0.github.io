@@ -5,8 +5,9 @@ section: projects
 projects: true
 permalink: /projects/borrowdalejs/
 date: 2026-11-13 00:00:00
-illustration: /assets/images/projects/borrowdalejs/sketchbook-sales.svg
+illustration: /assets/images/projects/borrowdalejs/sketchbook-sales-card.svg
 image: /assets/images/projects/borrowdalejs/social-preview.png
+eyebrow: Project
 seo:
   type: WebPage
 tags:
@@ -54,19 +55,19 @@ const chart = layoutChart({
 const svg = toSvgChart(chart, { fontFiles: excalifontFiles });
 </code></pre>
 
-{% include article-image.html src="/assets/images/projects/borrowdalejs/sketchbook-sales.svg" alt="Stacked bar chart of pocket and A4 sketchbook sales from January to June, with a dashed target line rising from 70 to 105 books, just below the bar tops" caption="The chart this code draws." %}
+{% include article-image.html src="/assets/images/projects/borrowdalejs/sketchbook-sales.svg" width="640" height="320" narrow="/assets/images/projects/borrowdalejs/sketchbook-sales-narrow.svg" narrow_width="360" narrow_height="300" alt="Stacked bar chart of pocket and A4 sketchbook sales from January to June, with a dashed target line rising from 70 to 105 books, just below the bar tops" caption="The chart this code draws." %}
 
 ## Examples
 
 These charts were drawn by the published packages. The figures are made up for the examples.
-Each one is a single SVG file with the font files its labels need embedded, so it looks the same
-wherever it is opened.
+Each one is a single SVG file with the font files its labels need embedded, so its labels look the
+same wherever it is opened. Its ink and grid follow the reader's light or dark setting.
 
-{% include article-image.html src="/assets/images/projects/borrowdalejs/pencil-grades.svg" alt="Donut chart of pencils in a drawer by grade: 2H, HB, 2B, 4B and 8B, with HB the largest share" caption="A donut chart. Each slice is hatched in its own colour." %}
+{% include article-image.html src="/assets/images/projects/borrowdalejs/pencil-grades.svg" width="480" height="360" narrow="/assets/images/projects/borrowdalejs/pencil-grades-narrow.svg" narrow_width="360" narrow_height="300" alt="Donut chart of pencils in a drawer by grade: 2H, HB, 2B, 4B and 8B, with HB the largest share" caption="A donut chart. Each slice is hatched in its own colour." %}
 
-{% include article-image.html src="/assets/images/projects/borrowdalejs/club-committee.svg" alt="Parliament chart of a sketching club committee: 40 seats in rows of arcs, shared by Ink, Graphite, Charcoal and Watercolour" caption="A unit chart, drawn as a parliament." %}
+{% include article-image.html src="/assets/images/projects/borrowdalejs/club-committee.svg" width="560" height="340" narrow="/assets/images/projects/borrowdalejs/club-committee-narrow.svg" narrow_width="360" narrow_height="280" alt="Parliament chart of a sketching club committee: 40 seats in rows of arcs, shared by Ink, Graphite, Charcoal and Watercolour" caption="A unit chart, drawn as a parliament." %}
 
-{% include article-image.html src="/assets/images/projects/borrowdalejs/studio-visits.svg" alt="Heatmap of studio visitors by weekday and hour, busiest on Thursday at 1pm" caption="A heatmap with a colour axis." %}
+{% include article-image.html src="/assets/images/projects/borrowdalejs/studio-visits.svg" width="560" height="340" narrow="/assets/images/projects/borrowdalejs/studio-visits-narrow.svg" narrow_width="360" narrow_height="300" alt="Heatmap of studio visitors by weekday and hour, busiest on Thursday at 1pm" caption="A heatmap with a colour axis." %}
 
 The [playground](https://borrowdalejs.com/playground/) has many more, from gauges and timelines to
 candlesticks and calendars.
