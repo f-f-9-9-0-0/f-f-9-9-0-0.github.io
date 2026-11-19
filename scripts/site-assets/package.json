@@ -1,0 +1,22 @@
+{
+  "name": "site-assets",
+  "private": true,
+  "description": "Renders the site's BorrowdaleJS drawings and copies its self-hosted fonts",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "render": "node render.mjs",
+    "fonts": "node fonts.mjs"
+  },
+  "dependencies": {
+    "@borrowdale/charts": "0.8.0",
+    "@borrowdale/core": "0.8.0",
+    "@borrowdale/text": "0.8.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/playfair-display": "5.3.0",
+    "playwright-core": "1.61.1"
+  }
+}

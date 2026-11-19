@@ -1,4 +1,6 @@
 <header class="site-header" lang="en">
-  <a class="site-name" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
-  {% include nav.html %}
+  <div class="container site-header-inner">
+    <a class="site-name" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+    {% include nav.html %}
+  </div>
 </header>

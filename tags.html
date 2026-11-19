@@ -5,20 +5,21 @@ seo:
   type: CollectionPage
 title: Tags
 section: blog
+eyebrow: Browse by topic
 ---
-<nav class="topic-index" aria-label="Article topics">
+<nav class="topic-index chips" aria-label="Article topics">
     {% assign topics = site.tags | sort %}
-    {% for topic in topics %}<a href="#{{ topic[0] | slugify }}">{{ topic[0] }}</a>{% endfor %}
+    {% for topic in topics %}<a href="#{{ topic[0] | slugify }}">{{ topic[0] | escape }}</a>{% endfor %}
 </nav>
 <div class="tag-list">
     {% for topic in topics %}
     <section aria-labelledby="{{ topic[0] | slugify }}">
-        <h2 id="{{ topic[0] | slugify }}">{{ topic[0] }}</h2>
-        <div class="list">
+        <h2 id="{{ topic[0] | slugify }}">{{ topic[0] | escape }}</h2>
+        <ol class="rows">
         {% for post in topic[1] %}
-            {% unless post.hidden %}{% include blog-post.html heading=3 %}{% endunless %}
+            {% unless post.hidden %}{% include post-row.html item=post %}{% endunless %}
         {% endfor %}
-        </div>
+        </ol>
     </section>
     {% endfor %}
 </div>

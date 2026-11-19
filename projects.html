@@ -5,14 +5,9 @@ seo:
   type: CollectionPage
 title: Projects
 section: projects
+eyebrow: Open source
 ---
-<div class="list">
-    {% assign project_pages = site.pages | where: 'projects', true | where_exp: 'item', 'item.hidden != true' %}
-    {% assign project_posts = site.posts | where: 'projects', true | where_exp: 'post', 'post.hidden != true' %}
-    {% assign projects = project_pages | concat: project_posts | sort: 'date' | reverse %}
-    {% for post in projects %}
-        {% include blog-post.html %}
-    {% else %}
-        <p>Project write-ups are coming soon. In the meantime, explore the <a href="{{ '/blog/' | relative_url }}">technical articles</a>{% if site.github %} or <a href="https://github.com/{{ site.github | escape }}">GitHub repositories</a>{% endif %}.</p>
-    {% endfor %}
-</div>
+{% include listings.html %}
+{% if projects.size > 0 %}{% include card-grid.html items=projects %}{% else %}
+<p>Project write-ups are coming soon. In the meantime, explore the <a href="{{ '/blog/' | relative_url }}">technical articles</a>{% if site.github %} or <a href="https://github.com/{{ site.github | escape }}">GitHub repositories</a>{% endif %}.</p>
+{% endif %}

@@ -5,13 +5,8 @@ seo:
   type: CollectionPage
 title: Blog
 section: blog
+eyebrow: Articles
+intro: Notes on data, orchestration and software. [Browse by topic](/tags/).
 ---
-<p class="page-intro">Notes on data, orchestration and software. <a href="{{ '/tags/' | relative_url }}">Browse by topic</a>.</p>
-<div class="list">
-    {% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
-    {% for post in articles %}
-        {% include blog-post.html %}
-    {% else %}
-        <p>No articles published yet.</p>
-    {% endfor %}
-</div>
+{% include listings.html %}
+{% if articles.size > 0 %}{% include card-grid.html items=articles %}{% else %}<p>No articles published yet.</p>{% endif %}

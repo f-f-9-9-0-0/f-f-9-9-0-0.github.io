@@ -41,11 +41,13 @@ into `privacy/`, which git ignores; delete that directory before running it agai
 |---|---|
 | `_posts/` | The articles, one Markdown file each |
 | `projects/` | The project pages, one Markdown file each |
-| `assets/images/` | Screenshots, photographs, the topic illustrations, and the images of project pages under `projects/` |
-| `_layouts/`, `_includes/`, `assets/css/` | The presentation. Most of these files are a pinned copy and are not edited here |
+| `assets/images/` | Screenshots, photographs, the topic illustrations, the home page hero, and the images of project pages under `projects/` |
+| `_layouts/`, `_includes/`, `assets/css/site.css` | The presentation |
+| `_data/palette.json` | The light and dark colours, by name |
+| `assets/fonts/`, `assets/css/fonts.css` | The self-hosted fonts and their licences, written by a script |
 | `_config.yml`, `_data/` | Site settings and navigation |
 | `scripts/` | The build checks, the privacy page generator and their tests |
-| `scripts/borrowdale-examples/` | The script that renders the BorrowdaleJS chart examples. Run it with Node.js 22 or later: `npm ci`, `npx playwright-core install chromium`, then `npm run render` |
+| `scripts/site-assets/` | The scripts that render the BorrowdaleJS drawings and copy the fonts. Run them with Node.js 22 or later: `npm ci`, `npx playwright-core install chromium`, then `npm run render` or `npm run fonts` |
 | `.github/workflows/pages.yml` | The build and deployment |
 | `docs/` | These guides |
 
@@ -54,15 +56,18 @@ into `privacy/`, which git ignores; delete that directory before running it agai
 The full list is in [`standards.md`](standards.md). The ones that catch most first changes:
 
 - Do not rename a published post file. Its name is its address.
-- Do not edit the files listed in `scripts/portfolio-template.lock.json` or anything under
-  `scripts/privacy-template/`. They are pinned by hash and the build fails when they change.
+- Do not edit anything under `scripts/privacy-template/`. It is pinned by hash and the build fails
+  when it changes.
+- Do not edit the drawings, the fonts or `assets/css/fonts.css` by hand. Change the script that
+  writes them and run it again.
+- Use the colour names from `_data/palette.json`, never a colour value, and check a change in both
+  light and dark mode.
 - Start sections in a post at `##`, and give screenshots a meaningful `alt` text.
 - Say which version of a tool a correction was checked against.
 
 ### Check it
 
 ```sh
-python3 scripts/check-portfolio-template.py
 python3 -m unittest discover -s scripts -p 'test_*.py' -v
 JEKYLL_ENV=production RUBYOPT=-rlogger bundle exec jekyll build
 python3 scripts/check-site.py _site
@@ -95,7 +100,9 @@ tokens or internal addresses.
 
 ## Licence
 
-The licences that apply to the presentation code are named in [`../README.md`](../README.md) and
-[`../LICENSE-portfolio`](../LICENSE-portfolio). No licence is stated for the articles and their
+The presentation is maintained in this repository. [`../LICENSE-portfolio`](../LICENSE-portfolio)
+covers the template code it started from, which remains in some layouts and includes, and
+[`../README.md`](../README.md) names the older components it derives from. The fonts' licences are
+in `assets/fonts/`. No licence is stated for the articles and their
 images: ask before reusing them. Material you add from elsewhere needs a licence that allows
 publishing it here, and its source named.

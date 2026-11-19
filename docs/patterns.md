@@ -6,32 +6,59 @@ in [`standards.md`](standards.md).
 
 ## Pinned snapshot of shared files
 
-**Problem.** The presentation (layouts, shared includes, the stylesheet) and the privacy page
-generator are maintained elsewhere and copied in. A local edit would silently fork them.
+**Problem.** The privacy page generator is maintained elsewhere and copied in. A local edit would
+silently fork it.
 
-**Pattern.** A lock file records a SHA-256 per copied file, and the build fails when a file no
-longer matches. Reference: `scripts/portfolio-template.lock.json` with
-`scripts/check-portfolio-template.py`, and `scripts/privacy-template.lock.json`, verified at the
-start of `scripts/configure-privacy.py`.
+**Pattern.** A lock file records a SHA-256 per copied file, and the generator refuses to run when a
+file no longer matches. Reference: `scripts/privacy-template.lock.json`, verified at the start of
+`scripts/configure-privacy.py`.
+
+- Files and lock change together, from one upstream release
+  ([`releases.md`](releases.md), "Refreshing the privacy generator").
+- Hashes are over bytes. `.gitattributes` forces LF for the bundled generator so a checkout on
+  another operating system cannot change them.
+- What the site owns stays outside the snapshot: the processing inventory in
+  `scripts/privacy-site.json`, and the layout and styles the generated pages are shown in.
+
+## Theme colours, light and dark
+
+**Problem.** Every page, the generated privacy pages and the drawings must agree on one palette, in
+light mode and in dark mode, and a drawing shown as an image cannot read the page's styles.
+
+**Pattern.** The palette is data, one set of named colours for light mode and one for dark.
+`assets/css/site.css` writes them as custom properties on `:root`, redefined under
+`prefers-color-scheme: dark`, and everything else refers to them by name. Reference:
+`_data/palette.json` and the top of `assets/css/site.css`.
 
 ```json
 {
-  "version": "0.2.0",
-  "files": {
-    "_layouts/default.html": "7c448cc2…"
-  },
-  "source_commit": "616ca433…"
+  "light": { "paper": "#f4f6f3", "ink": "#13232a", "brand": "#0d6b68" },
+  "dark": { "paper": "#0e1719", "ink": "#e3ece8", "brand": "#5fd1c6" }
 }
 ```
 
-- The check runs first in the workflow, before Ruby is installed, so a drifted file fails in
-  seconds.
-- Files and lock change together, from one upstream release
-  ([`releases.md`](releases.md), "Refreshing the pinned bundles").
-- Hashes are over bytes. `.gitattributes` forces LF for the bundled generator so a checkout on
-  another operating system cannot change them.
-- What the site owns stays outside the snapshot: content, `_config.yml`, `_data/`, and the
-  includes and layouts the lock does not list. Customise there.
+- An inverted band (the footer) sets `.on-ink`, which swaps `--brand` for the accent that keeps
+  its contrast on ink. The focus ring follows it.
+- The privacy generator reads `--privacy-*` properties, which `site.css` sets from the theme.
+- A drawing carries its own `<style>` with both modes, written by the render script from the same
+  palette (see "Drawings rendered by the library they show"). `scripts/check-site.py` compares
+  every colour a drawing declares with the palette, by name and mode, so a palette change without a
+  re-render cannot ship.
+
+## Fonts served from the site
+
+**Problem.** The design uses three typefaces, and loading them from a font service would send every
+reader's address to another company.
+
+**Pattern.** A pinned script copies the WOFF2 files and their licences from npm packages, and writes
+the `@font-face` rules. Reference: `scripts/site-assets/fonts.mjs`, which writes `assets/fonts/`
+and `assets/css/fonts.css`.
+
+- Each face comes in a `latin` and a `latin-ext` file, with the `unicode-range` of its source
+  package, so a browser fetches the second only for a page that uses its characters.
+- The two faces every page uses first are preloaded in `_layouts/default.html`.
+- `scripts/check-site.py` fails on a page whose markup loads from an origin it does not list, so a
+  font service `<link>` fails the build. An `@import` inside a stylesheet is not checked.
 
 ## One build, draft or published
 
@@ -124,10 +151,15 @@ raise "#{name}: expected one page heading" unless page.css('h1').size == 1
 - The message is `<page>: <what is wrong>`.
 - The check also asserts what must be absent: `scripts`, `docs` and `ANALYTICS.md` must not
   exist in the output.
-- Every root-relative image and link inside `main` must point at a file in `_site`, so a renamed
-  or deleted image fails the build instead of shipping a broken figure.
+- Every root-relative link in the header, the footer and `main` must point at a file in `_site`
+  (`scripts/check-design.rb`).
 - A new site-wide rule is one more assertion in the script that already walks the pages, not a
   new script.
+- `scripts/check-site.py` reads every built page for the resources its markup loads (scripts,
+  stylesheets, preloads, icons, images and their `srcset`, frames): a local one must exist in
+  `_site`, so a renamed image fails the build instead of shipping a broken figure, and any other
+  must come from a listed origin. It also reads every drawing for colours that differ from
+  `_data/palette.json`.
 
 ## Synthetic publication test
 
@@ -143,26 +175,40 @@ output. Reference: `scripts/test-site-build.py`.
   characters), so a leak of the test output could not be mistaken for real data.
 - It asserts the positive case the draft build cannot: exactly one beacon on the homepage.
 
-## Examples rendered by the library they show
+## Drawings rendered by the library they show
 
-**Problem.** A project page shows charts drawn by the library it describes. A screenshot or a
-hand-edited copy would drift from what the library draws, and nobody could make it again.
+**Problem.** The site's drawings, from the chart examples on the BorrowdaleJS page to the topic
+illustration of each article, are made with BorrowdaleJS. A screenshot or a hand-edited copy would
+drift from what the library draws, and nobody could make it again.
 
-**Pattern.** A small pinned script renders the examples, and its output is committed. Reference:
-`scripts/borrowdale-examples/render.mjs`, which writes `assets/images/projects/borrowdalejs/`.
+**Pattern.** A small pinned script renders every drawing, and its output is committed. Reference:
+`scripts/site-assets/render.mjs`, which writes the chart examples to
+`assets/images/projects/borrowdalejs/`, the home page hero to `assets/images/hero.svg` and the
+topic illustrations to `assets/images/articles/`.
 
 - The library version is pinned exactly in `package.json`, with a lockfile, so a re-render
   reproduces the committed files byte for byte until the pin is moved on purpose.
 - Every file is produced in memory first and written only when all of them succeeded, so a
   failure leaves the committed images as they were.
-- Each SVG embeds the font files its labels need, so it looks the same wherever it is opened.
-  The script fails if a label uses a character the font does not cover, rather than letting the
-  browser substitute another font.
-- Each SVG gets a paper-coloured background, because the library draws dark ink on a
-  transparent ground that the site's dark theme would hide. It also gets the embedded font's
-  licence notice (SIL OFL 1.1), which must travel with every copy of the font.
-- The link-preview PNG is the first chart laid out at 600 by 315 and photographed by headless
-  Chromium at twice the pixel density.
+- The hero and the illustrations are drawn in placeholder colours, which the `<style>` of each
+  file repaints with the palette of `_data/palette.json`, in light and in dark mode. The chart examples keep
+  the library's own series colours, so each stays the chart its code draws; only their ink, grid,
+  labels and paper follow the theme.
+- A topic illustration is a list of shapes in `scripts/site-assets/illustrations.mjs`, drawn shape
+  by shape with `sketch()` from `@borrowdale/core`: a grid of faint construction lines shared by
+  every illustration, the subject in the accent, filled parts hatched in coral. Its seed is its name, so it is drawn the same way every time.
+- Each chart embeds the font files its labels need, so its labels look the same wherever it is
+  opened. The script fails if a label uses a character the font does not cover, rather than
+  letting the browser substitute another font. The embedded font's licence notice (SIL OFL 1.1)
+  travels with every copy.
+- Each chart also has a phone render, 360 wide, which `_includes/article-image.html` serves below
+  40rem through `<picture>`. The media query is written as `max-width: 39.99rem`, not in range
+  syntax, which Safari on iOS parses only from version 16.4 (MDN browser compatibility data, checked
+  2026-11-18); an older iPhone would skip the phone render.
+- The project card shows the first chart drawn without its words, so the thumbnail carries no
+  font.
+- The link-preview PNG is the first chart laid out at 600 by 315 and photographed in light mode by
+  headless Chromium at twice the pixel density.
 - A code sample on the page that claims to draw an image must use the same spec as the script,
   seed included. The two are kept in step by hand.
 
@@ -197,8 +243,12 @@ and usable from the keyboard, and the source must stay reachable when an embed f
 
 - The Gist include renders a "View source" link beside the embed, so the code is one click away
   without JavaScript, and wraps the embed in a focusable, labelled scroll region.
-- The image include links the image to its full-size file and uses `alt` as the caption unless
-  `caption` is given.
+- A gist keeps GitHub's light palette. So that a light panel does not interrupt a dark page, the
+  embed sits in a `<details>` block that starts folded; a one-line script after it opens it when
+  the reader's setting is light. Without JavaScript the block stays folded and opens on request.
+  Folding is visual only: the gist still loads with the page.
+- The image include frames the image in a figure, links it to its full-size file and uses `alt` as
+  the caption unless `caption` is given. Given `narrow`, it serves that file to phones.
 - The build fails on a code block in a post that is not keyboard accessible.
 
 ## Contents list from headings

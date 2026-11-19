@@ -1,4 +1,4 @@
-<figure class="article-figure">
-  <a href="{{ include.src | relative_url }}" aria-label="{{ include.alt | escape }} — open full-size image"><img src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}" loading="lazy" decoding="async"></a>
+<figure class="figure">
+  <a class="figure-image" href="{{ include.src | relative_url }}" aria-label="{{ include.alt | escape }} — open full-size image">{% if include.narrow %}<picture><source media="(max-width: 39.99rem)" srcset="{{ include.narrow | relative_url }}"{% if include.narrow_width and include.narrow_height %} width="{{ include.narrow_width }}" height="{{ include.narrow_height }}"{% endif %}>{% endif %}<img src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}"{% if include.width and include.height %} width="{{ include.width }}" height="{{ include.height }}"{% endif %} loading="lazy" decoding="async">{% if include.narrow %}</picture>{% endif %}</a>
   <figcaption>{{ include.caption | default: include.alt | escape }} <span>· Open image for full size</span></figcaption>
 </figure>

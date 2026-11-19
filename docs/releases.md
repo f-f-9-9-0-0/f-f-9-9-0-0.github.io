@@ -1,6 +1,6 @@
 # Releases
 
-How a change gets from a merged pull request onto the live site, how the pinned bundles are
+How a change gets from a merged pull request onto the live site, how the pinned files are
 refreshed, and how to roll back.
 
 This repository cuts no tags and keeps no release notes. A release here is **a merge to `main`
@@ -79,27 +79,18 @@ The gem versions are not locked in the repository (`Gemfile.lock` is not committ
 redeploy can pick up newer gems than the last run used. If the output changes with no commit
 behind it, compare the "Install site dependencies" logs of the two runs.
 
-## Refreshing the pinned bundles
+## Refreshing the pinned files
 
-Two sets of files are copied from elsewhere and pinned by hash
-([`patterns.md`](patterns.md), "Pinned snapshot of shared files"). Neither is edited here.
+Three sets of files come from pinned releases elsewhere. None is edited here.
 
-| Bundle | Files | Lock | Verified by |
-|---|---|---|---|
-| Presentation (Technical Portfolio starter) | the layouts, includes, stylesheet and image listed in the lock | `scripts/portfolio-template.lock.json` (`version`, `source_commit`, hashes) | `scripts/check-portfolio-template.py`, first step of the build |
-| Privacy page generator (`website-privacy`) | `scripts/privacy-template/` | `scripts/privacy-template.lock.json` | `scripts/configure-privacy.py`, before it generates |
+| Files | Pinned in | Refreshed by |
+|---|---|---|
+| The privacy page generator (`website-privacy`), `scripts/privacy-template/` | `scripts/privacy-template.lock.json`, verified by `scripts/configure-privacy.py` before it generates | "Refreshing the privacy generator" |
+| The drawings under `assets/images/` | the `@borrowdale` versions in `scripts/site-assets/package.json` | "Re-rendering the drawings" |
+| The fonts, `assets/fonts/` and `assets/css/fonts.css` | the `@fontsource` versions in `scripts/site-assets/package.json` | "Refreshing the fonts" |
 
-### Refreshing the presentation snapshot
-
-1. Make the presentation change in the starter, and note the release and commit to copy from.
-2. Copy every file the lock lists from that commit. Copy all of them, not only the ones you
-   expect to differ.
-3. Update `version`, `source_commit` and each changed hash in the lock, in the same commit.
-4. Run `python3 scripts/check-portfolio-template.py`, then the full build and checks.
-5. In the pull request, state the version moved from and to, and what a reader will see change.
-
-A file the site needs to differ from the starter does not belong in the snapshot. Move the
-difference into a site-owned include, or into `_config.yml`.
+The scripts in `scripts/site-assets/` need Node.js 22 or later. Where the installed Node is older,
+`npx -p node@22 -- npm …` runs them on Node 22 without changing it.
 
 ### Refreshing the privacy generator
 
@@ -110,21 +101,32 @@ difference into a site-owned include, or into `_config.yml`.
 5. Read the generated privacy and choices pages in a local preview. A generator release can
    change the wording of a published notice.
 
-### Re-rendering the project charts
+### Re-rendering the drawings
 
-The BorrowdaleJS project page shows charts rendered by `scripts/borrowdale-examples/`, pinned to
-one release of the library. A new library release changes nothing on the site until the pin is
-moved.
+The chart examples on the BorrowdaleJS page, the home page hero and the topic illustrations are
+rendered by `scripts/site-assets/render.mjs`, pinned to one release of the library. A new library
+release changes nothing on the site until the pin is moved. Re-render also after changing a colour
+in `_data/palette.json`: the drawings carry the palette's values, and the build fails on a drawing
+whose colours no longer match it.
 
-1. In `scripts/borrowdale-examples/`, set the new version of each `@borrowdale` package in
-   `package.json`, then run `npm install` to update the lockfile.
-2. Run `npm run render`. It fails, and writes nothing, if a chart spec no longer validates or a
-   label uses a character the font lacks.
-3. Review the image diff, and read the page in a local preview. The drawings may change between
-   library versions.
-4. Check that the code sample on the page still matches the first chart's spec.
+1. In `scripts/site-assets/`, set the new version of each `@borrowdale` package in `package.json`,
+   then run `npm install` to update the lockfile. For a colour change only, run `npm ci`.
+2. Run `npx playwright-core install chromium` once, then `npm run render`. It fails, and writes
+   nothing, if a spec no longer validates or a label uses a character the font lacks.
+3. Review the image diff, and read the pages in a local preview, in light and in dark mode and at a
+   phone width. The drawings may change between library versions.
+4. Check that the code sample on the BorrowdaleJS page still matches the first chart's spec.
 
 The workflow does not run the script, so the committed images are what is published.
+
+### Refreshing the fonts
+
+1. In `scripts/site-assets/`, set the new version of each `@fontsource` package in `package.json`,
+   then run `npm install`.
+2. Run `npm run fonts`. It fails, and writes nothing, if a face it copies is missing from a
+   package.
+3. Read a post and the home page in a local preview, and compare the file list and licences in
+   `assets/fonts/` with the previous commit.
 
 ### Actions and Ruby
 

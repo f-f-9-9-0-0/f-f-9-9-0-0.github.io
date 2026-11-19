@@ -1,22 +1,43 @@
 ---
 layout: default
 ---
-<section class="portfolio-hero" aria-labelledby="intro-title">
-  <div class="hero-copy">
-    <p class="eyebrow">{{ site.hero_label | default: 'Technical writing' | escape }}</p>
-    <h1 id="intro-title">{{ site.hero_title | default: site.title | escape }}</h1>
-    <p class="hero-description">{{ site.description | escape }}</p>
-    {% include social-links.html %}
-  </div>
-  <div class="hero-art" aria-hidden="true">
-    <span class="monogram">{{ site.initials | default: 'TP' | escape }}</span>
-    <img src="{{ '/assets/images/data-network.svg' | relative_url }}" alt="" width="400" height="360">
+{% include listings.html %}
+<section class="hero dot-field" aria-labelledby="intro-title">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise">{{ site.hero_label | default: 'Technical writing' | escape }}</p>
+      <h1 id="intro-title" class="hero-title rise rise-1">{{ site.title | escape }}</h1>
+      {% if site.bio %}<p class="hero-motto rise rise-2">{{ site.bio | escape }}</p>{% endif %}
+      <p class="hero-intro rise rise-3">{{ site.hero_title | default: site.description | escape }}</p>
+      <div class="hero-actions rise rise-4">
+        <a class="button" href="{{ '/blog/' | relative_url }}">Read the blog <span class="arrow" aria-hidden="true">→</span></a>
+        {% if site.projects %}<a class="button-line" href="{{ '/projects/' | relative_url }}">Projects</a>{% endif %}
+      </div>
+    </div>
+    <div class="hero-art rise rise-3">
+      <img src="{{ '/assets/images/hero.svg' | relative_url }}" alt="" width="560" height="460" fetchpriority="high">
+    </div>
   </div>
 </section>
-<section class="home-writing" aria-labelledby="writing-title">
-  <div class="section-heading"><h2 id="writing-title">Latest writing</h2><a href="{{ '/blog/' | relative_url }}">View all posts <span aria-hidden="true">→</span></a></div>
-  <div class="list">
-  {% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
-  {% for post in articles limit:3 %}{% include blog-post.html %}{% else %}<p>No articles yet. Add a post to get started.</p>{% endfor %}
+<section class="home-writing section container" aria-labelledby="writing-title">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow"><span aria-hidden="true">§ 01 — </span>Writing</p>
+      <h2 id="writing-title">Latest writing</h2>
+    </div>
+    <a class="button-line" href="{{ '/blog/' | relative_url }}">All articles <span class="arrow" aria-hidden="true">→</span></a>
   </div>
+  {% if articles.size > 0 %}{% include card-grid.html items=articles limit=3 heading=3 %}{% else %}<p>No articles published yet.</p>{% endif %}
 </section>
+{% if site.projects and projects.size > 0 %}
+<section class="home-projects section container" aria-labelledby="projects-title">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow"><span aria-hidden="true">§ 02 — </span>Projects</p>
+      <h2 id="projects-title">Open source</h2>
+    </div>
+    <a class="button-line" href="{{ '/projects/' | relative_url }}">All projects <span class="arrow" aria-hidden="true">→</span></a>
+  </div>
+  {% include card-grid.html items=projects limit=3 heading=3 %}
+</section>
+{% endif %}

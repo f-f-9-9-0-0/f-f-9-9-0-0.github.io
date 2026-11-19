@@ -1,0 +1,10 @@
+{% assign item = include.item %}{% assign heading = include.heading | default: 2 %}{% assign artwork = item.illustration | default: item.image %}
+<li class="card">
+  <article>
+    {% if artwork %}<img class="card-art" src="{{ artwork | relative_url }}" alt="" width="640" height="320" loading="lazy" decoding="async">{% endif %}
+    <p class="card-meta"><span class="card-index">{{ include.index | prepend: '0' | slice: -2, 2 }}</span>{% if item.tags.first %}<span>{{ item.tags.first | escape }}</span>{% endif %}{% if item.date %}<time datetime="{{ item.date | date: '%Y-%m-%d' }}">{{ item.date | date: '%b %-d, %Y' }}</time>{% endif %}</p>
+    <h{{ heading }} class="card-title"><a href="{{ item.url | relative_url }}">{{ item.title | escape }}</a></h{{ heading }}>
+    {% if item.description %}<p class="card-summary">{{ item.description | escape }}</p>{% endif %}
+    <p class="card-more" aria-hidden="true">Read <span class="arrow">→</span></p>
+  </article>
+</li>

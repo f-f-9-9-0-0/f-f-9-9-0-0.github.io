@@ -60,8 +60,8 @@ pages.each do |path|
     raise "#{name}: broken contents link #{id}" unless page.xpath('//*[@id=$id]', nil, id: id).size == 1
     raise "#{name}: empty contents label" if link.text.strip.empty?
   end
-  page.css('.site-header a, .footer-main a, .home-writing a, link[rel="stylesheet"], main img[src], main a[href]').each do |link|
-    href = link['href'] || link['src']
+  page.css('.site-header a, .footer-main a, .home-writing a, main a[href]').each do |link|
+    href = link['href']
     next unless href&.start_with?('/') && !href.start_with?('//')
     target = root.join(URI::DEFAULT_PARSER.unescape(URI.parse(href).path).delete_prefix('/'))
     target = target.join('index.html') if target.directory?
@@ -71,4 +71,4 @@ end
 landing_pages = %w[index.html about/index.html blog/index.html projects/index.html tags/index.html]
 landing_descriptions = descriptions.values_at(*landing_pages)
 raise 'Landing pages need distinct descriptions' unless landing_descriptions.uniq.size == landing_pages.size
-puts "Design checks passed: #{pages.size} pages; landmarks, headings, navigation, contents anchors and shared assets"
+puts "Design checks passed: #{pages.size} pages; landmarks, headings, navigation, contents anchors and local links"

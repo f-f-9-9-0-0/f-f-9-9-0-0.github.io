@@ -96,8 +96,7 @@ exclude:
     "utils"
   ]
 
-# Technical Portfolio presentation
-initials: GT
+# Presentation
 hero_label: Technical writing
 hero_title: Practical notes on data engineering, Apache Airflow and reliable data workflows.
 favicon: /assets/images/favicon/favicon.ico

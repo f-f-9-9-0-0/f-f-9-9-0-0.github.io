@@ -1,0 +1,32 @@
+{
+  "light": {
+    "paper": "#f4f6f3",
+    "paper-deep": "#e8ece6",
+    "ink": "#13232a",
+    "muted": "#4f5f5e",
+    "brand": "#0d6b68",
+    "brand-deep": "#094c4a",
+    "brand-inverse": "#5fd1c6",
+    "on-brand": "#ffffff",
+    "hair": "#d3dbd5",
+    "dot": "rgb(19 35 42 / 0.1)",
+    "coral": "#e0573f",
+    "code-string": "#a8412c",
+    "code-number": "#7a5300"
+  },
+  "dark": {
+    "paper": "#0e1719",
+    "paper-deep": "#142024",
+    "ink": "#e3ece8",
+    "muted": "#9daeab",
+    "brand": "#5fd1c6",
+    "brand-deep": "#9ae6dc",
+    "brand-inverse": "#0d6b68",
+    "on-brand": "#0e1719",
+    "hair": "#22343a",
+    "dot": "rgb(227 236 232 / 0.07)",
+    "coral": "#ff7a62",
+    "code-string": "#ff7a62",
+    "code-number": "#e8c06a"
+  }
+}

@@ -29,7 +29,7 @@ Every post sets these, in this order:
 | `layout` | `post` |
 | `date` | `YYYY-MM-DD HH:MM` |
 | `image` | A photograph under `/assets/images/`. Used for social metadata |
-| `illustration` | The topic SVG under `/assets/images/articles/`. Takes priority over `image` in the header and in listings |
+| `illustration` | The topic drawing under `/assets/images/articles/`. Takes priority over `image` in the header and in listings |
 | `headerImage` | `true` to show the artwork above the article |
 | `tag` | A list. The first tag is shown as the topic in listings |
 | `category` | `blog` |
@@ -59,8 +59,11 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 
 - Screenshots and photographs live under `assets/images/<nnn>/`; topic illustrations under
   `assets/images/articles/`, one SVG per post, named after the topic.
-- Images for a project page live under `assets/images/projects/<project>/`. Where a script
-  generates them, they are never edited by hand: change the script and run it again.
+- The topic illustrations, the home page hero and the chart examples of a project page are drawn
+  by `scripts/site-assets/render.mjs`. They are never edited by hand: change the script, or the
+  shapes in `scripts/site-assets/illustrations.mjs`, and run it again. A new topic illustration is
+  a new entry there.
+- Images for a project page live under `assets/images/projects/<project>/`.
 - A screenshot shows no account name, token, internal hostname or other private detail.
 - Use only images you have the right to publish.
 
@@ -69,15 +72,27 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 - A page has front matter with `layout`, `title`, `description` and `section`. The five landing
   pages (`/`, `/about/`, `/blog/`, `/projects/`, `/tags/`) each need a description of their own;
   the build compares them.
+- A page may set `eyebrow`, the short label above its title (plain text, escaped), and `intro`, the
+  text beside its title (Markdown). A blank value prints nothing. The header is
+  `_includes/page-intro.html`; a listing of cards is `_includes/card-grid.html`, fed by the queries
+  in `_includes/listings.html`. A new page or listing reuses them.
 - `section` must match an entry in `_data/navigation.yml`, which is the single source for the
   main navigation.
-- The files listed in `scripts/portfolio-template.lock.json` are a pinned snapshot of the
-  Technical Portfolio starter. **Do not edit them here.** A presentation change is made in the
-  starter and copied over with an updated lock ([`releases.md`](releases.md), "Refreshing the
-  presentation snapshot"). Site-owned files are the content, `_config.yml`, `_data/`, and the
-  includes and layouts the lock does not list.
-- Everything under `scripts/privacy-template/` is a pinned bundle too, with the same rule and its
-  own lock file.
+- The presentation is `_layouts/`, `_includes/` and `assets/css/site.css`. The colours are defined
+  in `_data/palette.json`, once for light mode and once for dark (`prefers-color-scheme`), and the
+  build writes them into `site.css` as custom properties. Both modes name the same colours, and the
+  build fails otherwise. Templates and styles use those names, never a colour value, except the
+  white behind screenshots and gists, which keep their own light palette.
+- Measured 2026-11-19: every text and control colour pair in the palette meets WCAG AA in both
+  modes (4.5:1 for body text, 3:1 for large text and controls); the lowest is a code string on
+  `paper-deep` in light mode, 5.1:1. No check enforces this: measure a new pair in both modes
+  before using it.
+- The fonts are served from the site: `assets/fonts/` and `assets/css/fonts.css`, written by
+  `scripts/site-assets/fonts.mjs` from pinned packages, with each font's licence beside it. Do not
+  edit them by hand ([`releases.md`](releases.md), "Refreshing the fonts").
+- Everything under `scripts/privacy-template/` is a pinned bundle. **Do not edit it here.** It is
+  replaced from a reviewed upstream release together with its lock file
+  ([`releases.md`](releases.md), "Refreshing the privacy generator").
 - A root file that is not part of the site is added to `exclude` in `_config.yml`. Jekyll copies
   any other root file into the published site as it is.
 - `sitemap.xml` is built from the pages and posts. Do not list URLs in it by hand. A page that
@@ -98,6 +113,7 @@ newest first.
 | `permalink` | `/projects/<project>/` |
 | `date` | `YYYY-MM-DD HH:MM:SS`, **with seconds**. Without them the value is text, not a date, and the Projects list fails to sort as soon as a project post exists |
 | `illustration` | The listing thumbnail |
+| `eyebrow`, `intro` | The label above the title and the text beside it, as for any page (optional) |
 | `image` | A raster image (PNG or JPEG) for link previews, ideally 1200×630. Most platforms ignore SVG here |
 | `tags` | A list. The first is shown as the topic in the listing |
 | `seo` | `type: WebPage`, so the structured data does not call the page a blog post |
@@ -128,15 +144,20 @@ feed, and the page layout adds nothing around its content:
   names the page and the problem.
 - Python is invoked as `python3`, uses only the standard library, and reads and writes text as
   UTF-8. Paths are resolved from the script's own location.
-- The one exception is `scripts/borrowdale-examples/`, a Node.js script (version 22 or later) that
-  renders the BorrowdaleJS chart examples. Its dependencies are pinned exactly and locked in
-  `package-lock.json`, and its `node_modules/` is ignored. The workflow does not run it: the
-  images it writes are committed ([`releases.md`](releases.md), "Re-rendering the project
-  charts").
+- The one exception is `scripts/site-assets/`, Node.js scripts (version 22 or later) that render
+  the BorrowdaleJS drawings and copy the fonts. Their dependencies are pinned exactly and locked in
+  `package-lock.json`, and `node_modules/` is ignored. The workflow does not run them: the files
+  they write are committed ([`releases.md`](releases.md), "Re-rendering the drawings").
 - Unit tests are `scripts/test_*.py`, discovered by `python3 -m unittest`. A test arranges its
   input, acts once and asserts literal values.
 - A new rule for the rendered site gets its check in the same pull request, so the next change
   cannot break it unnoticed.
+- What a built page's markup loads (scripts, stylesheets, preloads, icons, images, frames) comes
+  only from the site itself or from the origins listed in `scripts/check-site.py`, and every local
+  file it names exists; the build fails otherwise. Each listed origin receives readers' data, so a
+  new one needs an entry in `scripts/privacy-site.json`, reviewed, in the same pull request. The
+  check does not read stylesheets (`@import`, `url()`) or what a script loads at run time: review
+  those by hand.
 - The bundled files under `scripts/privacy-template/` are checked in with LF line endings
   (`.gitattributes`), because their hashes are pinned.
 
