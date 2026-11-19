@@ -46,7 +46,7 @@ The pending update for **dsA** from day 1 has not yet been consumed. When **dsB*
 
 So in this weird case, **dagA** and **dagC** are running in parallel, which might not be the proper way of execution. Depends on your use case, of course though, for example loading a table and its source at the same time sounds like a bad idea.
 
-[link_to_other_post]: /data-aware-scheduling-with-dataset-in-apache-airflow
-[link_under_the_hoods]: /apache-airflow-datasets-under-the-hoods
+[link_to_other_post]: /data-aware-scheduling-with-dataset-in-apache-airflow/
+[link_under_the_hoods]: /apache-airflow-datasets-under-the-hoods/
 
 [dataset_scheduling]: https://airflow.apache.org/docs/apache-airflow/2.8.2/authoring-and-scheduling/datasets.html#multiple-datasets

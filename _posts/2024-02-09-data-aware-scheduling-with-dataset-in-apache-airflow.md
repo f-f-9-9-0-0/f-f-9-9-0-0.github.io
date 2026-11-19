@@ -89,11 +89,77 @@ Downstream datasets are specified in the argument `outlets` of tasks when those 
 Both can accept lists of instances of class `Dataset`.
 
 There are two upstream datasets which DAG `example_upstream_datasets` depends on in the below example:  
-{% include gist.html id="f-f-9-9-0-0/6d22dbe61ff4b1717d1e53eb88ae395b" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">dag_example_upstream_dataset.py</span> <span>Python</span></figcaption>
+
+```python
+import pendulum
+
+from airflow import Dataset
+from airflow.decorators import dag, task
+
+ds_001 = Dataset("any_string_001")
+ds_002 = Dataset("any_string_002")
+
+@task(
+  task_id = "empty_task"
+)
+def empty_task():
+  pass
+
+@dag(
+  start_date  = pendulum.datetime(2021, 1, 1, tz="UTC"),
+  schedule    = [
+    ds_001,
+    ds_002
+  ],
+  catchup     = False,
+  tags        = [ 'example' ]
+)
+def example_upstream_dataset():
+  empty_task()
+
+example_upstream_dataset()
+```
+
+</figure>
 
 And this is the DAG which updates those two datasets: `example_downstream_datasets`  
 **NOTE:** While the name of the *Python variables* are different (`ds_003` and `ds_004`) than in the previous DAG, the string for the datasets are the same (`any_string_001` and `any_string_002`)  
-{% include gist.html id="f-f-9-9-0-0/ddf908525fed6fc99618b19a297d8bed" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">dag_example_downstream_dataset.py</span> <span>Python</span></figcaption>
+
+```python
+import pendulum
+
+from airflow import Dataset
+from airflow.decorators import dag, task
+
+ds_003 = Dataset("any_string_001")
+ds_004 = Dataset("any_string_002")
+
+@task(
+  task_id = "empty_task",
+  outlets = [ ds_003, ds_004 ]
+)
+def empty_task():
+  pass
+
+@dag(
+  start_date  = pendulum.datetime(2021, 1, 1, tz="UTC"),
+  schedule    = None,
+  catchup     = False,
+  tags        = [ 'example' ]
+)
+def example_downstream_dataset():
+  empty_task()
+
+example_downstream_dataset()
+```
+
+</figure>
 
 On the *Airflow UI*, you can get a nice representation of these dependencies in the form of a directed acyclic graph, by clicking on the **Datasets** item in the navbar:  
 {% include article-image.html src="/assets/images/001/airflow_ui.png" alt="Airflow UI Datasets" %}
@@ -104,7 +170,59 @@ Ok, you can ask a very valid question: *What if there is no guarantee in the Pyt
 The answer is **yes**, Airflow still record the dependency, however datasets might not be updated by all the runs of the actual DAG.  
   
 Let's see the below example DAG, which has a branch in itself, resulting in an update for only one of the two datasets at a time:  
-{% include gist.html id="f-f-9-9-0-0/3dd72b1f003512556edc065c61d4c84a" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">dag_example_branch_dataset.py</span> <span>Python</span></figcaption>
+
+```python
+import pendulum
+
+from airflow import Dataset
+from airflow.decorators import dag, task
+
+ds_005 = Dataset("any_string_005")
+ds_006 = Dataset("any_string_006")
+
+@task.branch(
+  task_id = "branch_task"
+)
+def branch_task():
+  if pendulum.DateTime.utcnow().hour % 2 == 0:
+    return 'update_dataset_005'
+  else:
+    return 'update_dataset_006'
+
+@task(
+  task_id = "update_dataset_005",
+  outlets = [ ds_005 ]
+)
+def update_dataset_005():
+  pass
+
+@task(
+  task_id = "update_dataset_006",
+  outlets = [ ds_006 ]
+)
+def update_dataset_006():
+  pass
+
+@dag(
+  start_date  = pendulum.datetime(2021, 1, 1, tz="UTC"),
+  schedule    = None,
+  catchup     = False,
+  tags        = [ 'example' ]
+)
+def example_branch_dataset():
+  t1 = branch_task()
+  t2 = update_dataset_005()
+  t3 = update_dataset_006()
+
+  t1 >> [ t2, t3 ]
+
+example_branch_dataset()
+```
+
+</figure>
 
 Still the dependencies are recorded by Airflow, even though datasets are not updated by every run:  
 {% include article-image.html src="/assets/images/001/airflow_ui2.png" alt="Airflow UI Branch Datasets" %}

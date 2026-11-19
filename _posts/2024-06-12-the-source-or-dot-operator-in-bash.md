@@ -43,13 +43,98 @@ Also the script's content gets executed in the existing shell invoking it, which
 
 ## Sample code
 
-When creating the example file, preserve `$0` literally so it is evaluated when the script runs:
+To source the file from the current directory explicitly, use `. ./script0.sh`.
+
+<aside class="callout" aria-label="Note">
+    <p>
+        <strong class="callout-title">Note</strong>
+        Run the example with care. It creates a <code>bash_test</code> folder in the current directory, works inside it and deletes it at the end. Read it first, save it as a file and run it with <code>bash</code> from an empty directory, rather than pasting it into a terminal.
+    </p>
+</aside>
+
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">the_source_or_dot_operator_in_bash.sh</span> <span>Bash</span></figcaption>
 
 ```bash
+#!/bin/bash
+
+# create a new folder for the tests,
+# and stop if it already exists
+mkdir bash_test && cd bash_test || exit 1
+
+# create a new script with some content
+# set the variable 'some_variable' in the script
+echo "some_variable=0" >script0.sh
 printf '%s\n' 'echo "$0"' >>script0.sh
+
+# check the new folder is not in
+# the PATH environment variable
+echo $PATH
+
+# try to execute the script
+# you get an error as not found
+# in the PATH:
+#   command not found
+script0.sh
+
+# try to execute the script
+# you get an error as the script
+# is not executable (since path
+# is specified not checked in PATH):
+#   Permission denied
+./script0.sh
+
+# another try, but this time add
+# the current folder to the PATH
+export PATH=$PATH:$(pwd)
+# check it is being added
+echo $PATH
+# execute the script, as found in
+# the PATH,
+# now you get the same error
+#   Permission denied
+script0.sh
+
+# okay, remove the current folder
+# from PATH
+export PATH=${PATH%:/*}
+# check again
+echo $PATH
+
+# add permission necessary to
+# execute within a subshell
+chmod 744 script0.sh
+# check
+ls -l script0.sh
+
+# set variable empty
+some_variable=
+# check variable is not set
+echo $some_variable
+# execute the script, the variable
+# is set in a subshell
+./script0.sh
+# check variable is still not
+# set in the current shell
+echo $some_variable
+
+# remove permission added earlier
+chmod 644 script0.sh
+# check
+ls -l script0.sh
+# now execute with the
+# source or dot operator
+. script0.sh
+# check variable again
+# which is now being
+# set in the current shell
+echo $some_variable
+
+# cleanup
+some_variable=
+cd ..
+rm -R bash_test
 ```
 
-Use this instead of the embedded example’s `echo "echo $0" >>script0.sh`, which expands `$0` in the shell writing the file. To source the file from the current directory explicitly, use `. ./script0.sh`. The embedded Gist below retains its original code.
-
-
-{% include gist.html id="f-f-9-9-0-0/362970e3c1f6b0afddd218eefe1f6c97" %}
+</figure>

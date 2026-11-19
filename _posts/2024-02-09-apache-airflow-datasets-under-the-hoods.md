@@ -218,4 +218,4 @@ delete from dataset_dag_run_queue where target_dag_id = <dag_id>
 [airflow\models\manager.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/datasets/manager.py
 [airflow\jobs\scheduler_job_runner.py]: https://github.com/apache/airflow/blob/2.8.2/airflow/jobs/scheduler_job_runner.py
 
-[link_to_other_post]: /data-aware-scheduling-with-dataset-in-apache-airflow
+[link_to_other_post]: /data-aware-scheduling-with-dataset-in-apache-airflow/
