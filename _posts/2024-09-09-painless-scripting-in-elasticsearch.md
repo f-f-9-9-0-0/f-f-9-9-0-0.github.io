@@ -102,15 +102,232 @@ The full language specification can be found here: [Painless Language Specificat
 ## Sample code
 
 ### Parsing a date field
-{% include gist.html id="f-f-9-9-0-0/4f372cbce47b63a319eb87f08f42b8e0" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">elasticsearch_runtime_field_example_00.json</span> <span>Kibana console</span></figcaption>
+
+```hocon
+# create a component template for the index
+PUT _component_template/template_c
+{
+  "template": {
+    "mappings": {
+      "runtime": {
+        "year": {
+          "type": "keyword",
+          "script": "emit(doc['date_field'].value.toString().substring(0, 4))"
+        },
+        "month": {
+          "type": "keyword",
+          "script": "emit(doc['date_field'].value.toString().substring(5, 7))"
+        },
+        "day": {
+          "type": "keyword",
+          "script": "emit(doc['date_field'].value.toString().substring(8, 10))"
+        }
+      }
+    }
+  }
+}
+
+# create an index template for the index
+PUT _index_template/template_i
+{
+  "index_patterns": [ "test*" ], 
+  "composed_of": [ "template_c" ]
+}
+
+# add a new document to the index
+# it will create the index if that
+# does not exist
+POST test_index/_doc
+{
+  "date_field": "2024-09-08"
+}
+
+# get documents from the index
+# including runtime fields
+GET test_index/_search
+{
+  "fields": [
+    "*"
+  ]
+}
+
+# clean up
+DELETE test_index
+```
+
+</figure>
 
 ### Mapping a value to another
 Multi-line script
-{% include gist.html id="f-f-9-9-0-0/f62804cd61c6fd216e3cb69a9e702f97" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">elasticsearch_runtime_field_example_01.json</span> <span>Kibana console</span></figcaption>
+
+```hocon
+# create a component template for the index
+PUT _component_template/template_c
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "numbers": {
+          "type": "keyword"
+        }
+      }, 
+      "runtime": {
+        "numbers.name": {
+          "type": "keyword",
+          "script": {
+            "source": """
+              String ret;
+              if (doc['numbers'].size() == 0) {
+                ret = 'NaN';
+              }
+              else if (doc['numbers'].value == '0') {
+                ret = 'zero';
+              } 
+              else if (doc['numbers'].value == '1') {
+                ret = 'one';
+              } 
+              else if (doc['numbers'].value == '2') {
+                ret = 'two';
+              } 
+              else if (doc['numbers'].value == '3') {
+                ret = 'three';
+              } 
+              else if (doc['numbers'].value == '4') {
+                ret = 'four';
+              } 
+              else if (doc['numbers'].value == '5') {
+                ret = 'five';
+              } 
+              else if (doc['numbers'].value == '6') {
+                ret = 'six';
+              } 
+              else if (doc['numbers'].value == '7') {
+                ret = 'seven';
+              } 
+              else if (doc['numbers'].value == '8') {
+                ret = 'eight';
+              } 
+              else if (doc['numbers'].value == '9') {
+                ret = 'nine';
+              } 
+              else {
+                ret = 'NaN';
+              }
+              emit(ret);
+          """
+          }
+        }
+      }
+    }
+  }
+}
+
+# create an index template for the index
+PUT _index_template/template_i
+{
+  "index_patterns": [ "test*" ], 
+  "composed_of": [ "template_c" ]
+}
+
+# add a new document to the index
+# it will create the index if that
+# does not exist
+POST test_index/_doc
+{
+  "numbers": 5
+}
+
+# get documents from the index
+# including runtime fields
+GET test_index/_search
+{
+  "fields": [
+    "*"
+  ]
+}
+
+# clean up
+DELETE test_index
+```
+
+</figure>
 
 ### Classification
 Multi-line script
-{% include gist.html id="f-f-9-9-0-0/56e81a16d0164900b78a8d217cd1ddf8" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">elasticsearch_runtime_field_example_02.json</span> <span>Kibana console</span></figcaption>
+
+```hocon
+# create a component template for the index
+PUT _component_template/template_c
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "input": {
+          "type": "keyword"
+        }
+      }, 
+      "runtime": {
+        "classification": {
+          "type": "keyword",
+          "script": """
+            int num = Integer.parseInt(doc['input'].value);
+            if (num % 2 == 0) {
+              emit('even')
+            }
+            else {
+              emit('odd')
+            }
+          """
+        }
+      }
+    }
+  }
+}
+
+# create an index template for the index
+PUT _index_template/template_i
+{
+  "index_patterns": [ "test*" ], 
+  "composed_of": [ "template_c" ]
+}
+
+# add a new document to the index
+# it will create the index if that
+# does not exist
+POST test_index/_doc
+{
+  "input": 3
+}
+
+# add another document to the index
+POST test_index/_doc
+{
+  "input": 4
+}
+
+# get documents from the index
+# including runtime fields
+GET test_index/_search
+{
+  "fields": [
+    "*"
+  ]
+}
+
+# clean up
+DELETE test_index
+```
+
+</figure>
 
 [cornell]: https://cornell.edu/
 [lesk]: https://www.lesk.com/mlesk/

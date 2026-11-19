@@ -50,7 +50,177 @@ So what we need to do, step by step:
 ## Sample code
 
 ### A simple script to demonstrate how to keep change history of an Elasticsearch document inside the document itself
-{% include gist.html id="f-f-9-9-0-0/e4e7fd4ab27e488a66386116aeb85790" %}
+
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">elasticsearch_keep_change_history.json</span> <span>Kibana console</span></figcaption>
+
+```hocon
+# Mapping for the index
+#   Only fields 'field_included_in_history' and 'another_included_field'
+#   are being kept in the history
+PUT _component_template/template_c
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "creation_timestamp": {
+          "type" : "date"
+        },
+        "last_change_timestamp": {
+          "type" : "date"
+        },
+        "field_excluded_from_in_history": {
+          "type": "keyword"
+        },
+        "another_excluded_field": {
+          "type": "keyword"
+        },
+        "field_included_in_history": {
+          "type": "keyword"
+        },
+        "another_included_field": {
+          "type": "keyword"
+        },
+        "history": {
+          "properties": {
+            "change_description": {
+              "type" : "text"
+            },
+            "change_timestamp": {
+              "type" : "date"
+            },
+            "field_included_in_history": {
+              "type": "keyword"
+            },
+            "another_excluded_field": {
+              "type": "keyword"
+            },
+            "old": {
+              "properties": {
+                "field_included_in_history": {
+                  "type": "keyword"
+                },
+                "another_excluded_field": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+PUT _index_template/template_i
+{
+  "priority": 300,
+  "index_patterns": ["test_history_management"],
+  "composed_of": [ "template_c" ],
+  "_meta": {
+    "description": "Template for testing History Management"
+  }
+}
+
+DELETE test_history_management
+
+# Create one document
+POST test_history_management/_doc/93229420-028b-11ed-b440-0358b6de8001
+{
+  "creation_timestamp": "2024-09-15T00:00:00.000000000",
+  "last_change_timestamp": "2024-09-15T00:00:00.000000000",
+  "field_excluded_from_in_history": "excluded_000",
+  "another_excluded_field": "another_excluded_000",
+  "field_included_in_history": "included_000",
+  "another_included_field": "another_included_000"
+}
+
+# Script to update a document
+# and keep its history
+PUT _scripts/update_history
+{
+  "script": {
+    "lang": "painless",
+    "source": """
+      Map map_wrap = new HashMap();
+      Map map_old  = new HashMap();
+
+      params.forEach(
+            (key, value)
+                -> { 
+                  if (
+                    key == 'change_timestamp' ||
+                    key == 'change_description' 
+                  ) {
+                    map_wrap[key] = value;
+                  } else if (
+                      key == 'field_excluded_from_in_history' ||
+                      key == 'another_excluded_field'
+                  ) {
+                    ctx._source[key] = value;
+                  } else {
+                    map_old[key] = ctx._source[key];
+                    map_wrap[key] = value;
+                    ctx._source[key] = value;
+                  }
+                }
+      );
+
+      map_wrap['old'] = map_old;
+
+      ctx._source['last_change_timestamp'] = params['change_timestamp'];
+
+      if (ctx._source.history == null) {
+        ctx._source.history = [];
+      }
+      else if (!(ctx._source.history instanceof Collection)) {
+        ctx._source.history = [ctx._source.history];
+      }
+
+      ctx._source.history.add(map_wrap);
+    """
+  }
+}
+
+# Update a document
+#   Only field 'field_included_in_history' is being
+#   kept in history
+POST test_history_management/_update/93229420-028b-11ed-b440-0358b6de8001
+{
+  "script": {
+    "id": "update_history",
+    "params": {
+      "change_timestamp": "2024-09-15T01:00:00.000000000",
+      "change_description": "keep history of field 'field_included_in_history' of the document",
+      "field_included_in_history": "included_001",
+      "field_excluded_from_in_history": "excluded_001"
+    }
+  }
+}
+
+# Update the same document again
+#   Both fields 'field_included_in_history' and
+#   'another_included_field' are being kept in
+#   history
+POST test_history_management/_update/93229420-028b-11ed-b440-0358b6de8001
+{
+  "script": {
+    "id": "update_history",
+    "params": {
+      "change_timestamp": "2024-09-15T02:00:00.000000000",
+      "change_description": "keep history of both fields 'field_included_in_history' and 'another_included_field' of the document",
+      "field_included_in_history": "included_002",
+      "another_included_field": "another_included_001",
+      "another_excluded_field": "another_excluded_001"
+    }
+  }
+}
+
+# Check for the two entries in the history
+GET test_history_management/_search
+```
+
+</figure>
 
 ### The output
 
@@ -116,4 +286,4 @@ The ouput shows exactly what we wanted to achieve, having the documents change h
 [discuss3]: https://discuss.elastic.co/t/is-it-possible-to-store-document-versions-in-elastic-search/337496
 [concurrency]: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/optimistic-concurrency-control.html
 [versioning]: https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docs-index_.html#versioning
-[link_painless]: /painless-scripting-in-elasticsearch
+[link_painless]: /painless-scripting-in-elasticsearch/

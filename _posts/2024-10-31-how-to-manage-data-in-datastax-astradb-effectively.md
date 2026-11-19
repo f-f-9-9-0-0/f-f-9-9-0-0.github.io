@@ -68,18 +68,64 @@ Three subcommands, `load`, `unload`, and `count` are straightforward. The subcom
 
 ## Sample code
 
-##### This is a simple Dockerfile to prepare an environment to manage AstraDB data.
-{% include gist.html id="f-f-9-9-0-0/f6634e9cc2cd9b987df9ad5952ce773a" %}
+This is a simple Dockerfile to prepare an environment to manage AstraDB data.
 
-Once in use, **remove the suffix** and keep the file name as `Dockerfile` only.
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">Dockerfile</span> <span>Docker</span></figcaption>
+
+```dockerfile
+ARG  CODE_VERSION=20.04
+FROM ubuntu:${CODE_VERSION}
+
+ENV  WORKDIR=/app
+WORKDIR ${WORKDIR}
+
+LABEL version="1.0"
+LABEL description="Manage AstraDB data"
+
+# Prepare environment
+# DEBIAN_FRONTEND is required for silent install of JRE
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+apt-get upgrade && \
+apt-get install -y wget && \
+apt-get install -y python3 && \
+apt-get install -y default-jre-headless
+
+# Install CQLSH standalone tool
+RUN wget https://downloads.datastax.com/enterprise/cqlsh-astra.tar.gz && \
+tar -xzvf cqlsh-astra.tar.gz && \
+rm cqlsh-astra.tar.gz
+
+# Add cqlsh to PATH
+ENV PATH="${WORKDIR}/cqlsh-astra/bin:$PATH"
+
+# Install DataStax Bulk Loader
+RUN wget https://github.com/datastax/dsbulk/releases/download/1.11.0/dsbulk-1.11.0.tar.gz && \
+tar -xzvf dsbulk-1.11.0.tar.gz && \
+rm dsbulk-1.11.0.tar.gz
+
+# Add dsbulk to PATH
+ENV PATH="${WORKDIR}/dsbulk-1.11.0/bin:$PATH"
+
+# Start bash
+ENTRYPOINT ["/bin/bash"]
+```
+
+</figure>
 
 Tools `CQLSH standalone tool` and `DataStax Bulk Loader` get installed with all their dependencies on the image's OS.
 
-:warning: **NOTE:** Take care of the future version changes over time, both OS and application level.
+<aside class="callout" aria-label="Note">
+    <p>
+        <strong class="callout-title">Note</strong>
+        Take care of the future version changes over time, both OS and application level.
+    </p>
+</aside>
 
 ---
 
-Build the image using the bellow command, from the same folder where the `Dockerfile` is located (*PowerShell*)  
+Build the image using the below command, from the same folder where the `Dockerfile` is located (*PowerShell*)  
 ```bash
 docker build -t test/astradb_data_manager .
 ```
@@ -100,7 +146,7 @@ secure_connect_bundle=<PATH_TO_THE_SECURE_CONNECT_BUNDLE>
 
 Now you can start using the tools installed.
 
-#### CQLSH Standalone Tool
+### CQLSH Standalone Tool
 
 Sample code to print current timestamp in format of `timeUUID`
 ```bash
@@ -111,7 +157,7 @@ cqlsh \
   --execute="select now() from system.local;"
 ```
 
-#### Datastax Bulk Loader
+### DataStax Bulk Loader
 
 Sample code to get one record from a table in form of a `CSV`
 ```bash
@@ -129,7 +175,7 @@ dsbulk \
 [wiki_cassandra]: https://en.wikipedia.org/wiki/Apache_Cassandra
 [top_level]: https://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg01518.html
 [daas]: https://en.wikipedia.org/wiki/Cloud_database
-[link_to_other_post]: /datastax-studio
+[link_to_other_post]: /datastax-studio/
 
 [dynamo]: https://www.amazon.science/publications/dynamo-amazons-highly-available-key-value-store
 [cql_dml]: https://cassandra.apache.org/doc/4.1/cassandra/cql/dml.html

@@ -20,7 +20,7 @@ excerpt_separator: <!--more-->
 ---
 ## DataStax Studio
 
-In my [other post][link_to_other_post] I shared some techniques how to manage data in e.g. Datastax AstraDB.  
+In my [other post][link_to_other_post] I shared some techniques how to manage data in e.g. DataStax AstraDB.  
 The best developer tool to visualize, profile, and manipulate data stored in DataStax databases, however is DataStax Studio.  
 > Designed to facilitate Cassandra Query Language (CQL), Graph/Gremlin, and 
 > Spark SQL language development, DataStax Studio has all the tools needed 
@@ -31,18 +31,52 @@ The best developer tool to visualize, profile, and manipulate data stored in Dat
 
 ## Sample code
 
-### This is a simple Dockerfile to prepare an environment for DataStax Studio.
-{% include gist.html id="f-f-9-9-0-0/77df05c6a05ab185e35af6386051036e" %}
+This is a simple Dockerfile to prepare an environment for DataStax Studio.
 
-Once in use, **remove the suffix** and keep the file name as `Dockerfile` only.
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">Dockerfile</span> <span>Docker</span></figcaption>
+
+```dockerfile
+ARG  CODE_VERSION=latest
+FROM alpine:${CODE_VERSION}
+
+ENV  WORKDIR=/app
+WORKDIR ${WORKDIR}
+
+LABEL version="1.0"
+LABEL description="DataStax Studio"
+
+RUN apk add --upgrade apk-tools && \
+apk upgrade --available && \
+# Need Bash as that is being used in the
+# Datastax Studio scripts
+apk add --no-cache bash && \
+apk add --no-cache openjdk8-jre && \
+wget https://downloads.datastax.com/datastax-studio/datastax-studio-6.8.tar.gz && \
+tar -xvzf datastax-studio-6.8.tar.gz && \
+rm datastax-studio-6.8.tar.gz && \
+# This is required if you run this from
+# your local computer on top of Docker
+# Desktop
+sed -i -e 's/httpBindAddress: localhost/httpBindAddress: 0.0.0.0/' ./datastax-studio-6.8.*/conf/configuration.yaml
+
+ENTRYPOINT ./datastax-studio-6.8.*/bin/server.sh
+```
+
+</figure>
 
 `DataStax Studio` gets installed with all its dependencies on the image's OS.
 
-:warning: **NOTE:** Take care of the future version changes over time, both OS and application level.
+<aside class="callout" aria-label="Note">
+    <p>
+        <strong class="callout-title">Note</strong>
+        Take care of the future version changes over time, both OS and application level.
+    </p>
+</aside>
 
 ---
 
-Build the image using the bellow command, from the same folder where the `Dockerfile` is located (*PowerShell*)  
+Build the image using the below command, from the same folder where the `Dockerfile` is located (*PowerShell*)  
 ```bash
 docker build -t test/dsstudio .
 ```
@@ -64,6 +98,6 @@ docker port dsstudio 9091
 
 Because `-p :9091` assigns an available host port, use the reported port to open `http://localhost:<HOST_PORT>` when Docker runs locally. The application logs show startup details but may show the container’s internal port. See the [Docker run reference][docker_run].
 
-[link_to_other_post]: /how-to-manage-data-in-datastax-astradb-effectively
+[link_to_other_post]: /how-to-manage-data-in-datastax-astradb-effectively/
 
 [docker_run]: https://docs.docker.com/reference/cli/docker/container/run/

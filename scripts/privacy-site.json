@@ -4,7 +4,7 @@
   "languages": [
     "en"
   ],
-  "reviewed_on": "2026-11-02",
+  "reviewed_on": "2026-11-19",
   "publication_reviewed": true,
   "analytics": {
     "mode": "reviewed_exemption",
@@ -35,29 +35,6 @@
       },
       "transfers": {
         "en": "GitHub, Inc. is located in the United States. Transfers rely on the EU-U.S. Data Privacy Framework, in which GitHub participates, and on Standard Contractual Clauses."
-      }
-    },
-    {
-      "name": {
-        "en": "Embedded code snippets (GitHub Gist)"
-      },
-      "purpose": {
-        "en": "Display code examples inside blog posts."
-      },
-      "data": {
-        "en": "Some posts embed code from gist.github.com. When such a post loads, your browser connects to GitHub and sends your IP address, the address of the page and browser information."
-      },
-      "basis": {
-        "en": "Legitimate interest (Article 6(1)(f) GDPR) in presenting readable code examples."
-      },
-      "recipients": {
-        "en": "GitHub, Inc., under the GitHub General Privacy Statement."
-      },
-      "retention": {
-        "en": "The operator stores no visitor data. GitHub retains its data as described in its privacy statement."
-      },
-      "transfers": {
-        "en": "GitHub, Inc. is located in the United States. Transfers rely on the EU-U.S. Data Privacy Framework and on Standard Contractual Clauses."
       }
     },
     {

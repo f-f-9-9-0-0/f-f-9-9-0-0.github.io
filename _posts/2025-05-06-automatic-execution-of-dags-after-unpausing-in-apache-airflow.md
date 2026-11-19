@@ -88,7 +88,209 @@ Executed for all the completed data intervals and while multiple DagRuns got sta
 
 ### Source code for all Dags
 
-{% include gist.html id="f-f-9-9-0-0/fd08d111db57ec86e2af058c2c5ac142" %}
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">dag_example_automatic_start.py</span> <span>Python</span></figcaption>
+
+{% raw %}
+~~~~python
+from airflow.decorators import dag, task
+from datetime import datetime
+import time
+
+@task
+def print_task(print_me):
+  '''
+    ----------------------------------  
+    # Purpose of this task
+    ```
+    |-------------------------------------------------------------------|
+    | Print the value of the parameter                                  |
+    |                                                                   |
+    |       |\      _,,,---,,_                                          |
+    | ZZZzz /,`.-'`'    -.  ;-;;,_                                      |
+    |     |,4-  ) )-,_. ,\ (  `'-'                                      |
+    |     '---''(_/--'  `-'\_)                                          |
+    |-------------------------------------------------------------------|
+    ```
+    ----------------------------------  
+  '''
+  print(print_me)
+
+
+@task
+def sleep():
+  '''
+    ----------------------------------  
+    # Purpose of this task
+    ```
+    |-------------------------------------------------------------------|
+    | Sleep for 5s                                                      |
+    |                                                                   |
+    |       |\      _,,,---,,_                                          |
+    | ZZZzz /,`.-'`'    -.  ;-;;,_                                      |
+    |     |,4-  ) )-,_. ,\ (  `'-'                                      |
+    |     '---''(_/--'  `-'\_)                                          |
+    |-------------------------------------------------------------------|
+    ```
+    ----------------------------------  
+  '''
+  time.sleep(5)
+
+
+@dag(
+  dag_id          = 'dag_example_catchup_true_simultaneous',
+  start_date      = datetime(2024, 12, 2),
+  schedule        = '0 * * * *',
+  catchup         = True,
+  default_args    = {
+    'depends_on_past' : False
+  },
+  tags            = [ 'example' ]
+)
+def dag_example_catchup_true_simultaneous():
+  '''
+    # Purpose of this dag
+    ```
+    |-------------------------------------------------------------------|
+    | This DAG has only one task to demonstrate                         |
+    | how DAG Runs are generated once the newly                         |
+    | created DAG gets unpaused.                                        |
+    |                                                                   |
+    | As the `dag.catchup` value is **True**, the scheduler             |
+    | would create a DAG Run for each completed interval                |
+    | between the `start_date` and the last completed                   |
+    | data interval (based on `schedule`, *in this case                 |
+    | this is the last completed hour*) and the scheduler               |
+    | will execute them **simultaneously** as                           |
+    | `dag.default_args.depends_on_past` is set to **False**.           |
+    |                                                                   |
+    | depends_on_past: Set at the *task level* or as a `default_arg`    |
+    | for all tasks at the *DAG level*. When set to **True**, the task  |
+    | instance must wait for the **same task** in the **most recent DAG |
+    | run** to be **successful**. This ensures sequential data loads    |
+    | and allows only one DAG run to be executed at a time *in          |
+    | most cases*.                                                      |
+    |                                                                   |
+    |       |\      _,,,---,,_                                          |
+    | ZZZzz /,`.-'`'    -.  ;-;;,_                                      |
+    |     |,4-  ) )-,_. ,\ (  `'-'                                      |
+    |     '---''(_/--'  `-'\_)                                          |
+    |-------------------------------------------------------------------|
+    ```
+  '''
+
+  what_to_print = '''
+      execution_date            : {{ dag_run.execution_date }}
+      start_date                : {{ dag_run.start_date }}
+      end_date                  : {{ dag_run.end_date }}
+      data_interval_start       : {{ dag_run.data_interval_start }}
+      data_interval_end         : {{ dag_run.data_interval_end }}
+  '''
+
+  sleep() >> print_task(what_to_print)
+
+
+@dag(
+  dag_id          = 'dag_example_catchup_true_depends_on_past',
+  start_date      = datetime(2024, 12, 2),
+  schedule        = '0 * * * *',
+  catchup         = True,
+  default_args    = {
+    'depends_on_past' : True
+  },
+  tags            = [ 'example' ]
+)
+def dag_example_catchup_true_depends_on_past():
+  '''
+    # Purpose of this dag
+    ```
+    |-------------------------------------------------------------------|
+    | This DAG has only one task to demonstrate                         |
+    | how DAG Runs are generated once the newly                         |
+    | created DAG gets unpaused.                                        |
+    |                                                                   |
+    | As the `dag.catchup` value is **True**, the scheduler             |
+    | would create a DAG Run for each completed interval                |
+    | between the `start_date` and the last completed                   |
+    | data interval (based on `schedule`, *in this case                 |
+    | this is the last completed hour*) and the scheduler               |
+    | will execute them **sequentially** as                             |
+    | `dag.default_args.depends_on_past` is set to **True**.            |
+    |                                                                   |
+    | depends_on_past: Set at the *task level* or as a `default_arg`    |
+    | for all tasks at the *DAG level*. When set to **True**, the task  |
+    | instance must wait for the **same task** in the **most recent DAG |
+    | run** to be **successful**. This ensures sequential data loads    |
+    | and allows only one DAG run to be executed at a time *in          |
+    | most cases*.                                                      |
+    |                                                                   |
+    |       |\      _,,,---,,_                                          |
+    | ZZZzz /,`.-'`'    -.  ;-;;,_                                      |
+    |     |,4-  ) )-,_. ,\ (  `'-'                                      |
+    |     '---''(_/--'  `-'\_)                                          |
+    |-------------------------------------------------------------------|
+    ```
+  '''
+
+  what_to_print = '''
+      execution_date            : {{ dag_run.execution_date }}
+      start_date                : {{ dag_run.start_date }}
+      end_date                  : {{ dag_run.end_date }}
+      data_interval_start       : {{ dag_run.data_interval_start }}
+      data_interval_end         : {{ dag_run.data_interval_end }}
+  '''
+
+  sleep() >> print_task(what_to_print)
+
+
+@dag(
+  dag_id      = 'dag_example_catchup_false',
+  start_date  = datetime(2024, 12, 2),
+  schedule    = '0 * * * *',
+  catchup     = False,
+  tags        = [ 'example' ]
+)
+def dag_example_catchup_false():
+  '''
+    # Purpose of this dag
+    ```
+    |--------------------------------------------------------|
+    | This DAG has only one task to demonstrate              |
+    | how DAG Runs are generated once the newly              |
+    | created DAG gets unpaused.                             |
+    |                                                        |
+    | As the `dag.catchup` value is **False**, the scheduler |
+    | would create a single DAG Run for the last completed   |
+    | data interval (based on `schedule`, *in this case      |
+    | this is the last completed hour*) and the scheduler    |
+    | will execute it.                                       |
+    |                                                        |
+    |       |\      _,,,---,,_                               |
+    | ZZZzz /,`.-'`'    -.  ;-;;,_                           |
+    |     |,4-  ) )-,_. ,\ (  `'-'                           |
+    |     '---''(_/--'  `-'\_)                               |
+    |--------------------------------------------------------|
+    ```
+  '''
+
+  what_to_print = '''
+      execution_date            : {{ dag_run.execution_date }}
+      start_date                : {{ dag_run.start_date }}
+      end_date                  : {{ dag_run.end_date }}
+      data_interval_start       : {{ dag_run.data_interval_start }}
+      data_interval_end         : {{ dag_run.data_interval_end }}
+  '''
+
+  print_task(what_to_print)
+
+
+dag_example_catchup_true_simultaneous()
+dag_example_catchup_true_depends_on_past()
+dag_example_catchup_false()
+~~~~
+{% endraw %}
+
+</figure>
 
 [dags_are_paused_at_creation]: https://airflow.apache.org/docs/apache-airflow/2.10.4/configurations-ref.html#dags-are-paused-at-creation
 [catchup_by_default]: https://airflow.apache.org/docs/apache-airflow/2.10.4/configurations-ref.html#catchup-by-default

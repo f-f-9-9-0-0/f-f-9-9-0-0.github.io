@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Check the rendered site's shared layout, navigation, and article anchors.
+# Check the rendered site's shared layout, navigation, article anchors and post rules.
 require 'nokogiri'
 require 'pathname'
 require 'uri'
@@ -20,6 +20,11 @@ pages.each do |path|
   raise "#{name}: expected one page heading" unless page.css('h1').size == 1
   raise "#{name}: missing skip target" unless page.at_css('a.skip-link')['href'] == '#main-content' && page.at_css('main#main-content')
   raise "#{name}: external icon loader remains" if html.match?(/FontAwesomeKitConfig|kit\.fontawesome\.com/)
+  # Nothing renders emoji shortcodes any more, so a :warning: in the text would show as typed.
+  prose = page.at_css('main').dup
+  prose.css('pre, code, script, style').each(&:remove)
+  shortcode = prose.text[/(?<![\w\/:]):[a-z0-9_+-]+:(?![\w\/])/]
+  raise "#{name}: emoji shortcode shown as text: #{shortcode}" if shortcode
   raise "#{name}: extra closing wrapper" if page.errors.any? { |error| error.message.include?("End tag 'div' isn't allowed here") }
   ids = page.css('[id]').map { |element| element['id'] }
   raise "#{name}: duplicate element IDs" unless ids.size == ids.uniq.size
@@ -40,7 +45,16 @@ pages.each do |path|
   descriptions[name] = description
   canonical_path = '/' + name.delete_suffix('index.html')
   raise "#{name}: canonical mismatch" unless page.css('link[rel="canonical"]').map { |element| element['href'] } == [origin + canonical_path]
-  page.css('script[type="application/ld+json"]').each { |script| JSON.parse(script.text) }
+  page.css('script[type="application/ld+json"]').each do |script|
+    data = JSON.parse(script.text)
+    author = data['author'] if data.is_a?(Hash)
+    # _data/authors.yml spells the author's page out in full; it must follow the site if the site moves.
+    raise "#{name}: author URL #{author['url'].inspect} is not an absolute URL on this site" if author.is_a?(Hash) && !author['url'].to_s.start_with?(origin + '/')
+  end
+  # Without markdown="1" on its figure, a code example's fence is printed as text.
+  page.css('figure.code-example').each do |figure|
+    raise "#{name}: code example is not one highlighted block" unless figure.css('pre.highlight').size == 1
+  end
   page.css('main pre').each do |code|
     raise "#{name}: code block is not keyboard accessible" unless code['tabindex'] == '0' && code['role'] == 'region' && !code['aria-label'].to_s.empty?
   end
@@ -82,4 +96,4 @@ end
 landing_pages = %w[index.html about/index.html blog/index.html projects/index.html tags/index.html]
 landing_descriptions = descriptions.values_at(*landing_pages)
 raise 'Landing pages need distinct descriptions' unless landing_descriptions.uniq.size == landing_pages.size
-puts "Design checks passed: #{pages.size} pages; landmarks, headings, navigation, contents anchors and local links"
+puts "Design checks passed: #{pages.size} pages; landmarks, headings, navigation, contents anchors, local links, code examples and post rules"

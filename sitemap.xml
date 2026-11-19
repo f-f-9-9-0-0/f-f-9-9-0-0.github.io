@@ -4,10 +4,9 @@ sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{% for page in site.pages %}{% if page.layout and page.sitemap != false and page.hidden != true %}
-<url><loc>{{ page.url | absolute_url | xml_escape }}</loc></url>
+{% comment %}<lastmod> follows the structured data's dateModified: last_modified_at, else date. A page
+with neither has none, since Google uses the value only while it is accurate.{% endcomment %}
+{% assign entries = site.pages | concat: site.posts %}{% for entry in entries %}{% if entry.layout and entry.sitemap != false and entry.hidden != true %}
+{% assign modified = entry.last_modified_at | default: entry.date %}<url><loc>{{ entry.url | absolute_url | xml_escape }}</loc>{% if modified %}<lastmod>{{ modified | date_to_xmlschema }}</lastmod>{% endif %}</url>
 {% endif %}{% endfor %}
-{% for post in site.posts %}{% unless post.sitemap == false or post.hidden %}
-<url><loc>{{ post.url | absolute_url | xml_escape }}</loc></url>
-{% endunless %}{% endfor %}
 </urlset>

@@ -57,7 +57,7 @@ th, td { padding: .5rem .75rem; border-bottom: 1px solid var(--hair); text-align
 .container { width: 100%; max-width: 72rem; margin-inline: auto; padding-inline: 1rem; }
 /* The mono label: eyebrows, navigation, buttons, chips, metadata and captions. */
 .eyebrow, .button, .button-line, .nav a, .card-meta, .card-more, .row time, .chips a, .post-toc summary,
-.callout-title, .code-embed > figcaption, .code-embed summary, .footer-nav a, .footer-elsewhere a {
+.callout-title, .code-example > figcaption, .footer-nav a, .footer-elsewhere a {
   font: .75rem/1rem var(--mono);
   text-transform: uppercase;
   letter-spacing: .16em;
@@ -179,10 +179,13 @@ pre { max-width: 100%; overflow: auto; padding: 1.25rem; border: 1px solid var(-
 code, pre { font-family: var(--mono); font-size: .875rem; }
 code { padding: .1em .3em; background: var(--paper-deep); }
 pre code { padding: 0; background: transparent; }
-.highlight .k, .highlight .kd, .highlight .kn, .highlight .nf { color: var(--brand); }
-.highlight .s, .highlight .s1, .highlight .s2 { color: var(--code-string); }
-.highlight .mi, .highlight .mf { color: var(--code-number); }
-.highlight .c, .highlight .c1, .highlight .cm { color: var(--muted); font-style: italic; }
+/* Rouge's token classes, in four groups: keywords and definitions; strings; numbers, string escapes
+   and interpolation, and variables; comments. Anything else (names, punctuation, and the error
+   tokens a lexer gives text it does not know) stays in the ink colour. */
+.highlight :is(.k, .kc, .kd, .kn, .kp, .kr, .kt, .kv, .ow, .nf, .nc, .nd, .nl) { color: var(--brand); }
+.highlight :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .dl, .sh, .sr, .ss, .sx) { color: var(--code-string); }
+.highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .mx, .il, .se, .si, .nv, .vc, .vg, .vi, .vm) { color: var(--code-number); }
+.highlight :is(.c, .c1, .cd, .cm, .ch, .cp, .cs, .cpf) { color: var(--muted); font-style: italic; }
 .callout { margin-block: 2rem; padding: 1.25rem 1.5rem; border: 1px solid var(--hair); border-left: 2px solid var(--brand); background: var(--paper-deep); }
 .callout-title { display: block; margin-bottom: .5rem; font-weight: 500; color: var(--brand); }
 .callout p:last-child { margin-bottom: 0; }
@@ -193,23 +196,14 @@ pre code { padding: 0; background: transparent; }
 .figure figcaption { margin-top: 1rem; color: var(--muted); font-size: .875rem; line-height: 1.6; }
 .figure figcaption span { display: inline-block; }
 
-/* Gist embeds keep GitHub's light palette. In dark mode the block starts folded, so a light panel
-   does not interrupt a dark page; the script after each block opens it in light mode. */
-.code-embed { margin-block: 2.5rem; min-width: 0; border: 1px solid var(--hair); background: var(--paper-deep); }
-.code-embed > figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 1rem; padding: 0 1rem; color: var(--muted); }
-.code-embed > figcaption a { display: inline-flex; align-items: center; min-height: 44px; }
-.code-embed summary { display: flex; align-items: center; min-height: 44px; padding: 0 1rem; border-top: 1px solid var(--hair); cursor: pointer; color: var(--ink); }
-.code-embed summary:hover { color: var(--brand); }
-.code-embed details[open] .when-closed { display: none; }
-.code-embed details[open] .when-open { display: inline; }
-.gist-scroll { overflow: auto; max-height: 32rem; background: #ffffff; color-scheme: light; }
-.code-embed .gist { margin: 0; }
-.code-embed .gist .gist-file { margin: 0; border: 0; border-radius: 0; }
-.code-embed .gist .gist-data { overflow: visible; border: 0; }
-.code-embed .gist .blob-wrapper { overflow: visible !important; }
-.code-embed .gist table { display: table; overflow: visible; width: max-content; min-width: 100%; }
-.code-embed .gist td { border-bottom: 0; }
-.code-embed .gist .gist-meta { position: sticky; left: 0; }
+/* A code example: the caption names the file and its language, and the code below it is highlighted
+   at build time. A long example scrolls inside its frame; the post layout makes every <pre> take
+   keyboard focus for that. */
+.code-example { margin-block: 2.5rem; border: 1px solid var(--hair); background: var(--paper-deep); }
+.code-example > figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; padding: .875rem 1rem; border-bottom: 1px solid var(--hair); color: var(--muted); }
+.code-example .code-file { min-width: 0; overflow-wrap: anywhere; text-transform: none; letter-spacing: .02em; color: var(--ink); }
+.code-example pre { max-height: 32rem; margin: 0; border: 0; background: transparent; }
+.code-example pre:focus-visible { outline-offset: -2px; }
 
 /* Article footer */
 .post-navigation { margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--hair); }
@@ -232,7 +226,10 @@ pre code { padding: 0; background: transparent; }
 .footer-main .eyebrow { color: var(--paper); opacity: .7; }
 .privacy-links { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin-top: 1rem; }
 .footer-bar { border-top: 1px solid color-mix(in srgb, var(--paper) 15%, transparent); }
-.footer-bar p { margin-block: 0; padding-block: 1.5rem; font: .75rem/1rem var(--mono); letter-spacing: .16em; opacity: .7; }
+/* The muted colour is mixed rather than faded with opacity, which would also fade the link's focus ring. */
+.footer-bar p { margin-block: 0; padding-block: 1.5rem; font: .75rem/1rem var(--mono); letter-spacing: .16em; color: color-mix(in srgb, var(--paper) 70%, var(--ink)); }
+/* The licence link sits inside a sentence, so it stays inline rather than a 44px footer target. */
+.footer-bar a { display: inline; min-height: 0; color: inherit; text-decoration: underline 1px var(--brand); text-underline-offset: 4px; }
 
 /* The privacy generator styles its own fragments from these properties. */
 .wp-shell { --privacy-link: var(--brand); --privacy-heading-font: var(--display); --privacy-space: 0; }

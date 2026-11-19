@@ -15,7 +15,7 @@ NEW_DARK_BRAND = {'light': {'brand': '#0d6b68', 'brand-inverse': '#5fd1c6'}, 'da
 THEMED = ('<svg xmlns="http://www.w3.org/2000/svg"><style>:root{--brand:#0d6b68;}'
           '@media (prefers-color-scheme:dark){:root{--brand:#5fd1c6;}}[stroke="#c0ff01"]{stroke:var(--brand)}</style>'
           '<path stroke="#c0ff01"/></svg>')
-FILES = {'/assets/css/site.css', '/assets/fonts/plex.woff2', '/assets/images/chart-narrow.svg', '/blog/index.html'}
+FILES = {'/assets/css/site.css', '/assets/fonts/plex.woff2', '/assets/images/card.png', '/assets/images/chart-narrow.svg', '/blog/index.html'}
 
 
 def swap(text, old, new):
@@ -128,7 +128,7 @@ class PaletteTests(unittest.TestCase):
 class PageLoadTests(unittest.TestCase):
     def test_site_files_listed_origins_and_plain_links_pass(self):
         page = ('<link rel="stylesheet" href="/assets/css/site.css?v=1"><link rel="preload" href="/assets/fonts/plex.woff2" as="font">'
-                '<script src="https://gist.github.com/a/b.js"></script><source srcset="/assets/images/chart-narrow.svg">'
+                '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script><source srcset="/assets/images/chart-narrow.svg">'
                 '<a href="https://example.com/">A link loads nothing</a>')
         site.check_page_loads('index.html', page, FILES)
 
@@ -141,16 +141,20 @@ class PageLoadTests(unittest.TestCase):
 
     def test_reference_links_and_upper_case_listed_hosts_pass(self):
         page = ('<link rel="canonical" href="https://example.com/"><link rel="alternate" type="application/rss+xml" href="https://example.com/feed.xml">'
-                '<script src="https://GIST.github.com/a/b.js"></script>')
+                '<script src="https://STATIC.cloudflareinsights.com/beacon.min.js"></script>')
         site.check_page_loads('index.html', page, FILES)
 
     def test_backslash_before_a_listed_host_fails(self):
         with self.assertRaisesRegex(AssertionError, r'index\.html: loads https://evil\.example'):
-            site.check_page_loads('index.html', '<script src="https://evil.example\\@gist.github.com/x.js"></script>', FILES)
+            site.check_page_loads('index.html', '<script src="https://evil.example\\@static.cloudflareinsights.com/x.js"></script>', FILES)
 
     def test_line_break_inside_a_source_fails(self):
-        with self.assertRaisesRegex(AssertionError, r'loads https://gist\.github\.com\.evil\.example/y\.js'):
-            site.check_page_loads('index.html', '<script src="https://gist.github.com\n.evil.example/y.js"></script>', FILES)
+        with self.assertRaisesRegex(AssertionError, r'loads https://static\.cloudflareinsights\.com\.evil\.example/y\.js'):
+            site.check_page_loads('index.html', '<script src="https://static.cloudflareinsights.com\n.evil.example/y.js"></script>', FILES)
+
+    def test_gist_embed_fails(self):
+        with self.assertRaisesRegex(AssertionError, r'index\.html: loads https://gist\.github\.com/a/b\.js'):
+            site.check_page_loads('index.html', '<script src="https://gist.github.com/a/b.js"></script>', FILES)
 
     def test_trailing_comma_in_srcset_passes(self):
         site.check_page_loads('index.html', '<img src="/assets/images/chart-narrow.svg" srcset="/assets/images/chart-narrow.svg 1x, " alt="">', FILES)
@@ -198,6 +202,27 @@ class PageLoadTests(unittest.TestCase):
     def test_missing_phone_render_fails(self):
         with self.assertRaisesRegex(AssertionError, r'projects/index\.html: missing local target /assets/images/chart-narow\.svg'):
             site.check_page_loads('projects/index.html', '<picture><source srcset="/assets/images/chart-narow.svg"></picture>', FILES)
+
+
+class PreviewImageTests(unittest.TestCase):
+    def test_preview_image_among_the_site_files_passes(self):
+        site.check_preview('index.html', 'https://example.com/assets/images/card.png', FILES, 'https://example.com')
+
+    def test_missing_preview_image_fails(self):
+        with self.assertRaisesRegex(AssertionError, r'index\.html: missing link-preview image https://example\.com/assets/images/none\.png'):
+            site.check_preview('index.html', 'https://example.com/assets/images/none.png', FILES, 'https://example.com')
+
+    def test_page_without_preview_image_fails(self):
+        with self.assertRaisesRegex(AssertionError, r'index\.html: no link-preview image'):
+            site.check_preview('index.html', None, FILES, 'https://example.com')
+
+    def test_preview_image_on_another_site_fails(self):
+        with self.assertRaisesRegex(AssertionError, r'index\.html: link-preview image https://cdn\.example\.net/card\.png is not an absolute URL on this site'):
+            site.check_preview('index.html', 'https://cdn.example.net/card.png', FILES, 'https://example.com')
+
+    def test_preview_image_naming_this_site_only_in_its_query_fails(self):
+        with self.assertRaisesRegex(AssertionError, r'index\.html: link-preview image https://cdn\.example\.net/assets/images/card\.png\?u=https://example\.com/ is not an absolute URL on this site'):
+            site.check_preview('index.html', 'https://cdn.example.net/assets/images/card.png?u=https://example.com/', FILES, 'https://example.com')
 
 
 if __name__ == '__main__':

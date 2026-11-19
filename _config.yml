@@ -15,6 +15,16 @@ permalink: /:title/
 # The portrait on the About page.
 picture: assets/images/profile.jpg
 
+# Link previews: a page without an `image` of its own shares the site card, which
+# scripts/site-assets/render.mjs draws from the home page's words. Posts are left out: each sets its
+# own, and the build fails on a page or post with none.
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      image: /assets/images/social-preview.png
+
 # Profiles linked from the footer; the Projects page also links GitHub.
 linkedin: ff9900
 github: f-f-9-9-0-0
@@ -30,9 +40,7 @@ related: true
 
 plugins:
   - jekyll-seo-tag
-  - jekyll-gist
   - jekyll-feed
-  - jemoji
 
 exclude:
   [

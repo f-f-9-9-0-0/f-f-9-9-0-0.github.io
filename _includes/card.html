@@ -1,4 +1,4 @@
-{% assign item = include.item %}{% assign heading = include.heading | default: 2 %}{% assign artwork = item.illustration | default: item.image %}
+{% assign item = include.item %}{% assign heading = include.heading | default: 2 %}{% assign artwork = item.illustration %}
 <li class="card">
   <article>
     {% if artwork %}<img class="card-art" src="{{ artwork | relative_url }}" alt="" width="640" height="320" loading="lazy" decoding="async">{% endif %}

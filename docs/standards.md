@@ -28,8 +28,9 @@ Every post sets these, in this order:
 | `title` | The article title, in quotes |
 | `layout` | `post` |
 | `date` | `YYYY-MM-DD HH:MM` |
-| `image` | A photograph under `/assets/images/`. Used for social metadata |
-| `illustration` | The topic drawing under `/assets/images/articles/`. Takes priority over `image` in the header and in listings |
+| `last_modified_at` | Optional, `YYYY-MM-DD HH:MM`, after a significant change to the content. It becomes the structured data's `dateModified`, the feed's updated time and the sitemap's `<lastmod>`; without it they use `date` |
+| `image` | A photograph under `/assets/images/`, 1200×630, for link previews. The build fails on a post without one |
+| `illustration` | The topic drawing under `/assets/images/articles/`. The listing shows it, and the header shows it in place of `image` |
 | `headerImage` | `true` to show the artwork above the article |
 | `tag` | A list. The first tag is shown as the topic in listings |
 | `category` | `blog` |
@@ -50,7 +51,11 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 - Name the version a statement was checked against, in an Important callout at the top of the
   post ([`patterns.md`](patterns.md), "Important callout").
 - Screenshots go through the `article-image.html` include, with an `alt` that says what the image
-  shows. Code longer than a few lines goes through the `gist.html` include.
+  shows. A source file longer than a few lines is written into the post as a code example: a
+  fenced block inside a `code-example` figure that names the file
+  ([`patterns.md`](patterns.md), "Code examples and screenshots").
+- The code examples are published under MIT No Attribution, as the site footer says, provided as is
+  and without warranty. A post includes only code its author may publish under that licence.
 - Link to versioned documentation where the behaviour is version-specific, not to a "latest" page
   that will drift.
 - Links and images inside the site use the `relative_url` filter or a root-relative path.
@@ -59,8 +64,9 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 
 - Screenshots and photographs live under `assets/images/<nnn>/`; topic illustrations under
   `assets/images/articles/`, one SVG per post, named after the topic.
-- The topic illustrations, the home page hero and the chart examples of a project page are drawn
-  by `scripts/site-assets/render.mjs`. They are never edited by hand: change the script, or the
+- The topic illustrations, the home page hero, the chart examples of a project page and the site's
+  link-preview card (`assets/images/social-preview.png`) are drawn by
+  `scripts/site-assets/render.mjs`. They are never edited by hand: change the script, or the
   shapes in `scripts/site-assets/illustrations.mjs`, and run it again. A new topic illustration is
   a new entry there.
 - Images for a project page live under `assets/images/projects/<project>/`.
@@ -83,7 +89,7 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
   in `_data/palette.json`, once for light mode and once for dark (`prefers-color-scheme`), and the
   build writes them into `site.css` as custom properties. Both modes name the same colours, and the
   build fails otherwise. Templates and styles use those names, never a colour value, except the
-  white behind screenshots and gists, which keep their own light palette.
+  white behind screenshots, which keep their own light palette.
 - Measured 2026-11-19: every text and control colour pair in the palette meets WCAG AA in both
   modes (4.5:1 for body text, 3:1 for large text and controls); the lowest is a code string on
   `paper-deep` in light mode, 5.1:1. No check enforces this: measure a new pair in both modes
@@ -97,7 +103,8 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 - A root file that is not part of the site is added to `exclude` in `_config.yml`. Jekyll copies
   any other root file into the published site as it is.
 - `sitemap.xml` is built from the pages and posts. Do not list URLs in it by hand. A page that
-  must stay out sets `sitemap: false`.
+  must stay out sets `sitemap: false`. An entry's `<lastmod>` is the page's `last_modified_at`,
+  else its `date`, as in its structured data; a page with neither has none.
 
 ### Project pages
 
@@ -113,9 +120,9 @@ newest first.
 | `projects` | `true` |
 | `permalink` | `/projects/<project>/` |
 | `date` | `YYYY-MM-DD HH:MM:SS`, **with seconds**. Without them the value is text, not a date, and the Projects list fails to sort as soon as a project post exists |
-| `illustration` | The listing thumbnail |
+| `illustration` | The listing thumbnail; without it the listing shows none |
 | `eyebrow`, `intro` | The label above the title and the text beside it, as for any page (optional) |
-| `image` | A raster image (PNG or JPEG) for link previews, ideally 1200×630. Most platforms ignore SVG here |
+| `image` | A raster image (PNG or JPEG) for link previews, ideally 1200×630. Most platforms ignore SVG here. Without one, the page shares the site card |
 | `tags` | A list. The first is shown as the topic in the listing |
 | `seo` | `type: WebPage`, so the structured data does not call the page a blog post, and the build does not check it as one |
 | `hidden` | `true` keeps it off the Projects page and out of the sitemap while it is drafted |
