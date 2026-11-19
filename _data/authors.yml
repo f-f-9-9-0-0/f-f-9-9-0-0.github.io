@@ -4,3 +4,6 @@ gabor:
   name: Gábor Tóth
   bio: What makes us who we are, if not the way we experience the world
   picture: assets/images/profile.jpg
+  # The page that identifies the author, as `author.url` in each post's structured data. The SEO
+  # plugin writes it as given, so it is absolute.
+  url: https://f-f-9-9-0-0.github.io/about/
