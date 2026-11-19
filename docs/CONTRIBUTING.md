@@ -100,9 +100,7 @@ tokens or internal addresses.
 
 ## Licence
 
-The presentation is maintained in this repository. [`../LICENSE-portfolio`](../LICENSE-portfolio)
-covers the template code it started from, which remains in some layouts and includes, and
-[`../README.md`](../README.md) names the older components it derives from. The fonts' licences are
-in `assets/fonts/`. No licence is stated for the articles and their
-images: ask before reusing them. Material you add from elsewhere needs a licence that allows
+No licence is stated for this repository's code, articles or images: ask before reusing them. The
+fonts' licences are in `assets/fonts/`, and the font embedded in the chart examples carries its
+licence notice in each file. Material you add from elsewhere needs a licence that allows
 publishing it here, and its source named.
