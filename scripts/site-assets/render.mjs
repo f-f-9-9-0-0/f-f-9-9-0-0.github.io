@@ -1,6 +1,7 @@
 // Renders the site's BorrowdaleJS drawings into assets/images/: the chart examples on the
-// BorrowdaleJS project page, each with a phone-sized render, the home page hero, and the topic
-// illustration of every article. The figures are illustrative, not real measurements.
+// BorrowdaleJS project page, each with a phone-sized render, the home page hero, the topic
+// illustration of every article, and the link-preview images (the project's and the site's). The
+// figures are illustrative, not real measurements.
 // Run from this directory: npm ci && npx playwright-core install chromium && npm run render
 //
 // Colours: a drawing shown as an image cannot read the page's custom properties, so each file
@@ -223,12 +224,14 @@ for (const [name, { narrow, ...spec }] of Object.entries(CHARTS)) {
   files.push([`projects/borrowdalejs/${name}.svg`, themed(renderChart(name, spec), theme, options)]);
   files.push([`projects/borrowdalejs/${name}-narrow.svg`, themed(renderChart(name, { ...spec, ...narrow }), theme, options)]);
 }
+// The first chart at its wide size and without its title: the project card, the project's link
+// preview (which adds the title back) and the site card all draw it.
+const { narrow: _narrow, title: firstTitle, ...first } = CHARTS['sketchbook-sales'];
 // The project card shows the first chart without its words, so it carries no font.
-const { narrow: _cardNarrow, title: _cardTitle, ...cardSpec } = CHARTS['sketchbook-sales'];
 const card = layoutChart({
-  ...cardSpec,
+  ...first,
   legend: 'none',
-  axes: { x: { ...cardSpec.axes.x, hidden: true }, y: { ...cardSpec.axes.y, hidden: true } },
+  axes: { x: { ...first.axes.x, hidden: true }, y: { ...first.axes.y, hidden: true } },
 });
 files.push(['projects/borrowdalejs/sketchbook-sales-card.svg', themed(toSvgChart(card, {}), theme, { paper: true })]);
 files.push(['hero.svg', themed(toSvgChart(layoutChart(HERO), {}), theme, {})]);
@@ -238,14 +241,71 @@ for (const [name, accent] of Object.entries(ILLUSTRATIONS)) {
 
 // Link previews need a raster image at 1200 by 630, and most platforms ignore SVG. The first
 // chart is laid out at half that size and photographed in light mode at twice the pixel density.
-const { narrow: _, ...first } = CHARTS['sketchbook-sales'];
-const preview = themed(renderChart('social-preview', { ...first, width: 600, height: 315 }), theme, { title: true, paper: true, font: true });
+const preview = themed(renderChart('social-preview', { ...first, title: firstTitle, width: 600, height: 315 }),
+  theme, { title: true, paper: true, font: true });
+
+// The site's own preview, for every page without an image of its own (`defaults` in _config.yml):
+// the home page hero's words in the site's fonts, over the same chart without its title. The words
+// come from _config.yml, so the card says what the home page says.
+const config = readFileSync(join(here, '../../_config.yml'), 'utf8');
+function siteSetting(key) {
+  const match = new RegExp(`^${key}: (.+?)\\r?$(?:\\n([ \\t]+\\S))?`, 'm').exec(config);
+  const value = match?.[1].trim();
+  // Only a plain one-line value is read here: not a quoted, block, flow, anchored or tagged one, nor
+  // one followed by a comment or continued on the next line.
+  if (value === undefined || match[2] !== undefined || /^["'>|&*!\[{]|\s#/.test(value)) {
+    throw new Error(`_config.yml has no plain one-line "${key}"`);
+  }
+  return value;
+}
+// The card loads the site's own fonts.css, each file inlined, so the browser picks a family's files
+// by their unicode-range as it does on the site.
+const fontsCss = readFileSync(join(here, '../../assets/css/fonts.css'), 'utf8');
+const inlinedFonts = fontsCss.replace(/url\(\.\.\/fonts\/([^)]+)\)/g,
+  (_, file) => `url(data:font/woff2;base64,${readFileSync(join(here, '../../assets/fonts', file)).toString('base64')})`);
+// A character none of a family's files covers would be drawn in a fallback font, so the render
+// fails instead, as renderChart does for the chart's font; otherwise the text, escaped for HTML.
+function inFamily(family, text) {
+  const bounds = fontsCss.split('@font-face').filter((rule) => rule.includes(`font-family: '${family}'`))
+    .flatMap((rule) => /unicode-range:\s*([^;]+);/.exec(rule)?.[1].split(',') ?? [])
+    .map((range) => range.trim().slice(2).split('-').map((hex) => parseInt(hex, 16)));
+  if (bounds.length === 0) {
+    throw new Error(`assets/css/fonts.css has no unicode-range for "${family}"`);
+  }
+  const missing = [...text].filter((character) => !bounds.some(([low, high = low]) => character.codePointAt(0) >= low && character.codePointAt(0) <= high));
+  if (missing.length > 0) {
+    throw new Error(`site card: no "${family}" file covers ${JSON.stringify(missing)}`);
+  }
+  return text.replace(/[&<>]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[character]);
+}
+// The card's colours are set directly rather than repainted; an unknown name fails.
+function colour(name) {
+  if (theme.light[name] === undefined) {
+    throw new Error(`_data/palette.json has no light "${name}"`);
+  }
+  return theme.light[name];
+}
+const siteCard = '<!doctype html><style>' + inlinedFonts
+  + `body{margin:0}.card{box-sizing:border-box;display:flex;flex-direction:column;width:600px;height:315px;`
+  + `padding:26px 30px 10px;background:${colour('paper-deep')};color:${colour('ink')}}`
+  + `.eyebrow{margin:0;font:500 9px/1 'IBM Plex Mono';letter-spacing:.18em;color:${colour('brand')}}`
+  + `h1{margin:10px 0 0;font:400 40px/1 'Playfair Display';letter-spacing:-.01em}`
+  + `.intro{margin:8px 0 0;max-width:500px;font:400 13px/1.4 'IBM Plex Sans';color:${colour('muted')}}`
+  + `svg{display:block;margin-top:auto}</style>`
+  + `<div class="card"><p class="eyebrow">${inFamily('IBM Plex Mono', siteSetting('hero_label').toUpperCase())}</p>`
+  + `<h1>${inFamily('Playfair Display', siteSetting('title'))}</h1>`
+  + `<p class="intro">${inFamily('IBM Plex Sans', siteSetting('hero_title'))}</p>`
+  + themed(renderChart('site-card', { ...first, width: 540, height: 188 }), theme, { font: true }) + '</div>';
+
 const browser = await chromium.launch();
 try {
   const page = await browser.newPage({ viewport: { width: 600, height: 315 }, deviceScaleFactor: 2, colorScheme: 'light' });
   await page.setContent(`<!doctype html><body style="margin:0">${preview}</body>`);
   await page.evaluate(() => document.fonts.ready);
   files.push(['projects/borrowdalejs/social-preview.png', await page.locator('svg').screenshot()]);
+  await page.setContent(siteCard);
+  await page.evaluate(() => document.fonts.ready);
+  files.push(['social-preview.png', await page.locator('.card').screenshot()]);
 } finally {
   await browser.close();
 }
