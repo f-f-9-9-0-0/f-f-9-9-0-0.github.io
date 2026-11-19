@@ -5,7 +5,10 @@ layout: page
 seo:
   type: AboutPage
 section: about
+eyebrow: Data engineering
 ---
+<div class="article-body" markdown="1">
+
 ![Profile Image]({% if site.external-image %}{{ site.picture }}{% else %}{{ site.picture | relative_url }}{% endif %})
 
 <p>With 15+ years of experience, I implement modern BI solutions so can automate manual processes, turn data into insights, improve data quality, clearly communicate complex data, and predict trends and behavior.</p>
@@ -24,3 +27,5 @@ section: about
 <ul>
 	<li><a href="{{ '/projects/borrowdalejs/' | relative_url }}">BorrowdaleJS</a>: hand-drawn charts, text and backgrounds for the web</li>
 </ul>
+
+</div>

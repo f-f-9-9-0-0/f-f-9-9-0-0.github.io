@@ -1,0 +1,3 @@
+<ul class="card-grid">
+{% for item in include.items limit: include.limit %}{% include card.html item=item index=forloop.index heading=include.heading %}{% endfor %}
+</ul>

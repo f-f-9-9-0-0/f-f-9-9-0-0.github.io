@@ -1,0 +1,4 @@
+<li class="row">
+  <time datetime="{{ include.item.date | date: '%Y-%m-%d' }}">{{ include.item.date | date: '%b %-d, %Y' }}</time>
+  <h3><a href="{{ include.item.url | relative_url }}">{{ include.item.title | escape }}</a></h3>
+</li>

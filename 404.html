@@ -1,18 +1,11 @@
 ---
 description: This page could not be found. Return to the homepage to browse the latest articles.
-layout: default
+layout: page
 title: Page not found
+eyebrow: Error 404
+intro: This address does not lead to a page. It may have moved, or the link may be mistyped.
 sitemap: false
 robots: noindex,follow
-permalink: /404.html 
+permalink: /404.html
 ---
-
-<section class="lost-container">
-  <h1>Uh oh!</h1>
-  <div class="link">
-    <img class="selfie" alt="{{ site.title }}" src="{{ "/assets/images/error.gif" | relative_url }}" />
-  </div>
-  <br />
-  <br />
-  <a href="{{ "/" | relative_url }}">Return home</a>
-</section>
+<p><a class="button" href="{{ '/' | relative_url }}">Return home <span class="arrow" aria-hidden="true">→</span></a></p>

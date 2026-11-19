@@ -1,5 +1,11 @@
 ---
 layout: default
 ---
-{% unless page.layout == 'privacy' %}<h1 class="page-title">{{ page.title | escape }}</h1>{% endunless %}
+{% unless page.layout == 'privacy' %}
+{% assign eyebrow = page.eyebrow | default: '' | strip | escape %}{% if eyebrow == empty %}{% assign eyebrow = nil %}{% endif %}
+{% assign intro = page.intro | default: '' | strip %}{% assign lead = nil %}{% unless intro == empty %}{% assign lead = intro | markdownify %}{% endunless %}
+{% include page-intro.html eyebrow=eyebrow title=page.title lead=lead %}
+{% endunless %}
+<div class="container page-body">
 {{ content }}
+</div>

@@ -1,5 +1,27 @@
-<footer class="footer-main" lang="en">
-  <div class="footer-meta"><span>© {{ site.time | date: '%Y' }} {{ site.title | escape }}</span><a href="{{ '/feed.xml' | relative_url }}">RSS <span aria-hidden="true">↗</span></a></div>
-  {% assign privacy_language = page.lang | default: site.lang | default: 'en' %}
-  {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}{% assign link_language = link.lang | default: 'en' %}{% if link_language == privacy_language %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endif %}{% endfor %}</nav>{% endif %}
+<footer class="footer-main on-ink" lang="en">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <p class="footer-name">{{ site.title | escape }}</p>
+      {% if site.bio %}<p class="footer-motto">{{ site.bio | escape }}</p>{% endif %}
+    </div>
+    <nav class="footer-nav" aria-label="Site">
+      <ul>
+        {% for item in site.data.navigation %}{% if item.setting == nil or site[item.setting] %}<li><a href="{{ item.url | relative_url }}">{{ item.title | escape }}</a></li>{% endif %}{% endfor %}
+        <li><a href="{{ '/tags/' | relative_url }}">Tags</a></li>
+        <li><a href="{{ '/feed.xml' | relative_url }}">RSS <span aria-hidden="true">↗</span></a></li>
+      </ul>
+    </nav>
+    <div class="footer-elsewhere">
+      {% if site.linkedin or site.github %}
+      <p class="eyebrow">Elsewhere</p>
+      <ul>
+        {% if site.linkedin %}<li><a href="https://www.linkedin.com/in/{{ site.linkedin | escape }}">LinkedIn <span aria-hidden="true">↗</span></a></li>{% endif %}
+        {% if site.github %}<li><a href="https://github.com/{{ site.github | escape }}">GitHub <span aria-hidden="true">↗</span></a></li>{% endif %}
+      </ul>
+      {% endif %}
+      {% assign privacy_language = page.lang | default: site.lang | default: 'en' %}
+      {% if site.privacy_links %}<nav class="privacy-links" aria-label="Privacy">{% for link in site.privacy_links %}{% assign link_language = link.lang | default: 'en' %}{% if link_language == privacy_language %}<a href="{{ link.url | relative_url }}" lang="{{ link.lang | default: 'en' | escape }}">{{ link.title | escape }}</a>{% endif %}{% endfor %}</nav>{% endif %}
+    </div>
+  </div>
+  <div class="footer-bar"><p class="container">© {{ site.time | date: '%Y' }} {{ site.title | escape }}</p></div>
 </footer>

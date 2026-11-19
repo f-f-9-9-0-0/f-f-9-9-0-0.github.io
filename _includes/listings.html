@@ -1,0 +1,4 @@
+{% assign articles = site.posts | where: 'category', 'blog' | where_exp: 'post', 'post.hidden != true' %}
+{% assign project_pages = site.pages | where: 'projects', true | where_exp: 'item', 'item.hidden != true' %}
+{% assign project_posts = site.posts | where: 'projects', true | where_exp: 'post', 'post.hidden != true' %}
+{% assign projects = project_pages | concat: project_posts | sort: 'date' | reverse %}

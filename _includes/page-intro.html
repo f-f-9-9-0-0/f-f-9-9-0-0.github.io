@@ -1,0 +1,7 @@
+<header class="page-intro dot-field{% if include.modifier %} {{ include.modifier }}{% endif %}">
+  <div class="container intro-grid">
+    {% if include.eyebrow and include.eyebrow != empty %}<p class="eyebrow rise">{{ include.eyebrow }}</p>{% endif %}
+    <h1 class="rise rise-1">{{ include.title | escape }}</h1>
+    {% if include.lead and include.lead != empty %}<div class="intro-text rise rise-2">{{ include.lead }}</div>{% endif %}
+  </div>
+</header>
