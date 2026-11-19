@@ -1,0 +1,6 @@
+# Post authors, keyed by the `author` front matter value. The author box and the SEO plugin's author
+# tags both read this file, and so does the feed: anything added here may be published.
+gabor:
+  name: Gábor Tóth
+  bio: What makes us who we are, if not the way we experience the world
+  picture: assets/images/profile.jpg

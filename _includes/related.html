@@ -1,9 +1,9 @@
 {% comment %}Up to five newer-first articles that share a topic with this one.{% endcomment %}
-{% assign related_count = 0 %}
-{% capture related_rows %}{% for post in site.posts %}{% if related_count < 5 and post.url != page.url and post.hidden != true %}{% assign shared_topics = post.tags | where_exp: 'topic', 'page.tags contains topic' %}{% if shared_topics.size > 0 %}{% include post-row.html item=post %}{% assign related_count = related_count | plus: 1 %}{% endif %}{% endif %}{% endfor %}{% endcapture %}
-{% if related_count > 0 %}
+{% assign related = '' | split: '' %}
+{% for post in site.posts %}{% if post.url != page.url and post.hidden != true %}{% assign shared_topics = post.tags | where_exp: 'topic', 'page.tags contains topic' %}{% if shared_topics.size > 0 %}{% assign related = related | push: post %}{% endif %}{% endif %}{% endfor %}
+{% if related.size > 0 %}
 <section class="related" aria-labelledby="related-title">
   <h2 id="related-title">More on these topics</h2>
-  <ol class="rows">{{ related_rows }}</ol>
+  <ol class="rows">{% for post in related limit: 5 %}{% include post-row.html item=post %}{% endfor %}</ol>
 </section>
 {% endif %}

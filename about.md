@@ -9,7 +9,7 @@ eyebrow: Data engineering
 ---
 <div class="article-body" markdown="1">
 
-![Profile Image]({% if site.external-image %}{{ site.picture }}{% else %}{{ site.picture | relative_url }}{% endif %})
+![Portrait of Gábor Tóth]({{ site.picture | relative_url }})
 
 <p>With 15+ years of experience, I implement modern BI solutions so can automate manual processes, turn data into insights, improve data quality, clearly communicate complex data, and predict trends and behavior.</p>
 
@@ -17,7 +17,7 @@ eyebrow: Data engineering
 
 <h2>Skills</h2>
 
-<ul class="skill-list">
+<ul>
 	<li>All whatever you can imagine</li>
 	<li>and even more..</li>
 </ul>
