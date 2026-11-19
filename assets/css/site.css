@@ -226,7 +226,10 @@ pre code { padding: 0; background: transparent; }
 .footer-main .eyebrow { color: var(--paper); opacity: .7; }
 .privacy-links { display: flex; flex-wrap: wrap; gap: 0 1.5rem; margin-top: 1rem; }
 .footer-bar { border-top: 1px solid color-mix(in srgb, var(--paper) 15%, transparent); }
-.footer-bar p { margin-block: 0; padding-block: 1.5rem; font: .75rem/1rem var(--mono); letter-spacing: .16em; opacity: .7; }
+/* The muted colour is mixed rather than faded with opacity, which would also fade the link's focus ring. */
+.footer-bar p { margin-block: 0; padding-block: 1.5rem; font: .75rem/1rem var(--mono); letter-spacing: .16em; color: color-mix(in srgb, var(--paper) 70%, var(--ink)); }
+/* The licence link sits inside a sentence, so it stays inline rather than a 44px footer target. */
+.footer-bar a { display: inline; min-height: 0; color: inherit; text-decoration: underline 1px var(--brand); text-underline-offset: 4px; }
 
 /* The privacy generator styles its own fragments from these properties. */
 .wp-shell { --privacy-link: var(--brand); --privacy-heading-font: var(--display); --privacy-space: 0; }

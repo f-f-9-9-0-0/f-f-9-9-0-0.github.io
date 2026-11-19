@@ -100,7 +100,10 @@ tokens or internal addresses.
 
 ## Licence
 
-No licence is stated for this repository's code, articles or images: ask before reusing them. The
+The code examples in the posts are published under MIT No Attribution, provided as is, without
+warranty (see the README). No licence is stated for the rest of this repository's code, or for its
+articles and images: ask before reusing them. The
 fonts' licences are in `assets/fonts/`, and the font embedded in the chart examples carries its
 licence notice in each file. Material you add from elsewhere needs a licence that allows
-publishing it here, and its source named.
+publishing it here, and its source named; code added to a post must also be publishable under MIT No
+Attribution.

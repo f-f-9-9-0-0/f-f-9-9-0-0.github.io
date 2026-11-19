@@ -54,6 +54,8 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
   shows. A source file longer than a few lines is written into the post as a code example: a
   fenced block inside a `code-example` figure that names the file
   ([`patterns.md`](patterns.md), "Code examples and screenshots").
+- The code examples are published under MIT No Attribution, as the site footer says, provided as is
+  and without warranty. A post includes only code its author may publish under that licence.
 - Link to versioned documentation where the behaviour is version-specific, not to a "latest" page
   that will drift.
 - Links and images inside the site use the `relative_url` filter or a root-relative path.
