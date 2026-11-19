@@ -103,11 +103,14 @@ The scripts in `scripts/site-assets/` need Node.js 22 or later. Where the instal
 
 ### Re-rendering the drawings
 
-The chart examples on the BorrowdaleJS page, the home page hero and the topic illustrations are
-rendered by `scripts/site-assets/render.mjs`, pinned to one release of the library. A new library
-release changes nothing on the site until the pin is moved. Re-render also after changing a colour
-in `_data/palette.json`: the drawings carry the palette's values, and the build fails on a drawing
-whose colours no longer match it.
+The chart examples on the BorrowdaleJS page, the home page hero, the topic illustrations and the
+site card (`assets/images/social-preview.png`) are rendered by `scripts/site-assets/render.mjs`,
+pinned to one release of the library. A new library release changes nothing on the site until the
+pin is moved. Re-render also after changing a colour in `_data/palette.json`: the drawings carry the
+palette's values, and the build fails on a drawing whose colours no longer match it. That check
+reads the SVG drawings only: the two link-preview PNGs carry the palette too, and nothing fails when
+they go stale. The site card also repeats the home page's `hero_label`, `title` and `hero_title`
+from `_config.yml`: re-render after changing one of those.
 
 1. In `scripts/site-assets/`, set the new version of each `@borrowdale` package in `package.json`,
    then run `npm install` to update the lockfile. For a colour change only, run `npm ci`.

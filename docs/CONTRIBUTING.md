@@ -41,7 +41,7 @@ into `privacy/`, which git ignores; delete that directory before running it agai
 |---|---|
 | `_posts/` | The articles, one Markdown file each |
 | `projects/` | The project pages, one Markdown file each |
-| `assets/images/` | Screenshots, photographs, the topic illustrations, the home page hero, and the images of project pages under `projects/` |
+| `assets/images/` | Screenshots, photographs, the topic illustrations, the home page hero, the site's link-preview card, and the images of project pages under `projects/` |
 | `_layouts/`, `_includes/`, `assets/css/site.css` | The presentation |
 | `_data/palette.json` | The light and dark colours, by name |
 | `assets/fonts/`, `assets/css/fonts.css` | The self-hosted fonts and their licences, written by a script |

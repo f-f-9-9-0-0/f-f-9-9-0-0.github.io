@@ -141,8 +141,9 @@ combination.
 
 **Pattern.** After `jekyll build`, a script parses every HTML file under `_site` and raises on
 the first violation, naming the page. Reference: `scripts/check-design.rb` (structure,
-navigation, anchors, accessibility hooks) and `scripts/check-site.py` (canonical URLs, sitemap,
-robots, privacy policy).
+navigation, anchors, canonical URLs, accessibility hooks, post rules, code examples, emoji
+shortcodes) and `scripts/check-site.py` (the home and privacy canonical URLs, sitemap, robots,
+privacy policy, loaded resources, drawing colours, link-preview images).
 
 ```ruby
 raise "#{name}: expected one page heading" unless page.css('h1').size == 1
@@ -156,7 +157,13 @@ raise "#{name}: expected one page heading" unless page.css('h1').size == 1
 - Every page needs a meta description of its own: `_config.yml` leaves the site's `description`
   empty, so a page without one gets none and fails. A post (rendered by the post layout, or whose
   structured data says `BlogPosting`) must also show the intro text under its title, which comes
-  only from its own description, and its author's name (`scripts/check-design.rb`).
+  only from its own description, and its author's name; the author's page in its structured data
+  is on this site (`scripts/check-design.rb`).
+- Every page needs a link-preview image, and it is one of the site's own files: a page without one
+  of its own shares the site card through `defaults` in `_config.yml`, and a post sets its own
+  (`scripts/check-site.py`).
+- No emoji shortcode such as `:warning:` is left in a page's text outside code: nothing renders
+  them (`scripts/check-design.rb`).
 - A new site-wide rule is one more assertion in the script that already walks the pages, not a
   new script.
 - `scripts/check-site.py` reads every built page for the resources its markup loads (scripts,
@@ -187,8 +194,9 @@ drift from what the library draws, and nobody could make it again.
 
 **Pattern.** A small pinned script renders every drawing, and its output is committed. Reference:
 `scripts/site-assets/render.mjs`, which writes the chart examples to
-`assets/images/projects/borrowdalejs/`, the home page hero to `assets/images/hero.svg` and the
-topic illustrations to `assets/images/articles/`.
+`assets/images/projects/borrowdalejs/`, the home page hero to `assets/images/hero.svg`, the
+topic illustrations to `assets/images/articles/` and the site card to
+`assets/images/social-preview.png`.
 
 - The library version is pinned exactly in `package.json`, with a lockfile, so a re-render
   reproduces the committed files byte for byte until the pin is moved on purpose.
@@ -211,8 +219,13 @@ topic illustrations to `assets/images/articles/`.
   2026-11-18); an older iPhone would skip the phone render.
 - The project card shows the first chart drawn without its words, so the thumbnail carries no
   font.
-- The link-preview PNG is the first chart laid out at 600 by 315 and photographed in light mode by
-  headless Chromium at twice the pixel density.
+- The link-preview PNGs are photographed in light mode by headless Chromium at twice the pixel
+  density. The project's is the first chart laid out at 600 by 315. The site card
+  (`assets/images/social-preview.png`), which every page without an image of its own shares, sets
+  the home page's `hero_label`, `title` and `hero_title` from `_config.yml` in the site's fonts
+  above the same chart without its title, so it has to be re-rendered by hand when those settings
+  change. The card loads the site's `fonts.css` with each file inlined, and the render fails on a
+  character that none of a family's files covers.
 - A code sample on the page that claims to draw an image must use the same spec as the script,
   seed included. The two are kept in step by hand.
 
@@ -233,24 +246,49 @@ technology. Reference: any post under `_posts/`.
 </aside>
 ```
 
-## Embedded code and screenshots
+- The same box titled "Note", with `aria-label="Note"`, carries a caution inside a post.
 
-**Problem.** Long code samples and full-size screenshots need to be readable on a narrow screen
-and usable from the keyboard, and the source must stay reachable when an embed fails to load.
+## Code examples and screenshots
 
-**Pattern.** Two includes. Reference: `_includes/gist.html`, `_includes/article-image.html`.
+**Problem.** Long code examples and full-size screenshots need to be readable on a narrow screen,
+in both colour modes and from the keyboard. The code is part of the article, so it must be in
+the page itself, not loaded from another site.
 
-```liquid
-{% include gist.html id="<account>/<gist id>" %}
-{% include article-image.html src="/assets/images/001/dag_docs.png" alt="DAG level docs" %}
+**Pattern.** Code is written into the post inside a figure; a screenshot goes through an include.
+Reference: any post with a `code-example` figure, `_includes/article-image.html`.
+
+````markdown
+<figure class="code-example" markdown="1">
+<figcaption><span class="code-file">dag_example_logging.py</span> <span>Python</span></figcaption>
+
+```python
+import pendulum, logging
 ```
 
-- The Gist include renders a "View source" link beside the embed, so the code is one click away
-  without JavaScript, and wraps the embed in a focusable, labelled scroll region.
-- A gist keeps GitHub's light palette. So that a light panel does not interrupt a dark page, the
-  embed sits in a `<details>` block that starts folded; a one-line script after it opens it when
-  the reader's setting is light. Without JavaScript the block stays folded and opens on request.
-  Folding is visual only: the gist still loads with the page.
+</figure>
+
+{% include article-image.html src="/assets/images/001/dag_docs.png" alt="DAG level docs" %}
+````
+
+- The caption names the file and its language. Rouge highlights the code at build time in the
+  palette's colours, in both modes (`site.css`, "Rouge's token classes"); a token class it does
+  not colour stays in the ink colour.
+- `markdown="1"` lets kramdown read the fenced block inside the figure. Without it the fence is
+  printed as text, and the build fails on a code example that is not one highlighted block. A
+  blank line before and after the figure keeps the source readable.
+- The space between the caption's two spans keeps the file name and the language apart where the
+  stylesheet does not apply, as in the feed.
+- Code that itself contains ```` ``` ```` takes a `~~~~` fence.
+- Nothing is embedded from a gist. The github-pages gem adds `jekyll-gist` back whatever
+  `_config.yml` lists, so a `{% gist %}` tag still renders; `scripts/check-site.py` fails the page,
+  because GitHub is not a listed origin.
+- The fence names the lexer, the caption names the language for the reader, and the two may
+  differ: a Kibana console request is highlighted as `hocon`, which reads its `#` comments and
+  JSON bodies, and captioned "Kibana console".
+- Code containing `{{` or `{%`, such as a Jinja template, goes between `{% raw %}` and
+  `{% endraw %}`, or Liquid evaluates it.
+- A long example scrolls inside its frame, at most 32rem tall. The post layout gives every `<pre>`
+  a tabindex, a role and a label, so it can be scrolled from the keyboard.
 - The image include frames the image in a figure, links it to its full-size file and uses `alt` as
   the caption unless `caption` is given. Given `narrow`, it serves that file to phones.
 - The build fails on a code block in a post that is not keyboard accessible.
