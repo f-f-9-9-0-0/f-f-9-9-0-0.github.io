@@ -8,7 +8,7 @@ layout: default
       <p class="eyebrow rise">{{ site.hero_label | default: 'Technical writing' | escape }}</p>
       <h1 id="intro-title" class="hero-title rise rise-1">{{ site.title | escape }}</h1>
       {% if site.bio %}<p class="hero-motto rise rise-2">{{ site.bio | escape }}</p>{% endif %}
-      <p class="hero-intro rise rise-3">{{ site.hero_title | default: site.description | escape }}</p>
+      {% assign hero_intro = site.hero_title | default: '' | strip %}{% unless hero_intro == empty %}<p class="hero-intro rise rise-3">{{ hero_intro | escape }}</p>{% endunless %}
       <div class="hero-actions rise rise-4">
         <a class="button" href="{{ '/blog/' | relative_url }}">Read the blog <span class="arrow" aria-hidden="true">→</span></a>
         {% if site.projects %}<a class="button-line" href="{{ '/projects/' | relative_url }}">Projects</a>{% endif %}

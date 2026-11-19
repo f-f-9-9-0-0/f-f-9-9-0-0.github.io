@@ -33,8 +33,8 @@ Every post sets these, in this order:
 | `headerImage` | `true` to show the artwork above the article |
 | `tag` | A list. The first tag is shown as the topic in listings |
 | `category` | `blog` |
-| `author` | A key under `authors` in `_config.yml` |
-| `description` | One sentence. It becomes the meta description and the listing summary, and the build fails on a page without one |
+| `author` | A key in `_data/authors.yml`; the build fails on a post whose author it does not name |
+| `description` | One sentence. It becomes the meta description, the listing summary and the text under the post's title, and the build fails on a post without one |
 | `excerpt_separator` | `<!--more-->` |
 
 A post with `projects: true` is listed on the Projects page as well as in the Blog. A project
@@ -75,7 +75,8 @@ that should appear on Projects only is a page instead; see [Project pages](#proj
 - A page may set `eyebrow`, the short label above its title (plain text, escaped), and `intro`, the
   text beside its title (Markdown). A blank value prints nothing. The header is
   `_includes/page-intro.html`; a listing of cards is `_includes/card-grid.html`, fed by the queries
-  in `_includes/listings.html`. A new page or listing reuses them.
+  in `_includes/listings.html`; a ruled list of articles (the tags page, related articles) is made of
+  `_includes/post-row.html` rows. A new page or listing reuses them.
 - `section` must match an entry in `_data/navigation.yml`, which is the single source for the
   main navigation.
 - The presentation is `_layouts/`, `_includes/` and `assets/css/site.css`. The colours are defined
@@ -116,7 +117,7 @@ newest first.
 | `eyebrow`, `intro` | The label above the title and the text beside it, as for any page (optional) |
 | `image` | A raster image (PNG or JPEG) for link previews, ideally 1200×630. Most platforms ignore SVG here |
 | `tags` | A list. The first is shown as the topic in the listing |
-| `seo` | `type: WebPage`, so the structured data does not call the page a blog post |
+| `seo` | `type: WebPage`, so the structured data does not call the page a blog post, and the build does not check it as one |
 | `hidden` | `true` keeps it off the Projects page and out of the sitemap while it is drafted |
 
 A project page is not a post. It stays off the Blog list, the home page, the tags page and the

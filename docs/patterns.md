@@ -153,6 +153,10 @@ raise "#{name}: expected one page heading" unless page.css('h1').size == 1
   exist in the output.
 - Every root-relative link in the header, the footer and `main` must point at a file in `_site`
   (`scripts/check-design.rb`).
+- Every page needs a meta description of its own: `_config.yml` leaves the site's `description`
+  empty, so a page without one gets none and fails. A post (rendered by the post layout, or whose
+  structured data says `BlogPosting`) must also show the intro text under its title, which comes
+  only from its own description, and its author's name (`scripts/check-design.rb`).
 - A new site-wide rule is one more assertion in the script that already walks the pages, not a
   new script.
 - `scripts/check-site.py` reads every built page for the resources its markup loads (scripts,

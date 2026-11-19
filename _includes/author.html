@@ -1,8 +1,8 @@
-{% assign author = site.authors[page.author] %}
+{% assign author = site.data.authors[page.author] %}
 {% if author %}
 <section class="author" aria-labelledby="author-name">
-  {% if author.picture %}<img class="author-photo" src="{% if author.external-image %}{{ author.picture }}{% else %}{{ author.picture | relative_url }}{% endif %}" alt="" width="64" height="64" loading="lazy">{% endif %}
-  <div>
+  {% if author.picture %}<img class="author-photo" src="{{ author.picture | relative_url }}" alt="" width="64" height="64" loading="lazy">{% endif %}
+  <div class="author-text">
     <h2 id="author-name">{{ author.name | escape }}</h2>
     {% if author.bio %}<p class="author-bio">{{ author.bio | escape }}</p>{% endif %}
     <div class="share chips" role="group" aria-label="Share this article">

@@ -1,46 +1,32 @@
-# Site identity: the name in the header and footer, the line under it, and the default meta
-# description of pages that set none.
+# Site identity: the name in the header and footer, and the line under it.
 title: Gábor Tóth
 bio: What makes us who we are, if not the way we experience the world
-description: In-depth guides and practical notes on data engineering, with a focus on Apache Airflow and reliable data workflows.
+# Deliberately empty: every page sets its own description. A page without one then has no meta
+# description and fails the build (a post would fall back to its excerpt, which the build also
+# rejects). Left out, the GitHub Pages metadata plugin would fill it from the repository's
+# description and such pages would quietly use that instead. The feed's subtitle is empty as a result.
+description: ""
 
 url: https://f-f-9-9-0-0.github.io
 baseurl: ""
 # A post's file name is its address.
 permalink: /:title/
 
-# The portrait on the About page; set external-image when picture is a full URL.
-external-image: false
+# The portrait on the About page.
 picture: assets/images/profile.jpg
 
-# Profiles linked from the footer.
+# Profiles linked from the footer; the Projects page also links GitHub.
 linkedin: ff9900
 github: f-f-9-9-0-0
 
-# Post authors, keyed by the `author` front matter value.
-authors:
-  gabor:
-    name: Gábor Tóth
-    bio: What makes us who we are, if not the way we experience the world
-    external-image: false
-    picture: assets/images/profile.jpg
-
-# Sections in the main navigation (_data/navigation.yml names these settings).
+# Sections of the site: the navigation (_data/navigation.yml names these settings) and the footer
+# show only those set to true; the home page checks `projects`.
 projects: true
 about: true
 blog: true
 
-# Under each post: articles on the same topics, and the author box.
+# Under each post: articles on the same topics. The author box always follows.
 related: true
-show-author: true
-
-# Posts are listed unless they set hidden: true.
-defaults:
-  - scope:
-      path: ""
-      layout: "post"
-    values:
-      hidden: false
 
 plugins:
   - jekyll-seo-tag
