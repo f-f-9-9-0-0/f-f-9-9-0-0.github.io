@@ -1,79 +1,45 @@
-# main text of home
+# Site identity: the name in the header and footer, the line under it, and the default meta
+# description of pages that set none.
 title: Gábor Tóth
 bio: What makes us who we are, if not the way we experience the world
-home_intro: Practical notes on data engineering, Apache Airflow and the tools behind reliable data workflows.
-
-# twitter summary info
 description: In-depth guides and practical notes on data engineering, with a focus on Apache Airflow and reliable data workflows.
-
-# if it's an external image, update below for true
-# better with square images
-external-image: false
-picture: assets/images/profile.jpg
-
-# If you want to include your resume, set to true
-# and specify source (external or local).
-# resume: true
-# resume-external: true
-# resume-url: https://google.com/?q=my+resume
 
 url: https://f-f-9-9-0-0.github.io
 baseurl: ""
-
+# A post's file name is its address.
 permalink: /:title/
 
+# The portrait on the About page; set external-image when picture is a full URL.
+external-image: false
+picture: assets/images/profile.jpg
 
-# if you don't want comments in your posts, leave categories empty
-disqus:
-  shortname: # https-f-f-9-9-0-0-github-io # enter this from your disqus account
-  categories: # [blog, project] # only show disqus for posts that have these categories
-
-# if you don't have any of social below, comment the line
-# facebook: myfacebook
-# twitter: mytwitter
-# instagram: myinstagram
+# Profiles linked from the footer.
 linkedin: ff9900
 github: f-f-9-9-0-0
-# email: myemail@gmail.com
 
+# Post authors, keyed by the `author` front matter value.
 authors:
   gabor:
     name: Gábor Tóth
     bio: What makes us who we are, if not the way we experience the world
     external-image: false
     picture: assets/images/profile.jpg
-    # twitter: johndoe
 
-# if you don't need projects, comment the *projects* configs below
+# Sections in the main navigation (_data/navigation.yml names these settings).
 projects: true
-
-# if you don't need "about" or "blog", comment them out below
 about: true
 blog: true
 
-# do you want to show the "read time" of the posts?
-read-time: true
-
-# do you want to show the "tags" inside the posts?
-show-tags: true
-
-# related posts inside a post?
+# Under each post: articles on the same topics, and the author box.
 related: true
-
-# Display links for next and previous posts for the specified categories
-post-advance-links: [blog]
-
-# show author block at the end of a post ?
 show-author: true
 
-# add default values to specific pages or layouts
+# Posts are listed unless they set hidden: true.
 defaults:
   - scope:
-      path: "" # an empty string here means all files in the project
+      path: ""
       layout: "post"
     values:
-      # setting all post to not hidden by default,
-      # can be overridden in the front matter for a specific post
       hidden: false
 
 plugins:
@@ -90,8 +56,6 @@ exclude:
     "README.md",
     "Gemfile",
     "Gemfile.lock",
-    "FAQ.md",
-    "LICENSE-portfolio",
     "vendor",
     "utils"
   ]
