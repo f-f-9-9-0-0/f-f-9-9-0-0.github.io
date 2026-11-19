@@ -53,7 +53,7 @@ def generate(source, publish=False, static=False):
                     alternates = {lang: config['page_urls'][lang][page] for lang in config['languages']}
                     metadata = {'description': description, 'alternates': alternates, 'layout': 'privacy', 'title': title, 'lang': language,
                                 'permalink': '/privacy/' + language + '/' + page + '.html',
-                                'analytics': False, 'comments': False, 'sitemap': publish,
+                                'analytics': False, 'sitemap': publish,
                                 'robots': 'index,follow' if publish else 'noindex,nofollow'}
                     # JSON is valid YAML; one mapping between front matter delimiters.
                     path.write_text('---\n' + json.dumps(metadata, ensure_ascii=False) + '\n---\n' + body, encoding='utf-8')
